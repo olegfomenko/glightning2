@@ -1,32 +1,35 @@
 # glightning2
 
-## Generate Files
+## What Is Here
 
-Requirements:
+### `clntypes`
 
-- Go
-- Python 3
-- A Core Lightning checkout
+Go representations of Core Lightning schema-specific scalar types, such as
+`msat`, `sat`, `hash`, `secret`, `txid`, `outpoint`, `pubkey`,
+`short_channel_id`, `short_channel_id_dir`, `feerate`, and `outputdesc`.
 
+### `tools`
 
-The generator expects a Core Lightning checkout and an output directory:
+A Python generator that reuses Core Lightning's own `msggen` package directly.
+It loads the normalized CLN service model, applies CLN's `msggen` patches, and
+emits Go structs.
+
+### `clnrpc`
+
+Generated Go structs for the current Core Lightning schema model.
+
+## Howto Generate Files
 
 ```bash
 tools/generate-clnrpc.sh <cln-repo-path> <output-path>
 ```
 
-Example using the local context checkout:
+Example:
 
 ```bash
 tools/generate-clnrpc.sh .context/lightning clnrpc
 ```
 
-The script:
-
-1. Runs `tools/cln-schema-export.py` with Core Lightning's `msggen`.
-2. Writes the temporary schema dump to a temporary directory.
-3. Runs `go run ./cmd/clnrpcgen`.
-4. Removes temporary files automatically.
-
-Only generated Go files remain in the output directory.
+The wrapper sets `PYTHONPATH` to `<cln-repo-path>/contrib/msggen`, so `msggen`
+does not need to be installed globally.
 
