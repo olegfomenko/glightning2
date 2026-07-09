@@ -1,0 +1,308 @@
+package plugin
+
+import "encoding/json"
+
+// OptionType is a Core Lightning plugin option type.
+type OptionType string
+
+const (
+	// OptionString stores a string option value.
+	OptionString OptionType = "string"
+
+	// OptionStringConceal stores a string option value that should be concealed in logs.
+	OptionStringConceal OptionType = "string-conceal"
+
+	// OptionBool stores a boolean option value.
+	OptionBool OptionType = "bool"
+
+	// OptionInt stores an integer option value.
+	OptionInt OptionType = "int"
+
+	// OptionFlag stores a flag option that is true when present.
+	OptionFlag OptionType = "flag"
+)
+
+// Option describes a command line option accepted by a plugin.
+type Option struct {
+	Name        string     `json:"name"`
+	Type        OptionType `json:"type"`
+	Default     any        `json:"default,omitempty"`
+	Description string     `json:"description"`
+	Category    string     `json:"category,omitempty"`
+	Dynamic     bool       `json:"dynamic,omitempty"`
+	Deprecated  any        `json:"deprecated,omitempty"`
+	Multi       bool       `json:"multi,omitempty"`
+}
+
+// NewStringOption creates a string plugin option.
+func NewStringOption(name, description, defaultValue string) Option {
+	return Option{
+		Name:        name,
+		Type:        OptionString,
+		Default:     defaultValue,
+		Description: description,
+	}
+}
+
+// NewStringConcealOption creates a concealed string plugin option.
+func NewStringConcealOption(name, description, defaultValue string) Option {
+	return Option{
+		Name:        name,
+		Type:        OptionStringConceal,
+		Default:     defaultValue,
+		Description: description,
+	}
+}
+
+// NewBoolOption creates a boolean plugin option.
+func NewBoolOption(name, description string, defaultValue bool) Option {
+	return Option{
+		Name:        name,
+		Type:        OptionBool,
+		Default:     defaultValue,
+		Description: description,
+	}
+}
+
+// NewIntOption creates an integer plugin option.
+func NewIntOption(name, description string, defaultValue int64) Option {
+	return Option{
+		Name:        name,
+		Type:        OptionInt,
+		Default:     defaultValue,
+		Description: description,
+	}
+}
+
+// NewFlagOption creates a flag plugin option.
+func NewFlagOption(name, description string) Option {
+	return Option{
+		Name:        name,
+		Type:        OptionFlag,
+		Description: description,
+	}
+}
+
+// RPCMethod describes a JSON-RPC method implemented by a plugin.
+type RPCMethod struct {
+	Name            string `json:"name"`
+	Description     string `json:"description,omitempty"`
+	Usage           string `json:"usage"`
+	LongDescription string `json:"long_description,omitempty"`
+	Category        string `json:"category,omitempty"`
+	Deprecated      any    `json:"deprecated,omitempty"`
+}
+
+// NewRPCMethod creates a plugin JSON-RPC method description.
+func NewRPCMethod(name, usage, description string) RPCMethod {
+	return RPCMethod{
+		Name:        name,
+		Usage:       usage,
+		Description: description,
+	}
+}
+
+// Hook describes a Core Lightning plugin hook subscription.
+//
+// A hook with only Name set is marshaled as a plain string, matching the older
+// glightning manifest format. Hooks with ordering or filters are marshaled as
+// objects, matching the current Core Lightning manifest format.
+type Hook struct {
+	Name    string   `json:"name"`
+	Before  []string `json:"before,omitempty"`
+	After   []string `json:"after,omitempty"`
+	Filters []any    `json:"filters,omitempty"`
+}
+
+// NewHook creates a simple hook subscription.
+func NewHook(name string) Hook {
+	return Hook{Name: name}
+}
+
+// MarshalJSON emits simple hooks as strings and extended hooks as objects.
+func (h Hook) MarshalJSON() ([]byte, error) {
+	if len(h.Before) == 0 && len(h.After) == 0 && len(h.Filters) == 0 {
+		return json.Marshal(h.Name)
+	}
+
+	type hook Hook
+	return json.Marshal(hook(h))
+}
+
+// FeatureBits contains feature bitsets announced by a plugin.
+type FeatureBits struct {
+	Node    string `json:"node,omitempty"`
+	Init    string `json:"init,omitempty"`
+	Invoice string `json:"invoice,omitempty"`
+	Channel string `json:"channel,omitempty"`
+}
+
+// Notification describes a custom JSON-RPC notification topic emitted by a plugin.
+type Notification struct {
+	Method      string `json:"method"`
+	Description string `json:"description,omitempty"`
+}
+
+// Manifest is the response returned by a plugin's getmanifest method.
+type Manifest struct {
+	Options        []Option       `json:"options"`
+	RPCMethods     []RPCMethod    `json:"rpcmethods"`
+	Dynamic        bool           `json:"dynamic"`
+	Subscriptions  []string       `json:"subscriptions,omitempty"`
+	Hooks          []Hook         `json:"hooks,omitempty"`
+	FeatureBits    FeatureBits    `json:"featurebits"`
+	Notifications  []Notification `json:"notifications,omitempty"`
+	CustomMessages []uint16       `json:"custommessages,omitempty"`
+	NonNumericIDs  bool           `json:"nonnumericids,omitempty"`
+	CanCheck       bool           `json:"cancheck,omitempty"`
+	Disable        string         `json:"disable,omitempty"`
+}
+
+// NewManifest creates a dynamic plugin manifest with empty options and methods.
+func NewManifest() Manifest {
+	return Manifest{
+		Options:    []Option{},
+		RPCMethods: []RPCMethod{},
+		Dynamic:    true,
+	}
+}
+
+// MarshalJSON keeps options and rpcmethods as arrays even when the manifest was
+// constructed without NewManifest.
+func (m Manifest) MarshalJSON() ([]byte, error) {
+	type manifest Manifest
+
+	out := manifest(m)
+	if out.Options == nil {
+		out.Options = []Option{}
+	}
+	if out.RPCMethods == nil {
+		out.RPCMethods = []RPCMethod{}
+	}
+
+	return json.Marshal(out)
+}
+
+// ManifestBuilder builds a Core Lightning plugin manifest.
+type ManifestBuilder struct {
+	manifest Manifest
+}
+
+// NewManifestBuilder creates a builder for a dynamic plugin manifest.
+func NewManifestBuilder() *ManifestBuilder {
+	return &ManifestBuilder{manifest: NewManifest()}
+}
+
+// AddOption adds an option description to the manifest.
+func (b *ManifestBuilder) AddOption(option Option) *ManifestBuilder {
+	b.manifest.Options = append(b.manifest.Options, option)
+	return b
+}
+
+// StringOption adds a string option to the manifest.
+func (b *ManifestBuilder) StringOption(name, description, defaultValue string) *ManifestBuilder {
+	return b.AddOption(NewStringOption(name, description, defaultValue))
+}
+
+// StringConcealOption adds a concealed string option to the manifest.
+func (b *ManifestBuilder) StringConcealOption(name, description, defaultValue string) *ManifestBuilder {
+	return b.AddOption(NewStringConcealOption(name, description, defaultValue))
+}
+
+// BoolOption adds a boolean option to the manifest.
+func (b *ManifestBuilder) BoolOption(name, description string, defaultValue bool) *ManifestBuilder {
+	return b.AddOption(NewBoolOption(name, description, defaultValue))
+}
+
+// IntOption adds an integer option to the manifest.
+func (b *ManifestBuilder) IntOption(name, description string, defaultValue int64) *ManifestBuilder {
+	return b.AddOption(NewIntOption(name, description, defaultValue))
+}
+
+// FlagOption adds a flag option to the manifest.
+func (b *ManifestBuilder) FlagOption(name, description string) *ManifestBuilder {
+	return b.AddOption(NewFlagOption(name, description))
+}
+
+// AddRPCMethod adds a JSON-RPC method description to the manifest.
+func (b *ManifestBuilder) AddRPCMethod(method RPCMethod) *ManifestBuilder {
+	b.manifest.RPCMethods = append(b.manifest.RPCMethods, method)
+	return b
+}
+
+// RPCMethod adds a JSON-RPC method description to the manifest.
+func (b *ManifestBuilder) RPCMethod(name, usage, description string) *ManifestBuilder {
+	return b.AddRPCMethod(NewRPCMethod(name, usage, description))
+}
+
+// Dynamic sets whether the plugin can be started and stopped dynamically.
+func (b *ManifestBuilder) Dynamic(dynamic bool) *ManifestBuilder {
+	b.manifest.Dynamic = dynamic
+	return b
+}
+
+// Subscribe adds notification subscriptions to the manifest.
+func (b *ManifestBuilder) Subscribe(subscriptions ...string) *ManifestBuilder {
+	b.manifest.Subscriptions = append(b.manifest.Subscriptions, subscriptions...)
+	return b
+}
+
+// AddHook adds a hook subscription to the manifest.
+func (b *ManifestBuilder) AddHook(hook Hook) *ManifestBuilder {
+	b.manifest.Hooks = append(b.manifest.Hooks, hook)
+	return b
+}
+
+// Hook adds a simple hook subscription to the manifest.
+func (b *ManifestBuilder) Hook(name string) *ManifestBuilder {
+	return b.AddHook(NewHook(name))
+}
+
+// FeatureBits sets the feature bitsets announced by the plugin.
+func (b *ManifestBuilder) FeatureBits(featureBits FeatureBits) *ManifestBuilder {
+	b.manifest.FeatureBits = featureBits
+	return b
+}
+
+// AddNotification adds a custom notification topic to the manifest.
+func (b *ManifestBuilder) AddNotification(notification Notification) *ManifestBuilder {
+	b.manifest.Notifications = append(b.manifest.Notifications, notification)
+	return b
+}
+
+// Notification adds a custom notification topic to the manifest.
+func (b *ManifestBuilder) Notification(method, description string) *ManifestBuilder {
+	return b.AddNotification(Notification{
+		Method:      method,
+		Description: description,
+	})
+}
+
+// CustomMessage adds custom message types explicitly handled by the plugin.
+func (b *ManifestBuilder) CustomMessage(messageTypes ...uint16) *ManifestBuilder {
+	b.manifest.CustomMessages = append(b.manifest.CustomMessages, messageTypes...)
+	return b
+}
+
+// NonNumericIDs declares support for string JSON-RPC request IDs.
+func (b *ManifestBuilder) NonNumericIDs() *ManifestBuilder {
+	b.manifest.NonNumericIDs = true
+	return b
+}
+
+// CanCheck declares support for check commands for plugin RPC methods.
+func (b *ManifestBuilder) CanCheck() *ManifestBuilder {
+	b.manifest.CanCheck = true
+	return b
+}
+
+// Disable marks the plugin disabled and sets the reason reported to Core Lightning.
+func (b *ManifestBuilder) Disable(reason string) *ManifestBuilder {
+	b.manifest.Disable = reason
+	return b
+}
+
+// Build returns the built manifest.
+func (b *ManifestBuilder) Build() Manifest {
+	return b.manifest
+}
