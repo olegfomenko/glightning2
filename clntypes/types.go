@@ -28,22 +28,22 @@ type (
 	// PubKey is a compressed secp256k1 public key, used by CLN for node IDs and
 	// other Lightning public keys. Its JSON form is 33 bytes of SEC1 compressed
 	// public key data encoded as hex.
-	PubKey = btcec.PublicKey
+	PubKey btcec.PublicKey
 
 	// Signature is a secp256k1 ECDSA signature. CLN's JSON schema represents it
 	// as DER-encoded signature bytes encoded as hex.
-	Signature = ecdsa.Signature
+	Signature ecdsa.Signature
 
 	// Bip340Sig is a BIP340 Schnorr signature. CLN's JSON form is the 64-byte
 	// signature encoded as hex.
-	Bip340Sig = schnorr.Signature
+	Bip340Sig schnorr.Signature
 
 	// TxID is a Bitcoin transaction ID. chainhash.Hash matches CLN's txid JSON
 	// byte order because both parse and render txids in Bitcoin display order.
 	TxID = chainhash.Hash
 
 	// Outpoint is a Bitcoin transaction output reference of the form txid:index.
-	Outpoint = wire.OutPoint
+	Outpoint wire.OutPoint
 
 	// Feerate is a CLN feerate value, such as "normal", "urgent", "253perkw",
 	// or "1000perkb".
@@ -142,6 +142,98 @@ func (m MSat) Uint64() uint64 {
 	return uint64(m)
 }
 
+func (p PubKey) MarshalJSON() ([]byte, error) {
+	return json.Marshal(hex.EncodeToString(p.SerializeCompressed()))
+}
+
+func (p *PubKey) UnmarshalJSON(b []byte) error {
+	decoded, err := unmarshalHexString(b)
+	if err != nil {
+		return err
+	}
+	key, err := btcec.ParsePubKey(decoded)
+	if err != nil {
+		return fmt.Errorf("invalid pubkey: %w", err)
+	}
+	*p = PubKey(*key)
+	return nil
+}
+
+func (p *PubKey) BTCEC() *btcec.PublicKey {
+	return (*btcec.PublicKey)(p)
+}
+
+func (p PubKey) SerializeCompressed() []byte {
+	return ((*btcec.PublicKey)(&p)).SerializeCompressed()
+}
+
+func (s Signature) MarshalJSON() ([]byte, error) {
+	return json.Marshal(hex.EncodeToString(((*ecdsa.Signature)(&s)).Serialize()))
+}
+
+func (s *Signature) UnmarshalJSON(b []byte) error {
+	decoded, err := unmarshalHexString(b)
+	if err != nil {
+		return err
+	}
+	sig, err := ecdsa.ParseDERSignature(decoded)
+	if err != nil {
+		return fmt.Errorf("invalid signature: %w", err)
+	}
+	*s = Signature(*sig)
+	return nil
+}
+
+func (s *Signature) BTCEC() *ecdsa.Signature {
+	return (*ecdsa.Signature)(s)
+}
+
+func (s Bip340Sig) MarshalJSON() ([]byte, error) {
+	return json.Marshal(hex.EncodeToString(((*schnorr.Signature)(&s)).Serialize()))
+}
+
+func (s *Bip340Sig) UnmarshalJSON(b []byte) error {
+	decoded, err := unmarshalHexString(b)
+	if err != nil {
+		return err
+	}
+	sig, err := schnorr.ParseSignature(decoded)
+	if err != nil {
+		return fmt.Errorf("invalid bip340sig: %w", err)
+	}
+	*s = Bip340Sig(*sig)
+	return nil
+}
+
+func (s *Bip340Sig) BTCEC() *schnorr.Signature {
+	return (*schnorr.Signature)(s)
+}
+
+func (o Outpoint) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.String())
+}
+
+func (o *Outpoint) UnmarshalJSON(b []byte) error {
+	var raw string
+	if err := json.Unmarshal(b, &raw); err != nil {
+		return err
+	}
+	outpoint, err := wire.NewOutPointFromString(raw)
+	if err != nil {
+		return fmt.Errorf("invalid outpoint: %w", err)
+	}
+	*o = Outpoint(*outpoint)
+	return nil
+}
+
+func (o Outpoint) String() string {
+	return wire.OutPoint(o).String()
+}
+
+func (o *Outpoint) Wire() *wire.OutPoint {
+	return (*wire.OutPoint)(o)
+}
+
 func (a Amount) MarshalJSON() ([]byte, error) {
 	return json.Marshal(uint64(a))
 }
@@ -236,7 +328,7 @@ func (h Hash) MarshalJSON() ([]byte, error) {
 }
 
 func (h *Hash) UnmarshalJSON(b []byte) error {
-	return unmarshal32ByteHex(b, h[:], "hash")
+	return unmarshal32ByteHex(b, h[:])
 }
 
 func (s Secret) MarshalJSON() ([]byte, error) {
@@ -244,7 +336,7 @@ func (s Secret) MarshalJSON() ([]byte, error) {
 }
 
 func (s *Secret) UnmarshalJSON(b []byte) error {
-	return unmarshal32ByteHex(b, s[:], "secret")
+	return unmarshal32ByteHex(b, s[:])
 }
 
 func (s ShortChannelID) BlockHeight() uint32 {
@@ -343,17 +435,25 @@ func ParseShortChannelIDDir(raw string) (ShortChannelIDDir, error) {
 	return ShortChannelIDDir{ShortChannelID: scid, Direction: byte(dir)}, nil
 }
 
-func unmarshal32ByteHex(b []byte, dst []byte, name string) error {
+func unmarshalHexString(b []byte) ([]byte, error) {
 	var raw string
 	if err := json.Unmarshal(b, &raw); err != nil {
-		return err
+		return nil, err
 	}
 	decoded, err := hex.DecodeString(raw)
 	if err != nil {
-		return fmt.Errorf("invalid %s hex: %w", name, err)
+		return nil, fmt.Errorf("invalid hex: %w", err)
+	}
+	return decoded, nil
+}
+
+func unmarshal32ByteHex(b []byte, dst []byte) error {
+	decoded, err := unmarshalHexString(b)
+	if err != nil {
+		return err
 	}
 	if len(decoded) != 32 {
-		return fmt.Errorf("invalid %s length %d, want 32", name, len(decoded))
+		return fmt.Errorf("invalid length %d, want 32", len(decoded))
 	}
 	copy(dst, decoded)
 	return nil

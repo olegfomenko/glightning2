@@ -1,11 +1,14 @@
 package clntypes
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"testing"
 
+	"github.com/btcsuite/btcd/btcec/v2"
+	btcecdsa "github.com/btcsuite/btcd/btcec/v2/ecdsa"
+	"github.com/btcsuite/btcd/btcec/v2/schnorr"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/wire"
 )
 
 func TestHashJSON(t *testing.T) {
@@ -54,15 +57,87 @@ func TestTxIDMappingUsesChainhash(t *testing.T) {
 	var _ chainhash.Hash = got
 }
 
-func TestOutpointMappingUsesWireOutPoint(t *testing.T) {
+func TestPubKeyJSON(t *testing.T) {
+	_, key := btcec.PrivKeyFromBytes(bytesOf(1, 32))
+	raw := hex.EncodeToString(key.SerializeCompressed())
+
+	var got PubKey
+	if err := json.Unmarshal([]byte(`"`+raw+`"`), &got); err != nil {
+		t.Fatalf("unmarshal pubkey: %v", err)
+	}
+	if hex.EncodeToString(got.SerializeCompressed()) != raw {
+		t.Fatalf("pubkey bytes = %x, want %s", got.SerializeCompressed(), raw)
+	}
+
+	encoded, err := json.Marshal(got)
+	if err != nil {
+		t.Fatalf("marshal pubkey: %v", err)
+	}
+	if string(encoded) != `"`+raw+`"` {
+		t.Fatalf("marshal pubkey = %s, want %q", encoded, raw)
+	}
+}
+
+func TestSignatureJSON(t *testing.T) {
+	key, _ := btcec.PrivKeyFromBytes(bytesOf(2, 32))
+	msg := bytesOf(3, 32)
+	sig := btcecdsa.Sign(key, msg)
+	raw := hex.EncodeToString(sig.Serialize())
+
+	var got Signature
+	if err := json.Unmarshal([]byte(`"`+raw+`"`), &got); err != nil {
+		t.Fatalf("unmarshal signature: %v", err)
+	}
+
+	encoded, err := json.Marshal(got)
+	if err != nil {
+		t.Fatalf("marshal signature: %v", err)
+	}
+	if string(encoded) != `"`+raw+`"` {
+		t.Fatalf("marshal signature = %s, want %q", encoded, raw)
+	}
+}
+
+func TestBip340SigJSON(t *testing.T) {
+	key, _ := btcec.PrivKeyFromBytes(bytesOf(4, 32))
+	msg := bytesOf(5, 32)
+	sig, err := schnorr.Sign(key, msg)
+	if err != nil {
+		t.Fatalf("sign schnorr: %v", err)
+	}
+	raw := hex.EncodeToString(sig.Serialize())
+
+	var got Bip340Sig
+	if err := json.Unmarshal([]byte(`"`+raw+`"`), &got); err != nil {
+		t.Fatalf("unmarshal bip340sig: %v", err)
+	}
+
+	encoded, err := json.Marshal(got)
+	if err != nil {
+		t.Fatalf("marshal bip340sig: %v", err)
+	}
+	if string(encoded) != `"`+raw+`"` {
+		t.Fatalf("marshal bip340sig = %s, want %q", encoded, raw)
+	}
+}
+
+func TestOutpointJSON(t *testing.T) {
 	const raw = "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f:7"
 
-	got, err := wire.NewOutPointFromString(raw)
-	if err != nil {
-		t.Fatalf("parse outpoint: %v", err)
+	var got Outpoint
+	if err := json.Unmarshal([]byte(`"`+raw+`"`), &got); err != nil {
+		t.Fatalf("unmarshal outpoint: %v", err)
 	}
 	if got.String() != raw {
 		t.Fatalf("outpoint string = %s, want %s", got.String(), raw)
+	}
+
+	encoded, err := json.Marshal(got)
+	if err != nil {
+		t.Fatalf("marshal outpoint: %v", err)
+	}
+	if string(encoded) != `"`+raw+`"` {
+		t.Fatalf("marshal outpoint = %s, want %q", encoded, raw)
 	}
 }
 
@@ -154,4 +229,12 @@ func TestFeerateIsString(t *testing.T) {
 	if got != "253perkw" {
 		t.Fatalf("feerate = %q", got)
 	}
+}
+
+func bytesOf(v byte, n int) []byte {
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = v
+	}
+	return b
 }

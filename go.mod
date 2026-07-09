@@ -1,6 +1,6 @@
 module github.com/olegfomenko/glightning2
 
-go 1.22
+go 1.26
 
 require (
 	github.com/btcsuite/btcd v0.24.3-0.20250318170759-4f4ea81776d6
