@@ -552,7 +552,7 @@ func parseBtcString(raw string) (uint64, error) {
 		}
 
 		if len(raws[1]) == 8 {
-			raws[1] += "000"
+			raws[1] += strings.Repeat("0", 3)
 		}
 
 		raw = raws[0] + raws[1]
