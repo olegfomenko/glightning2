@@ -12,6 +12,7 @@ from your Go application. Note that the repository is WIP:
 ### Repository structure
 
 - [clntypes](./clntypes) contains Go representations of Core Lightning schema-specific scalar types.
+  Leverages [btcsuite](github.com/btcsuite/btcd) for Bitcoin-related types (PublicKey, Signature, etc.).
 
 - [clnrpc](./clnrpc) contains generated Go structs for the current Core Lightning schema model, a JSON-RPC
   client for the native `lightning-rpc` Unix socket, and typed methods for every
