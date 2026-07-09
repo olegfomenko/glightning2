@@ -177,10 +177,10 @@ func TestShortChannelIDDir(t *testing.T) {
 
 func TestAmountOrAll(t *testing.T) {
 	tests := map[string]uint64{
-		`42`:          42,
-		`"42sat"`:     42,
-		`"42000msat"`: 42,
-		`"0.01btc"`:   1000000,
+		`42`:              42,
+		`"42sat"`:         42,
+		`"42000msat"`:     42,
+		`"0.01000000btc"`: 1000000,
 	}
 	for input, want := range tests {
 		var got AmountOrAll

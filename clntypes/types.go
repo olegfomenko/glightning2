@@ -1,7 +1,6 @@
 package clntypes
 
 import (
-	"bytes"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -159,10 +158,6 @@ func (p *PubKey) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (p *PubKey) BTCEC() *btcec.PublicKey {
-	return (*btcec.PublicKey)(p)
-}
-
 func (p PubKey) SerializeCompressed() []byte {
 	return ((*btcec.PublicKey)(&p)).SerializeCompressed()
 }
@@ -184,10 +179,6 @@ func (s *Signature) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (s *Signature) BTCEC() *ecdsa.Signature {
-	return (*ecdsa.Signature)(s)
-}
-
 func (s Bip340Sig) MarshalJSON() ([]byte, error) {
 	return json.Marshal(hex.EncodeToString(((*schnorr.Signature)(&s)).Serialize()))
 }
@@ -203,10 +194,6 @@ func (s *Bip340Sig) UnmarshalJSON(b []byte) error {
 	}
 	*s = Bip340Sig(*sig)
 	return nil
-}
-
-func (s *Bip340Sig) BTCEC() *schnorr.Signature {
-	return (*schnorr.Signature)(s)
 }
 
 func (o Outpoint) MarshalJSON() ([]byte, error) {
@@ -470,89 +457,110 @@ func parseBoundedUint(raw string, bits int, name string) (uint64, error) {
 	return v, nil
 }
 
-func parseSatAmountJSON(b []byte) (uint64, error) {
-	return parseAmountJSON(b, parseSatAmountString)
+func parseSatAmountJSON(b []byte) (amount uint64, err error) {
+	var raw string
+	if err := json.Unmarshal(b, &raw); err != nil {
+		// Maybe a JSON number
+		var num json.Number
+		if err := json.Unmarshal(b, &num); err != nil {
+			return 0, err
+		}
+		raw = num.String()
+	}
+
+	if strings.HasSuffix(raw, "msat") {
+		amount, err = parseMSatString(raw)
+	} else if strings.HasSuffix(raw, "sat") {
+		amount, err = parseSatString(raw)
+	} else if strings.HasSuffix(raw, "btc") {
+		amount, err = parseBtcString(raw)
+	} else {
+		return strconv.ParseUint(raw, 10, 64)
+	}
+
+	if amount%1000 != 0 {
+		return 0, fmt.Errorf("invalid sat amount %d: has msats", amount)
+	}
+
+	amount /= 1000
+	return
 }
 
 func parseMSatAmountJSON(b []byte) (uint64, error) {
-	return parseAmountJSON(b, parseMSatAmountString)
-}
-
-func parseAmountJSON(b []byte, parseString func(string) (uint64, error)) (uint64, error) {
-	dec := json.NewDecoder(bytes.NewReader(b))
-	dec.UseNumber()
-
-	var raw interface{}
-	if err := dec.Decode(&raw); err != nil {
-		return 0, err
-	}
-
-	switch v := raw.(type) {
-	case json.Number:
-		return strconv.ParseUint(v.String(), 10, 64)
-	case string:
-		return parseString(v)
-	default:
-		return 0, fmt.Errorf("invalid amount JSON type %T", raw)
-	}
-}
-
-func parseMSatAmountString(raw string) (uint64, error) {
-	switch {
-	case strings.HasSuffix(raw, "msat"):
-		return parseDecimalToUint(strings.TrimSuffix(raw, "msat"), 0)
-	case strings.HasSuffix(raw, "sat"):
-		return parseDecimalToUint(strings.TrimSuffix(raw, "sat"), 3)
-	case strings.HasSuffix(raw, "btc"):
-		return parseDecimalToUint(strings.TrimSuffix(raw, "btc"), 11)
-	default:
-		return parseDecimalToUint(raw, 0)
-	}
-}
-
-func parseSatAmountString(raw string) (uint64, error) {
-	switch {
-	case strings.HasSuffix(raw, "msat"):
-		msatRaw := strings.TrimSuffix(raw, "msat")
-		if !strings.HasSuffix(msatRaw, "000") && strings.Trim(msatRaw, "0") != "" {
-			return 0, fmt.Errorf("amount %q is not whole satoshi precision", raw)
+	var raw string
+	if err := json.Unmarshal(b, &raw); err != nil {
+		// Maybe a JSON number
+		var num json.Number
+		if err := json.Unmarshal(b, &num); err != nil {
+			return 0, err
 		}
-		if len(msatRaw) <= 3 {
-			return 0, nil
-		}
-		return parseDecimalToUint(msatRaw[:len(msatRaw)-3], 0)
-	case strings.HasSuffix(raw, "sat"):
-		return parseDecimalToUint(strings.TrimSuffix(raw, "sat"), 0)
-	case strings.HasSuffix(raw, "btc"):
-		return parseDecimalToUint(strings.TrimSuffix(raw, "btc"), 8)
-	default:
-		return parseDecimalToUint(raw, 0)
+		raw = num.String()
 	}
+
+	if strings.HasSuffix(raw, "msat") {
+		return parseMSatString(raw)
+	}
+	if strings.HasSuffix(raw, "sat") {
+		return parseSatString(raw)
+	}
+	if strings.HasSuffix(raw, "btc") {
+		return parseBtcString(raw)
+	}
+
+	return strconv.ParseUint(raw, 10, 64)
 }
 
-func parseDecimalToUint(raw string, scale int) (uint64, error) {
-	if raw == "" || strings.HasPrefix(raw, "-") {
-		return 0, fmt.Errorf("invalid amount %q", raw)
-	}
-
-	whole, frac, hasFrac := strings.Cut(raw, ".")
-	if whole == "" || !isDigits(whole) || (hasFrac && (frac == "" || !isDigits(frac))) {
-		return 0, fmt.Errorf("invalid amount %q", raw)
-	}
-	if len(frac) > scale {
-		return 0, fmt.Errorf("amount %q has more than %d decimal places", raw, scale)
-	}
-
-	return strconv.ParseUint(whole+frac+strings.Repeat("0", scale-len(frac)), 10, 64)
+// parseMSatString consumes "100msat" and returns msat integer
+func parseMSatString(raw string) (uint64, error) {
+	return strconv.ParseUint(strings.TrimSuffix(raw, "msat"), 10, 64)
 }
 
-func isDigits(raw string) bool {
-	for _, c := range raw {
-		if c < '0' || c > '9' {
-			return false
+// parseSatString consumes "10sat" or "10.000sat" and returns msat integer
+func parseSatString(raw string) (uint64, error) {
+	raw = strings.TrimSuffix(raw, "sat")
+
+	if strings.ContainsRune(raw, '.') {
+		raws := strings.Split(raw, ".")
+		if len(raws) != 2 {
+			return 0, fmt.Errorf("unexpected decimal string format: more then one dot separator")
 		}
+
+		if len(raws[1]) != 3 {
+			return 0, fmt.Errorf("unexpected decimal string format: sat fractional part should have 3 digits")
+		}
+
+		raw = raws[0] + raws[1]
+	} else {
+		raw += strings.Repeat("0", 3)
 	}
-	return true
+
+	return strconv.ParseUint(raw, 10, 64)
+}
+
+// parseBtcString consumes "10btc" or "0.00000010btc"  or "0.00000010000btc" and returns msat integer
+func parseBtcString(raw string) (uint64, error) {
+	raw = strings.TrimSuffix(raw, "btc")
+
+	if strings.ContainsRune(raw, '.') {
+		raws := strings.Split(raw, ".")
+		if len(raws) != 2 {
+			return 0, fmt.Errorf("unexpected decimal string format: more then one dot separator")
+		}
+
+		if len(raws[1]) != 8 && len(raws[1]) != 11 {
+			return 0, fmt.Errorf("unexpected decimal string format: btc fractional part should have 8 or 11 digits")
+		}
+
+		if len(raws[1]) == 8 {
+			raws[1] += "000"
+		}
+
+		raw = raws[0] + raws[1]
+	} else {
+		raw += strings.Repeat("0", 11)
+	}
+
+	return strconv.ParseUint(raw, 10, 64)
 }
 
 func isJSONStringLiteral(b []byte, literal string) bool {
