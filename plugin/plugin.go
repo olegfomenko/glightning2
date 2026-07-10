@@ -6,24 +6,11 @@ import (
 	"github.com/olegfomenko/glightning2/clnrpc"
 )
 
-// RPCHandler handles a raw JSON-RPC request sent to a plugin method.
-type RPCHandler func(json.RawMessage) (any, error)
+// RequestHandler handles a raw JSON-RPC request sent to a plugin method.
+type RequestHandler func(json.RawMessage) (any, error)
 
-// EventHandler handles a raw event notification sent to a plugin.
-type EventHandler func(json.RawMessage) error
-
-// HookHandler handles a Core Lightning hook request.
-type HookHandler func(json.RawMessage) (any, error)
-
-type RPCMethod struct {
-	manifest ManifestRPCMethod
-	handler  RPCHandler
-}
-
-type HookMethod struct {
-	manifest ManifestHook
-	handler  HookHandler
-}
+// NotificationHandler handles a raw JSON-RPC notification sent to a plugin method.
+type NotificationHandler func(json.RawMessage) error
 
 type pluginDeclarations struct {
 	options       []Option
@@ -35,11 +22,9 @@ type pluginDeclarations struct {
 
 // Plugin defines a Core Lightning plugin.
 type Plugin struct {
-	declarations *pluginDeclarations
-
-	rpcMethods map[string]RPCHandler
-	events     map[string]EventHandler
-	hooks      map[string]HookHandler
+	declarations         *pluginDeclarations
+	requestHandlers      map[string]RequestHandler
+	notificationHandlers map[string]NotificationHandler
 }
 
 // NewPlugin creates an empty Core Lightning plugin definition.
@@ -49,9 +34,8 @@ func NewPlugin() *Plugin {
 			rpcMethods: make(map[string]ManifestRPCMethod),
 			hooks:      make(map[string]ManifestHook),
 		},
-		rpcMethods: make(map[string]RPCHandler),
-		events:     make(map[string]EventHandler),
-		hooks:      make(map[string]HookHandler),
+		requestHandlers:      make(map[string]RequestHandler),
+		notificationHandlers: make(map[string]NotificationHandler),
 	}
 }
 
@@ -87,7 +71,7 @@ func (p *Plugin) AddOption(option Option) *Plugin {
 }
 
 // AddRPCMethod adds a plugin JSON-RPC method.
-func (p *Plugin) AddRPCMethod(name, description string, handler RPCHandler) *Plugin {
+func (p *Plugin) AddRPCMethod(name, description string, handler RequestHandler) *Plugin {
 	return p.AddRPCMethodWithManifest(ManifestRPCMethod{
 		Name:        name,
 		Description: description,
@@ -95,15 +79,15 @@ func (p *Plugin) AddRPCMethod(name, description string, handler RPCHandler) *Plu
 }
 
 // AddRPCMethodWithManifest adds a plugin JSON-RPC method with an explicit manifest entry.
-func (p *Plugin) AddRPCMethodWithManifest(method ManifestRPCMethod, handler RPCHandler) *Plugin {
-	p.rpcMethods[method.Name] = handler
+func (p *Plugin) AddRPCMethodWithManifest(method ManifestRPCMethod, handler RequestHandler) *Plugin {
+	p.requestHandlers[method.Name] = handler
 	p.declarations.rpcMethods[method.Name] = method
 	return p
 }
 
 // SubscribeEvent subscribes to an event notification.
-func (p *Plugin) SubscribeEvent(name string, handler EventHandler) *Plugin {
-	p.events[name] = handler
+func (p *Plugin) SubscribeEvent(name string, handler NotificationHandler) *Plugin {
+	p.notificationHandlers[name] = handler
 	p.declarations.subscriptions = append(p.declarations.subscriptions, name)
 	return p
 }
@@ -282,8 +266,8 @@ func (p *Plugin) SubscribeOnionMessageRecvSecret(handler func(clnrpc.OnionMessag
 	return p
 }
 
-func (p *Plugin) SubscribeHook(manifest ManifestHook, handler HookHandler) *Plugin {
-	p.hooks[manifest.Name] = handler
+func (p *Plugin) SubscribeHook(manifest ManifestHook, handler RequestHandler) *Plugin {
+	p.requestHandlers[manifest.Name] = handler
 	p.declarations.hooks[manifest.Name] = manifest
 	return p
 }
