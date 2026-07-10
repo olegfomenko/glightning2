@@ -123,13 +123,7 @@ func (p *Plugin) SubscribePeerConnected(handler func(clnrpc.PeerConnected) (any,
 		ManifestHook{
 			Name: "peer_connected",
 		},
-		func(message json.RawMessage) (any, error) {
-			var hook clnrpc.PeerConnected
-			if err := json.Unmarshal(message, &hook); err != nil {
-				return nil, err
-			}
-			return handler(hook)
-		},
+		unmarshallAndHandle(handler),
 	)
 	return p
 }
@@ -140,13 +134,7 @@ func (p *Plugin) SubscribeRecover(handler func(clnrpc.RecoverHook) (any, error))
 		ManifestHook{
 			Name: "recover",
 		},
-		func(message json.RawMessage) (any, error) {
-			var hook clnrpc.RecoverHook
-			if err := json.Unmarshal(message, &hook); err != nil {
-				return nil, err
-			}
-			return handler(hook)
-		},
+		unmarshallAndHandle(handler),
 	)
 	return p
 }
@@ -157,13 +145,7 @@ func (p *Plugin) SubscribeCommitmentRevocation(handler func(clnrpc.CommitmentRev
 		ManifestHook{
 			Name: "commitment_revocation",
 		},
-		func(message json.RawMessage) (any, error) {
-			var hook clnrpc.CommitmentRevocation
-			if err := json.Unmarshal(message, &hook); err != nil {
-				return nil, err
-			}
-			return handler(hook)
-		},
+		unmarshallAndHandle(handler),
 	)
 	return p
 }
@@ -174,13 +156,7 @@ func (p *Plugin) SubscribeDBWrite(handler func(clnrpc.DBWrite) (any, error)) *Pl
 		ManifestHook{
 			Name: "db_write",
 		},
-		func(message json.RawMessage) (any, error) {
-			var hook clnrpc.DBWrite
-			if err := json.Unmarshal(message, &hook); err != nil {
-				return nil, err
-			}
-			return handler(hook)
-		},
+		unmarshallAndHandle(handler),
 	)
 	return p
 }
@@ -191,13 +167,7 @@ func (p *Plugin) SubscribeInvoicePayment(handler func(clnrpc.InvoicePaymentHook)
 		ManifestHook{
 			Name: "invoice_payment",
 		},
-		func(message json.RawMessage) (any, error) {
-			var hook clnrpc.InvoicePaymentHook
-			if err := json.Unmarshal(message, &hook); err != nil {
-				return nil, err
-			}
-			return handler(hook)
-		},
+		unmarshallAndHandle(handler),
 	)
 	return p
 }
@@ -208,13 +178,7 @@ func (p *Plugin) SubscribeOpenchannel(handler func(clnrpc.Openchannel) (any, err
 		ManifestHook{
 			Name: "openchannel",
 		},
-		func(message json.RawMessage) (any, error) {
-			var hook clnrpc.Openchannel
-			if err := json.Unmarshal(message, &hook); err != nil {
-				return nil, err
-			}
-			return handler(hook)
-		},
+		unmarshallAndHandle(handler),
 	)
 	return p
 }
@@ -225,13 +189,7 @@ func (p *Plugin) SubscribeOpenchannel2(handler func(clnrpc.Openchannel2) (any, e
 		ManifestHook{
 			Name: "openchannel2",
 		},
-		func(message json.RawMessage) (any, error) {
-			var hook clnrpc.Openchannel2
-			if err := json.Unmarshal(message, &hook); err != nil {
-				return nil, err
-			}
-			return handler(hook)
-		},
+		unmarshallAndHandle(handler),
 	)
 	return p
 }
@@ -242,13 +200,7 @@ func (p *Plugin) SubscribeOpenchannel2Changed(handler func(clnrpc.Openchannel2Ch
 		ManifestHook{
 			Name: "openchannel2_changed",
 		},
-		func(message json.RawMessage) (any, error) {
-			var hook clnrpc.Openchannel2Changed
-			if err := json.Unmarshal(message, &hook); err != nil {
-				return nil, err
-			}
-			return handler(hook)
-		},
+		unmarshallAndHandle(handler),
 	)
 	return p
 }
@@ -259,13 +211,7 @@ func (p *Plugin) SubscribeOpenchannel2Sign(handler func(clnrpc.Openchannel2Sign)
 		ManifestHook{
 			Name: "openchannel2_sign",
 		},
-		func(message json.RawMessage) (any, error) {
-			var hook clnrpc.Openchannel2Sign
-			if err := json.Unmarshal(message, &hook); err != nil {
-				return nil, err
-			}
-			return handler(hook)
-		},
+		unmarshallAndHandle(handler),
 	)
 	return p
 }
@@ -276,13 +222,7 @@ func (p *Plugin) SubscribeRbfChannel(handler func(clnrpc.RbfChannel) (any, error
 		ManifestHook{
 			Name: "rbf_channel",
 		},
-		func(message json.RawMessage) (any, error) {
-			var hook clnrpc.RbfChannel
-			if err := json.Unmarshal(message, &hook); err != nil {
-				return nil, err
-			}
-			return handler(hook)
-		},
+		unmarshallAndHandle(handler),
 	)
 	return p
 }
@@ -293,13 +233,7 @@ func (p *Plugin) SubscribeHTLCAccepted(handler func(clnrpc.HTLCAccepted) (any, e
 		ManifestHook{
 			Name: "htlc_accepted",
 		},
-		func(message json.RawMessage) (any, error) {
-			var hook clnrpc.HTLCAccepted
-			if err := json.Unmarshal(message, &hook); err != nil {
-				return nil, err
-			}
-			return handler(hook)
-		},
+		unmarshallAndHandle(handler),
 	)
 	return p
 }
@@ -310,13 +244,7 @@ func (p *Plugin) SubscribeRPCCommand(handler func(clnrpc.RPCCommand) (any, error
 		ManifestHook{
 			Name: "rpc_command",
 		},
-		func(message json.RawMessage) (any, error) {
-			var hook clnrpc.RPCCommand
-			if err := json.Unmarshal(message, &hook); err != nil {
-				return nil, err
-			}
-			return handler(hook)
-		},
+		unmarshallAndHandle(handler),
 	)
 	return p
 }
@@ -327,13 +255,7 @@ func (p *Plugin) SubscribeCustommsg(handler func(clnrpc.CustommsgHook) (any, err
 		ManifestHook{
 			Name: "custommsg",
 		},
-		func(message json.RawMessage) (any, error) {
-			var hook clnrpc.CustommsgHook
-			if err := json.Unmarshal(message, &hook); err != nil {
-				return nil, err
-			}
-			return handler(hook)
-		},
+		unmarshallAndHandle(handler),
 	)
 	return p
 }
@@ -344,13 +266,7 @@ func (p *Plugin) SubscribeOnionMessageRecv(handler func(clnrpc.OnionMessageRecv)
 		ManifestHook{
 			Name: "onion_message_recv",
 		},
-		func(message json.RawMessage) (any, error) {
-			var hook clnrpc.OnionMessageRecv
-			if err := json.Unmarshal(message, &hook); err != nil {
-				return nil, err
-			}
-			return handler(hook)
-		},
+		unmarshallAndHandle(handler),
 	)
 	return p
 }
@@ -361,13 +277,7 @@ func (p *Plugin) SubscribeOnionMessageRecvSecret(handler func(clnrpc.OnionMessag
 		ManifestHook{
 			Name: "onion_message_recv_secret",
 		},
-		func(message json.RawMessage) (any, error) {
-			var hook clnrpc.OnionMessageRecvSecret
-			if err := json.Unmarshal(message, &hook); err != nil {
-				return nil, err
-			}
-			return handler(hook)
-		},
+		unmarshallAndHandle(handler),
 	)
 	return p
 }
@@ -397,4 +307,14 @@ func (p *pluginDeclarations) Manifest() Manifest {
 	}
 
 	return manifest
+}
+
+func unmarshallAndHandle[T any](handler func(T) (any, error)) func(json.RawMessage) (any, error) {
+	return func(message json.RawMessage) (any, error) {
+		var hook T
+		if err := json.Unmarshal(message, &hook); err != nil {
+			return nil, err
+		}
+		return handler(hook)
+	}
 }
