@@ -2,6 +2,7 @@ package plugin
 
 import (
 	"encoding/json"
+	"sort"
 	"testing"
 
 	"github.com/olegfomenko/glightning2/clnrpc"
@@ -35,12 +36,20 @@ func TestPluginManifest(t *testing.T) {
 		}).
 		AddNotification("user_saved", "User was saved")
 
-	got, err := json.Marshal(plugin.Manifest())
+	manifest := plugin.declarations.Manifest()
+	sort.Slice(manifest.RPCMethods, func(i, j int) bool {
+		return manifest.RPCMethods[i].Name < manifest.RPCMethods[j].Name
+	})
+	sort.Slice(manifest.Hooks, func(i, j int) bool {
+		return manifest.Hooks[i].Name < manifest.Hooks[j].Name
+	})
+
+	got, err := json.Marshal(manifest)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	want := `{"options":[{"name":"flag1","type":"string","default":"string","description":"Flag 1 option (string)"},{"name":"flag2","type":"bool","default":true,"description":"Flag 2 option (bool)"}],"rpcmethods":[{"name":"get_user","description":"Get user entry","usage":""},{"name":"save_user","description":"Save user entry","usage":""}],"dynamic":false,"subscriptions":["connect"],"hooks":["db_write","htlc_accepted","custommsg"],"featurebits":{},"notifications":[{"method":"user_saved","description":"User was saved"}]}`
+	want := `{"options":[{"name":"flag1","type":"string","default":"string","description":"Flag 1 option (string)"},{"name":"flag2","type":"bool","default":true,"description":"Flag 2 option (bool)"}],"rpcmethods":[{"name":"get_user","description":"Get user entry","usage":""},{"name":"save_user","description":"Save user entry","usage":""}],"dynamic":false,"subscriptions":["connect"],"hooks":["custommsg","db_write","htlc_accepted"],"featurebits":{},"notifications":[{"method":"user_saved","description":"User was saved"}]}`
 	if string(got) != want {
 		t.Fatalf("manifest JSON mismatch\nwant: %s\n got: %s", want, got)
 	}

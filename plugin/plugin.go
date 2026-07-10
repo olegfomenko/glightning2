@@ -12,36 +12,47 @@ type RPCHandler func(json.RawMessage) (any, error)
 // EventHandler handles a raw event notification sent to a plugin.
 type EventHandler func(json.RawMessage) error
 
-// HookHandler handles a typed Core Lightning hook request.
-type HookHandler[T any] func(T) (any, error)
+// HookHandler handles a Core Lightning hook request.
+type HookHandler func(json.RawMessage) (any, error)
 
-type rpcMethod struct {
-	manifest RPCMethod
+type RPCMethod struct {
+	manifest ManifestRPCMethod
 	handler  RPCHandler
 }
 
-type eventSubscription struct {
-	name    string
-	handler EventHandler
+type HookMethod struct {
+	manifest ManifestHook
+	handler  HookHandler
 }
 
-type hookSubscription struct {
-	name    string
-	handler any
+type pluginDeclarations struct {
+	options       []Option
+	notifications []Notification
+	subscriptions []string
+	rpcMethods    map[string]ManifestRPCMethod
+	hooks         map[string]ManifestHook
 }
 
 // Plugin defines a Core Lightning plugin.
 type Plugin struct {
-	options       []Option
-	rpcMethods    []rpcMethod
-	events        []eventSubscription
-	hooks         []hookSubscription
-	notifications []Notification
+	declarations *pluginDeclarations
+
+	rpcMethods map[string]RPCHandler
+	events     map[string]EventHandler
+	hooks      map[string]HookHandler
 }
 
 // NewPlugin creates an empty Core Lightning plugin definition.
 func NewPlugin() *Plugin {
-	return &Plugin{}
+	return &Plugin{
+		declarations: &pluginDeclarations{
+			rpcMethods: make(map[string]ManifestRPCMethod),
+			hooks:      make(map[string]ManifestHook),
+		},
+		rpcMethods: make(map[string]RPCHandler),
+		events:     make(map[string]EventHandler),
+		hooks:      make(map[string]HookHandler),
+	}
 }
 
 // AddStringOption adds a string option to the plugin manifest.
@@ -71,39 +82,35 @@ func (p *Plugin) AddFlagOption(name, description string) *Plugin {
 
 // AddOption adds an option to the plugin manifest.
 func (p *Plugin) AddOption(option Option) *Plugin {
-	p.options = append(p.options, option)
+	p.declarations.options = append(p.declarations.options, option)
 	return p
 }
 
 // AddRPCMethod adds a plugin JSON-RPC method.
 func (p *Plugin) AddRPCMethod(name, description string, handler RPCHandler) *Plugin {
-	return p.AddRPCMethodWithManifest(RPCMethod{
+	return p.AddRPCMethodWithManifest(ManifestRPCMethod{
 		Name:        name,
 		Description: description,
 	}, handler)
 }
 
 // AddRPCMethodWithManifest adds a plugin JSON-RPC method with an explicit manifest entry.
-func (p *Plugin) AddRPCMethodWithManifest(method RPCMethod, handler RPCHandler) *Plugin {
-	p.rpcMethods = append(p.rpcMethods, rpcMethod{
-		manifest: method,
-		handler:  handler,
-	})
+func (p *Plugin) AddRPCMethodWithManifest(method ManifestRPCMethod, handler RPCHandler) *Plugin {
+	p.rpcMethods[method.Name] = handler
+	p.declarations.rpcMethods[method.Name] = method
 	return p
 }
 
 // SubscribeEvent subscribes to an event notification.
 func (p *Plugin) SubscribeEvent(name string, handler EventHandler) *Plugin {
-	p.events = append(p.events, eventSubscription{
-		name:    name,
-		handler: handler,
-	})
+	p.events[name] = handler
+	p.declarations.subscriptions = append(p.declarations.subscriptions, name)
 	return p
 }
 
 // AddNotification adds a custom notification topic the plugin can emit.
 func (p *Plugin) AddNotification(method, description string) *Plugin {
-	p.notifications = append(p.notifications, Notification{
+	p.declarations.notifications = append(p.declarations.notifications, Notification{
 		Method:      method,
 		Description: description,
 	})
@@ -111,168 +118,282 @@ func (p *Plugin) AddNotification(method, description string) *Plugin {
 }
 
 // SubscribePeerConnected subscribes to the peer_connected hook.
-func (p *Plugin) SubscribePeerConnected(handler HookHandler[clnrpc.PeerConnected]) *Plugin {
-	p.hooks = append(p.hooks, hookSubscription{
-		name:    "peer_connected",
-		handler: handler,
-	})
+func (p *Plugin) SubscribePeerConnected(handler func(clnrpc.PeerConnected) (any, error)) *Plugin {
+	p.SubscribeHook(
+		ManifestHook{
+			Name: "peer_connected",
+		},
+		func(message json.RawMessage) (any, error) {
+			var hook clnrpc.PeerConnected
+			if err := json.Unmarshal(message, &hook); err != nil {
+				return nil, err
+			}
+			return handler(hook)
+		},
+	)
 	return p
 }
 
 // SubscribeRecover subscribes to the recover hook.
-func (p *Plugin) SubscribeRecover(handler HookHandler[clnrpc.RecoverHook]) *Plugin {
-	p.hooks = append(p.hooks, hookSubscription{
-		name:    "recover",
-		handler: handler,
-	})
+func (p *Plugin) SubscribeRecover(handler func(clnrpc.RecoverHook) (any, error)) *Plugin {
+	p.SubscribeHook(
+		ManifestHook{
+			Name: "recover",
+		},
+		func(message json.RawMessage) (any, error) {
+			var hook clnrpc.RecoverHook
+			if err := json.Unmarshal(message, &hook); err != nil {
+				return nil, err
+			}
+			return handler(hook)
+		},
+	)
 	return p
 }
 
 // SubscribeCommitmentRevocation subscribes to the commitment_revocation hook.
-func (p *Plugin) SubscribeCommitmentRevocation(handler HookHandler[clnrpc.CommitmentRevocation]) *Plugin {
-	p.hooks = append(p.hooks, hookSubscription{
-		name:    "commitment_revocation",
-		handler: handler,
-	})
+func (p *Plugin) SubscribeCommitmentRevocation(handler func(clnrpc.CommitmentRevocation) (any, error)) *Plugin {
+	p.SubscribeHook(
+		ManifestHook{
+			Name: "commitment_revocation",
+		},
+		func(message json.RawMessage) (any, error) {
+			var hook clnrpc.CommitmentRevocation
+			if err := json.Unmarshal(message, &hook); err != nil {
+				return nil, err
+			}
+			return handler(hook)
+		},
+	)
 	return p
 }
 
 // SubscribeDBWrite subscribes to the db_write hook.
-func (p *Plugin) SubscribeDBWrite(handler HookHandler[clnrpc.DBWrite]) *Plugin {
-	p.hooks = append(p.hooks, hookSubscription{
-		name:    "db_write",
-		handler: handler,
-	})
+func (p *Plugin) SubscribeDBWrite(handler func(clnrpc.DBWrite) (any, error)) *Plugin {
+	p.SubscribeHook(
+		ManifestHook{
+			Name: "db_write",
+		},
+		func(message json.RawMessage) (any, error) {
+			var hook clnrpc.DBWrite
+			if err := json.Unmarshal(message, &hook); err != nil {
+				return nil, err
+			}
+			return handler(hook)
+		},
+	)
 	return p
 }
 
 // SubscribeInvoicePayment subscribes to the invoice_payment hook.
-func (p *Plugin) SubscribeInvoicePayment(handler HookHandler[clnrpc.InvoicePaymentHook]) *Plugin {
-	p.hooks = append(p.hooks, hookSubscription{
-		name:    "invoice_payment",
-		handler: handler,
-	})
+func (p *Plugin) SubscribeInvoicePayment(handler func(clnrpc.InvoicePaymentHook) (any, error)) *Plugin {
+	p.SubscribeHook(
+		ManifestHook{
+			Name: "invoice_payment",
+		},
+		func(message json.RawMessage) (any, error) {
+			var hook clnrpc.InvoicePaymentHook
+			if err := json.Unmarshal(message, &hook); err != nil {
+				return nil, err
+			}
+			return handler(hook)
+		},
+	)
 	return p
 }
 
 // SubscribeOpenchannel subscribes to the openchannel hook.
-func (p *Plugin) SubscribeOpenchannel(handler HookHandler[clnrpc.Openchannel]) *Plugin {
-	p.hooks = append(p.hooks, hookSubscription{
-		name:    "openchannel",
-		handler: handler,
-	})
+func (p *Plugin) SubscribeOpenchannel(handler func(clnrpc.Openchannel) (any, error)) *Plugin {
+	p.SubscribeHook(
+		ManifestHook{
+			Name: "openchannel",
+		},
+		func(message json.RawMessage) (any, error) {
+			var hook clnrpc.Openchannel
+			if err := json.Unmarshal(message, &hook); err != nil {
+				return nil, err
+			}
+			return handler(hook)
+		},
+	)
 	return p
 }
 
 // SubscribeOpenchannel2 subscribes to the openchannel2 hook.
-func (p *Plugin) SubscribeOpenchannel2(handler HookHandler[clnrpc.Openchannel2]) *Plugin {
-	p.hooks = append(p.hooks, hookSubscription{
-		name:    "openchannel2",
-		handler: handler,
-	})
+func (p *Plugin) SubscribeOpenchannel2(handler func(clnrpc.Openchannel2) (any, error)) *Plugin {
+	p.SubscribeHook(
+		ManifestHook{
+			Name: "openchannel2",
+		},
+		func(message json.RawMessage) (any, error) {
+			var hook clnrpc.Openchannel2
+			if err := json.Unmarshal(message, &hook); err != nil {
+				return nil, err
+			}
+			return handler(hook)
+		},
+	)
 	return p
 }
 
 // SubscribeOpenchannel2Changed subscribes to the openchannel2_changed hook.
-func (p *Plugin) SubscribeOpenchannel2Changed(handler HookHandler[clnrpc.Openchannel2Changed]) *Plugin {
-	p.hooks = append(p.hooks, hookSubscription{
-		name:    "openchannel2_changed",
-		handler: handler,
-	})
+func (p *Plugin) SubscribeOpenchannel2Changed(handler func(clnrpc.Openchannel2Changed) (any, error)) *Plugin {
+	p.SubscribeHook(
+		ManifestHook{
+			Name: "openchannel2_changed",
+		},
+		func(message json.RawMessage) (any, error) {
+			var hook clnrpc.Openchannel2Changed
+			if err := json.Unmarshal(message, &hook); err != nil {
+				return nil, err
+			}
+			return handler(hook)
+		},
+	)
 	return p
 }
 
 // SubscribeOpenchannel2Sign subscribes to the openchannel2_sign hook.
-func (p *Plugin) SubscribeOpenchannel2Sign(handler HookHandler[clnrpc.Openchannel2Sign]) *Plugin {
-	p.hooks = append(p.hooks, hookSubscription{
-		name:    "openchannel2_sign",
-		handler: handler,
-	})
+func (p *Plugin) SubscribeOpenchannel2Sign(handler func(clnrpc.Openchannel2Sign) (any, error)) *Plugin {
+	p.SubscribeHook(
+		ManifestHook{
+			Name: "openchannel2_sign",
+		},
+		func(message json.RawMessage) (any, error) {
+			var hook clnrpc.Openchannel2Sign
+			if err := json.Unmarshal(message, &hook); err != nil {
+				return nil, err
+			}
+			return handler(hook)
+		},
+	)
 	return p
 }
 
 // SubscribeRbfChannel subscribes to the rbf_channel hook.
-func (p *Plugin) SubscribeRbfChannel(handler HookHandler[clnrpc.RbfChannel]) *Plugin {
-	p.hooks = append(p.hooks, hookSubscription{
-		name:    "rbf_channel",
-		handler: handler,
-	})
+func (p *Plugin) SubscribeRbfChannel(handler func(clnrpc.RbfChannel) (any, error)) *Plugin {
+	p.SubscribeHook(
+		ManifestHook{
+			Name: "rbf_channel",
+		},
+		func(message json.RawMessage) (any, error) {
+			var hook clnrpc.RbfChannel
+			if err := json.Unmarshal(message, &hook); err != nil {
+				return nil, err
+			}
+			return handler(hook)
+		},
+	)
 	return p
 }
 
 // SubscribeHTLCAccepted subscribes to the htlc_accepted hook.
-func (p *Plugin) SubscribeHTLCAccepted(handler HookHandler[clnrpc.HTLCAccepted]) *Plugin {
-	p.hooks = append(p.hooks, hookSubscription{
-		name:    "htlc_accepted",
-		handler: handler,
-	})
+func (p *Plugin) SubscribeHTLCAccepted(handler func(clnrpc.HTLCAccepted) (any, error)) *Plugin {
+	p.SubscribeHook(
+		ManifestHook{
+			Name: "htlc_accepted",
+		},
+		func(message json.RawMessage) (any, error) {
+			var hook clnrpc.HTLCAccepted
+			if err := json.Unmarshal(message, &hook); err != nil {
+				return nil, err
+			}
+			return handler(hook)
+		},
+	)
 	return p
 }
 
 // SubscribeRPCCommand subscribes to the rpc_command hook.
-func (p *Plugin) SubscribeRPCCommand(handler HookHandler[clnrpc.RPCCommand]) *Plugin {
-	p.hooks = append(p.hooks, hookSubscription{
-		name:    "rpc_command",
-		handler: handler,
-	})
+func (p *Plugin) SubscribeRPCCommand(handler func(clnrpc.RPCCommand) (any, error)) *Plugin {
+	p.SubscribeHook(
+		ManifestHook{
+			Name: "rpc_command",
+		},
+		func(message json.RawMessage) (any, error) {
+			var hook clnrpc.RPCCommand
+			if err := json.Unmarshal(message, &hook); err != nil {
+				return nil, err
+			}
+			return handler(hook)
+		},
+	)
 	return p
 }
 
 // SubscribeCustommsg subscribes to the custommsg hook.
-func (p *Plugin) SubscribeCustommsg(handler HookHandler[clnrpc.CustommsgHook]) *Plugin {
-	p.hooks = append(p.hooks, hookSubscription{
-		name:    "custommsg",
-		handler: handler,
-	})
+func (p *Plugin) SubscribeCustommsg(handler func(clnrpc.CustommsgHook) (any, error)) *Plugin {
+	p.SubscribeHook(
+		ManifestHook{
+			Name: "custommsg",
+		},
+		func(message json.RawMessage) (any, error) {
+			var hook clnrpc.CustommsgHook
+			if err := json.Unmarshal(message, &hook); err != nil {
+				return nil, err
+			}
+			return handler(hook)
+		},
+	)
 	return p
 }
 
 // SubscribeOnionMessageRecv subscribes to the onion_message_recv hook.
-func (p *Plugin) SubscribeOnionMessageRecv(handler HookHandler[clnrpc.OnionMessageRecv]) *Plugin {
-	p.hooks = append(p.hooks, hookSubscription{
-		name:    "onion_message_recv",
-		handler: handler,
-	})
+func (p *Plugin) SubscribeOnionMessageRecv(handler func(clnrpc.OnionMessageRecv) (any, error)) *Plugin {
+	p.SubscribeHook(
+		ManifestHook{
+			Name: "onion_message_recv",
+		},
+		func(message json.RawMessage) (any, error) {
+			var hook clnrpc.OnionMessageRecv
+			if err := json.Unmarshal(message, &hook); err != nil {
+				return nil, err
+			}
+			return handler(hook)
+		},
+	)
 	return p
 }
 
 // SubscribeOnionMessageRecvSecret subscribes to the onion_message_recv_secret hook.
-func (p *Plugin) SubscribeOnionMessageRecvSecret(handler HookHandler[clnrpc.OnionMessageRecvSecret]) *Plugin {
-	p.hooks = append(p.hooks, hookSubscription{
-		name:    "onion_message_recv_secret",
-		handler: handler,
-	})
+func (p *Plugin) SubscribeOnionMessageRecvSecret(handler func(clnrpc.OnionMessageRecvSecret) (any, error)) *Plugin {
+	p.SubscribeHook(
+		ManifestHook{
+			Name: "onion_message_recv_secret",
+		},
+		func(message json.RawMessage) (any, error) {
+			var hook clnrpc.OnionMessageRecvSecret
+			if err := json.Unmarshal(message, &hook); err != nil {
+				return nil, err
+			}
+			return handler(hook)
+		},
+	)
 	return p
 }
 
-func (p *Plugin) SubscribeHook(name string, handler any) *Plugin {
-	p.hooks = append(p.hooks, hookSubscription{
-		name:    name,
-		handler: handler,
-	})
+func (p *Plugin) SubscribeHook(manifest ManifestHook, handler HookHandler) *Plugin {
+	p.hooks[manifest.Name] = handler
+	p.declarations.hooks[manifest.Name] = manifest
 	return p
 }
 
 // Manifest builds the plugin getmanifest response from registered handlers and metadata.
-func (p *Plugin) Manifest() Manifest {
+func (p *pluginDeclarations) Manifest() Manifest {
 	manifest := Manifest{
 		Options:       append([]Option(nil), p.options...),
-		RPCMethods:    make([]RPCMethod, 0, len(p.rpcMethods)),
-		Subscriptions: make([]string, 0, len(p.events)),
-		Hooks:         make([]Hook, 0, len(p.hooks)),
+		RPCMethods:    make([]ManifestRPCMethod, 0, len(p.rpcMethods)),
+		Subscriptions: p.subscriptions,
+		Hooks:         make([]ManifestHook, 0, len(p.hooks)),
 		Notifications: append([]Notification(nil), p.notifications...),
 	}
 
 	for _, method := range p.rpcMethods {
-		manifest.RPCMethods = append(manifest.RPCMethods, method.manifest)
-	}
-
-	for _, event := range p.events {
-		manifest.Subscriptions = append(manifest.Subscriptions, event.name)
+		manifest.RPCMethods = append(manifest.RPCMethods, method)
 	}
 
 	for _, hook := range p.hooks {
-		manifest.Hooks = append(manifest.Hooks, NewHook(hook.name))
+		manifest.Hooks = append(manifest.Hooks, hook)
 	}
 
 	return manifest

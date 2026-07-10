@@ -83,8 +83,8 @@ func NewFlagOption(name, description string) Option {
 	}
 }
 
-// RPCMethod describes a JSON-RPC method implemented by a plugin.
-type RPCMethod struct {
+// ManifestRPCMethod describes a JSON-RPC method implemented by a plugin.
+type ManifestRPCMethod struct {
 	Name            string `json:"name"`
 	Description     string `json:"description,omitempty"`
 	Usage           string `json:"usage"`
@@ -93,21 +93,12 @@ type RPCMethod struct {
 	Deprecated      any    `json:"deprecated,omitempty"`
 }
 
-// NewRPCMethod creates a plugin JSON-RPC method description.
-func NewRPCMethod(name, usage, description string) RPCMethod {
-	return RPCMethod{
-		Name:        name,
-		Usage:       usage,
-		Description: description,
-	}
-}
-
-// Hook describes a Core Lightning plugin hook subscription.
+// ManifestHook describes a Core Lightning plugin hook subscription.
 //
 // A hook with only Name set is marshaled as a plain string, matching the older
 // glightning manifest format. Hooks with ordering or filters are marshaled as
 // objects, matching the current Core Lightning manifest format.
-type Hook struct {
+type ManifestHook struct {
 	Name    string   `json:"name"`
 	Before  []string `json:"before,omitempty"`
 	After   []string `json:"after,omitempty"`
@@ -115,17 +106,17 @@ type Hook struct {
 }
 
 // NewHook creates a simple hook subscription.
-func NewHook(name string) Hook {
-	return Hook{Name: name}
+func NewHook(name string) ManifestHook {
+	return ManifestHook{Name: name}
 }
 
 // MarshalJSON emits simple hooks as strings and extended hooks as objects.
-func (h Hook) MarshalJSON() ([]byte, error) {
+func (h ManifestHook) MarshalJSON() ([]byte, error) {
 	if len(h.Before) == 0 && len(h.After) == 0 && len(h.Filters) == 0 {
 		return json.Marshal(h.Name)
 	}
 
-	type hook Hook
+	type hook ManifestHook
 	return json.Marshal(hook(h))
 }
 
@@ -145,26 +136,17 @@ type Notification struct {
 
 // Manifest is the response returned by a plugin's getmanifest method.
 type Manifest struct {
-	Options        []Option       `json:"options"`
-	RPCMethods     []RPCMethod    `json:"rpcmethods"`
-	Dynamic        bool           `json:"dynamic"`
-	Subscriptions  []string       `json:"subscriptions,omitempty"`
-	Hooks          []Hook         `json:"hooks,omitempty"`
-	FeatureBits    FeatureBits    `json:"featurebits"`
-	Notifications  []Notification `json:"notifications,omitempty"`
-	CustomMessages []uint16       `json:"custommessages,omitempty"`
-	NonNumericIDs  bool           `json:"nonnumericids,omitempty"`
-	CanCheck       bool           `json:"cancheck,omitempty"`
-	Disable        string         `json:"disable,omitempty"`
-}
-
-// NewManifest creates a dynamic plugin manifest with empty options and methods.
-func NewManifest() Manifest {
-	return Manifest{
-		Options:    []Option{},
-		RPCMethods: []RPCMethod{},
-		Dynamic:    true,
-	}
+	Options        []Option            `json:"options"`
+	RPCMethods     []ManifestRPCMethod `json:"rpcmethods"`
+	Dynamic        bool                `json:"dynamic"`
+	Subscriptions  []string            `json:"subscriptions,omitempty"`
+	Hooks          []ManifestHook      `json:"hooks,omitempty"`
+	FeatureBits    FeatureBits         `json:"featurebits"`
+	Notifications  []Notification      `json:"notifications,omitempty"`
+	CustomMessages []uint16            `json:"custommessages,omitempty"`
+	NonNumericIDs  bool                `json:"nonnumericids,omitempty"`
+	CanCheck       bool                `json:"cancheck,omitempty"`
+	Disable        string              `json:"disable,omitempty"`
 }
 
 // MarshalJSON keeps options and rpcmethods as arrays even when the manifest was
@@ -177,7 +159,7 @@ func (m Manifest) MarshalJSON() ([]byte, error) {
 		out.Options = []Option{}
 	}
 	if out.RPCMethods == nil {
-		out.RPCMethods = []RPCMethod{}
+		out.RPCMethods = []ManifestRPCMethod{}
 	}
 
 	return json.Marshal(out)
