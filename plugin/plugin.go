@@ -1,16 +1,17 @@
 package plugin
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/olegfomenko/glightning2/clnrpc"
 )
 
 // RequestHandler handles a raw JSON-RPC request sent to a plugin method.
-type RequestHandler func(json.RawMessage) (any, error)
+type RequestHandler func(context.Context, json.RawMessage) (any, error)
 
 // NotificationHandler handles a raw JSON-RPC notification sent to a plugin method.
-type NotificationHandler func(json.RawMessage) error
+type NotificationHandler func(context.Context, json.RawMessage) error
 
 type pluginDeclarations struct {
 	options       []Option
@@ -102,7 +103,7 @@ func (p *Plugin) AddNotification(method, description string) *Plugin {
 }
 
 // SubscribePeerConnected subscribes to the peer_connected hook.
-func (p *Plugin) SubscribePeerConnected(handler func(clnrpc.PeerConnected) (any, error)) *Plugin {
+func (p *Plugin) SubscribePeerConnected(handler func(context.Context, clnrpc.PeerConnected) (any, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "peer_connected",
@@ -113,7 +114,7 @@ func (p *Plugin) SubscribePeerConnected(handler func(clnrpc.PeerConnected) (any,
 }
 
 // SubscribeRecover subscribes to the recover hook.
-func (p *Plugin) SubscribeRecover(handler func(clnrpc.RecoverHook) (any, error)) *Plugin {
+func (p *Plugin) SubscribeRecover(handler func(context.Context, clnrpc.RecoverHook) (any, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "recover",
@@ -124,7 +125,7 @@ func (p *Plugin) SubscribeRecover(handler func(clnrpc.RecoverHook) (any, error))
 }
 
 // SubscribeCommitmentRevocation subscribes to the commitment_revocation hook.
-func (p *Plugin) SubscribeCommitmentRevocation(handler func(clnrpc.CommitmentRevocation) (any, error)) *Plugin {
+func (p *Plugin) SubscribeCommitmentRevocation(handler func(context.Context, clnrpc.CommitmentRevocation) (any, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "commitment_revocation",
@@ -135,7 +136,7 @@ func (p *Plugin) SubscribeCommitmentRevocation(handler func(clnrpc.CommitmentRev
 }
 
 // SubscribeDBWrite subscribes to the db_write hook.
-func (p *Plugin) SubscribeDBWrite(handler func(clnrpc.DBWrite) (any, error)) *Plugin {
+func (p *Plugin) SubscribeDBWrite(handler func(context.Context, clnrpc.DBWrite) (any, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "db_write",
@@ -146,7 +147,7 @@ func (p *Plugin) SubscribeDBWrite(handler func(clnrpc.DBWrite) (any, error)) *Pl
 }
 
 // SubscribeInvoicePayment subscribes to the invoice_payment hook.
-func (p *Plugin) SubscribeInvoicePayment(handler func(clnrpc.InvoicePaymentHook) (any, error)) *Plugin {
+func (p *Plugin) SubscribeInvoicePayment(handler func(context.Context, clnrpc.InvoicePaymentHook) (any, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "invoice_payment",
@@ -157,7 +158,7 @@ func (p *Plugin) SubscribeInvoicePayment(handler func(clnrpc.InvoicePaymentHook)
 }
 
 // SubscribeOpenchannel subscribes to the openchannel hook.
-func (p *Plugin) SubscribeOpenchannel(handler func(clnrpc.Openchannel) (any, error)) *Plugin {
+func (p *Plugin) SubscribeOpenchannel(handler func(context.Context, clnrpc.Openchannel) (any, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "openchannel",
@@ -168,7 +169,7 @@ func (p *Plugin) SubscribeOpenchannel(handler func(clnrpc.Openchannel) (any, err
 }
 
 // SubscribeOpenchannel2 subscribes to the openchannel2 hook.
-func (p *Plugin) SubscribeOpenchannel2(handler func(clnrpc.Openchannel2) (any, error)) *Plugin {
+func (p *Plugin) SubscribeOpenchannel2(handler func(context.Context, clnrpc.Openchannel2) (any, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "openchannel2",
@@ -179,7 +180,7 @@ func (p *Plugin) SubscribeOpenchannel2(handler func(clnrpc.Openchannel2) (any, e
 }
 
 // SubscribeOpenchannel2Changed subscribes to the openchannel2_changed hook.
-func (p *Plugin) SubscribeOpenchannel2Changed(handler func(clnrpc.Openchannel2Changed) (any, error)) *Plugin {
+func (p *Plugin) SubscribeOpenchannel2Changed(handler func(context.Context, clnrpc.Openchannel2Changed) (any, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "openchannel2_changed",
@@ -190,7 +191,7 @@ func (p *Plugin) SubscribeOpenchannel2Changed(handler func(clnrpc.Openchannel2Ch
 }
 
 // SubscribeOpenchannel2Sign subscribes to the openchannel2_sign hook.
-func (p *Plugin) SubscribeOpenchannel2Sign(handler func(clnrpc.Openchannel2Sign) (any, error)) *Plugin {
+func (p *Plugin) SubscribeOpenchannel2Sign(handler func(context.Context, clnrpc.Openchannel2Sign) (any, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "openchannel2_sign",
@@ -201,7 +202,7 @@ func (p *Plugin) SubscribeOpenchannel2Sign(handler func(clnrpc.Openchannel2Sign)
 }
 
 // SubscribeRbfChannel subscribes to the rbf_channel hook.
-func (p *Plugin) SubscribeRbfChannel(handler func(clnrpc.RbfChannel) (any, error)) *Plugin {
+func (p *Plugin) SubscribeRbfChannel(handler func(context.Context, clnrpc.RbfChannel) (any, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "rbf_channel",
@@ -212,7 +213,7 @@ func (p *Plugin) SubscribeRbfChannel(handler func(clnrpc.RbfChannel) (any, error
 }
 
 // SubscribeHTLCAccepted subscribes to the htlc_accepted hook.
-func (p *Plugin) SubscribeHTLCAccepted(handler func(clnrpc.HTLCAccepted) (any, error)) *Plugin {
+func (p *Plugin) SubscribeHTLCAccepted(handler func(context.Context, clnrpc.HTLCAccepted) (any, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "htlc_accepted",
@@ -223,7 +224,7 @@ func (p *Plugin) SubscribeHTLCAccepted(handler func(clnrpc.HTLCAccepted) (any, e
 }
 
 // SubscribeRPCCommand subscribes to the rpc_command hook.
-func (p *Plugin) SubscribeRPCCommand(handler func(clnrpc.RPCCommand) (any, error)) *Plugin {
+func (p *Plugin) SubscribeRPCCommand(handler func(context.Context, clnrpc.RPCCommand) (any, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "rpc_command",
@@ -234,7 +235,7 @@ func (p *Plugin) SubscribeRPCCommand(handler func(clnrpc.RPCCommand) (any, error
 }
 
 // SubscribeCustommsg subscribes to the custommsg hook.
-func (p *Plugin) SubscribeCustommsg(handler func(clnrpc.CustommsgHook) (any, error)) *Plugin {
+func (p *Plugin) SubscribeCustommsg(handler func(context.Context, clnrpc.CustommsgHook) (any, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "custommsg",
@@ -245,7 +246,7 @@ func (p *Plugin) SubscribeCustommsg(handler func(clnrpc.CustommsgHook) (any, err
 }
 
 // SubscribeOnionMessageRecv subscribes to the onion_message_recv hook.
-func (p *Plugin) SubscribeOnionMessageRecv(handler func(clnrpc.OnionMessageRecv) (any, error)) *Plugin {
+func (p *Plugin) SubscribeOnionMessageRecv(handler func(context.Context, clnrpc.OnionMessageRecv) (any, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "onion_message_recv",
@@ -256,7 +257,7 @@ func (p *Plugin) SubscribeOnionMessageRecv(handler func(clnrpc.OnionMessageRecv)
 }
 
 // SubscribeOnionMessageRecvSecret subscribes to the onion_message_recv_secret hook.
-func (p *Plugin) SubscribeOnionMessageRecvSecret(handler func(clnrpc.OnionMessageRecvSecret) (any, error)) *Plugin {
+func (p *Plugin) SubscribeOnionMessageRecvSecret(handler func(context.Context, clnrpc.OnionMessageRecvSecret) (any, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "onion_message_recv_secret",
@@ -293,12 +294,12 @@ func (p *pluginDeclarations) Manifest() Manifest {
 	return manifest
 }
 
-func unmarshallAndHandle[T any](handler func(T) (any, error)) func(json.RawMessage) (any, error) {
-	return func(message json.RawMessage) (any, error) {
+func unmarshallAndHandle[T any](handler func(context.Context, T) (any, error)) RequestHandler {
+	return func(ctx context.Context, message json.RawMessage) (any, error) {
 		var hook T
 		if err := json.Unmarshal(message, &hook); err != nil {
 			return nil, err
 		}
-		return handler(hook)
+		return handler(ctx, hook)
 	}
 }

@@ -1,6 +1,7 @@
 package plugin
 
 import (
+	"context"
 	"encoding/json"
 	"sort"
 	"testing"
@@ -9,13 +10,13 @@ import (
 )
 
 func TestPluginManifest(t *testing.T) {
-	getUser := func(json.RawMessage) (any, error) {
+	getUser := func(context.Context, json.RawMessage) (any, error) {
 		return nil, nil
 	}
-	onConnect := func(json.RawMessage) error {
+	onConnect := func(context.Context, json.RawMessage) error {
 		return nil
 	}
-	onDBWrite := func(clnrpc.DBWrite) (any, error) {
+	onDBWrite := func(context.Context, clnrpc.DBWrite) (any, error) {
 		return nil, nil
 	}
 
@@ -23,15 +24,15 @@ func TestPluginManifest(t *testing.T) {
 		AddStringOption("flag1", "Flag 1 option (string)", "string").
 		AddBoolOption("flag2", "Flag 2 option (bool)", true).
 		AddRPCMethod("get_user", "Get user entry", getUser).
-		AddRPCMethod("save_user", "Save user entry", func(json.RawMessage) (any, error) {
+		AddRPCMethod("save_user", "Save user entry", func(context.Context, json.RawMessage) (any, error) {
 			return nil, nil
 		}).
 		SubscribeEvent("connect", onConnect).
 		SubscribeDBWrite(onDBWrite).
-		SubscribeHTLCAccepted(func(clnrpc.HTLCAccepted) (any, error) {
+		SubscribeHTLCAccepted(func(context.Context, clnrpc.HTLCAccepted) (any, error) {
 			return nil, nil
 		}).
-		SubscribeCustommsg(func(clnrpc.CustommsgHook) (any, error) {
+		SubscribeCustommsg(func(context.Context, clnrpc.CustommsgHook) (any, error) {
 			return nil, nil
 		}).
 		AddNotification("user_saved", "User was saved")

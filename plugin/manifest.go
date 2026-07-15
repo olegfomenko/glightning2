@@ -105,11 +105,6 @@ type ManifestHook struct {
 	Filters []any    `json:"filters,omitempty"`
 }
 
-// NewHook creates a simple hook subscription.
-func NewHook(name string) ManifestHook {
-	return ManifestHook{Name: name}
-}
-
 // MarshalJSON emits simple hooks as strings and extended hooks as objects.
 func (h ManifestHook) MarshalJSON() ([]byte, error) {
 	if len(h.Before) == 0 && len(h.After) == 0 && len(h.Filters) == 0 {
