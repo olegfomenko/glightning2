@@ -115,6 +115,23 @@ func (h ManifestHook) MarshalJSON() ([]byte, error) {
 	return json.Marshal(hook(h))
 }
 
+// UnmarshalJSON accepts both the simple hook name and extended hook object forms.
+func (h *ManifestHook) UnmarshalJSON(data []byte) error {
+	var name string
+	if err := json.Unmarshal(data, &name); err == nil {
+		*h = ManifestHook{Name: name}
+		return nil
+	}
+
+	type hook ManifestHook
+	var value hook
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*h = ManifestHook(value)
+	return nil
+}
+
 // FeatureBits contains feature bitsets announced by a plugin.
 type FeatureBits struct {
 	Node    string `json:"node,omitempty"`

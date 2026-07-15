@@ -3,12 +3,26 @@ package plugin
 import (
 	"context"
 	"encoding/json"
+	"runtime"
 
 	"github.com/olegfomenko/glightning2/clnrpc"
 )
 
+// DefaultMaxIntakeBuffer defines the default line size limit for input stream scanner.
+//
+// Following commit 258753fc in ElementsProject/glightning:
+// """
+// We don't expect to get gigantic inputs (like the client gets),
+// but just in case we should use a larger max buffer size. Now can
+// group up to 500MB.
+//
+// Note that it resets to the smaller, original buffer size (in this case
+// 1Kb) on every scan re-start
+// """
+const DefaultMaxIntakeBuffer = 500 * 1024 * 1024
+
 // RequestHandler handles a raw JSON-RPC request sent to a plugin method.
-type RequestHandler func(context.Context, json.RawMessage) (any, error)
+type RequestHandler func(context.Context, json.RawMessage) (json.RawMessage, error)
 
 // NotificationHandler handles a raw JSON-RPC notification sent to a plugin method.
 type NotificationHandler func(context.Context, json.RawMessage) error
@@ -26,6 +40,17 @@ type Plugin struct {
 	declarations         *pluginDeclarations
 	requestHandlers      map[string]RequestHandler
 	notificationHandlers map[string]NotificationHandler
+	optionValues         map[string]json.RawMessage
+
+	configuration Configuration
+
+	// MaxIntakeBuffer configures the line size limit for input stream scanner.
+	// The default value is 500MB.
+	MaxIntakeBuffer int
+
+	// MaxConcurrentRequests limits the number of request processed at the same time.
+	// Default is runtime.NumCPU()
+	MaxConcurrentRequests int
 }
 
 // NewPlugin creates an empty Core Lightning plugin definition.
@@ -37,6 +62,9 @@ func NewPlugin() *Plugin {
 		},
 		requestHandlers:      make(map[string]RequestHandler),
 		notificationHandlers: make(map[string]NotificationHandler),
+
+		MaxIntakeBuffer:       DefaultMaxIntakeBuffer,
+		MaxConcurrentRequests: runtime.NumCPU(),
 	}
 }
 
@@ -103,7 +131,7 @@ func (p *Plugin) AddNotification(method, description string) *Plugin {
 }
 
 // SubscribePeerConnected subscribes to the peer_connected hook.
-func (p *Plugin) SubscribePeerConnected(handler func(context.Context, clnrpc.PeerConnected) (any, error)) *Plugin {
+func (p *Plugin) SubscribePeerConnected(handler func(context.Context, clnrpc.PeerConnected) (json.RawMessage, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "peer_connected",
@@ -114,7 +142,7 @@ func (p *Plugin) SubscribePeerConnected(handler func(context.Context, clnrpc.Pee
 }
 
 // SubscribeRecover subscribes to the recover hook.
-func (p *Plugin) SubscribeRecover(handler func(context.Context, clnrpc.RecoverHook) (any, error)) *Plugin {
+func (p *Plugin) SubscribeRecover(handler func(context.Context, clnrpc.RecoverHook) (json.RawMessage, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "recover",
@@ -125,7 +153,7 @@ func (p *Plugin) SubscribeRecover(handler func(context.Context, clnrpc.RecoverHo
 }
 
 // SubscribeCommitmentRevocation subscribes to the commitment_revocation hook.
-func (p *Plugin) SubscribeCommitmentRevocation(handler func(context.Context, clnrpc.CommitmentRevocation) (any, error)) *Plugin {
+func (p *Plugin) SubscribeCommitmentRevocation(handler func(context.Context, clnrpc.CommitmentRevocation) (json.RawMessage, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "commitment_revocation",
@@ -136,7 +164,7 @@ func (p *Plugin) SubscribeCommitmentRevocation(handler func(context.Context, cln
 }
 
 // SubscribeDBWrite subscribes to the db_write hook.
-func (p *Plugin) SubscribeDBWrite(handler func(context.Context, clnrpc.DBWrite) (any, error)) *Plugin {
+func (p *Plugin) SubscribeDBWrite(handler func(context.Context, clnrpc.DBWrite) (json.RawMessage, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "db_write",
@@ -147,7 +175,7 @@ func (p *Plugin) SubscribeDBWrite(handler func(context.Context, clnrpc.DBWrite) 
 }
 
 // SubscribeInvoicePayment subscribes to the invoice_payment hook.
-func (p *Plugin) SubscribeInvoicePayment(handler func(context.Context, clnrpc.InvoicePaymentHook) (any, error)) *Plugin {
+func (p *Plugin) SubscribeInvoicePayment(handler func(context.Context, clnrpc.InvoicePaymentHook) (json.RawMessage, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "invoice_payment",
@@ -158,7 +186,7 @@ func (p *Plugin) SubscribeInvoicePayment(handler func(context.Context, clnrpc.In
 }
 
 // SubscribeOpenchannel subscribes to the openchannel hook.
-func (p *Plugin) SubscribeOpenchannel(handler func(context.Context, clnrpc.Openchannel) (any, error)) *Plugin {
+func (p *Plugin) SubscribeOpenchannel(handler func(context.Context, clnrpc.Openchannel) (json.RawMessage, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "openchannel",
@@ -169,7 +197,7 @@ func (p *Plugin) SubscribeOpenchannel(handler func(context.Context, clnrpc.Openc
 }
 
 // SubscribeOpenchannel2 subscribes to the openchannel2 hook.
-func (p *Plugin) SubscribeOpenchannel2(handler func(context.Context, clnrpc.Openchannel2) (any, error)) *Plugin {
+func (p *Plugin) SubscribeOpenchannel2(handler func(context.Context, clnrpc.Openchannel2) (json.RawMessage, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "openchannel2",
@@ -180,7 +208,7 @@ func (p *Plugin) SubscribeOpenchannel2(handler func(context.Context, clnrpc.Open
 }
 
 // SubscribeOpenchannel2Changed subscribes to the openchannel2_changed hook.
-func (p *Plugin) SubscribeOpenchannel2Changed(handler func(context.Context, clnrpc.Openchannel2Changed) (any, error)) *Plugin {
+func (p *Plugin) SubscribeOpenchannel2Changed(handler func(context.Context, clnrpc.Openchannel2Changed) (json.RawMessage, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "openchannel2_changed",
@@ -191,7 +219,7 @@ func (p *Plugin) SubscribeOpenchannel2Changed(handler func(context.Context, clnr
 }
 
 // SubscribeOpenchannel2Sign subscribes to the openchannel2_sign hook.
-func (p *Plugin) SubscribeOpenchannel2Sign(handler func(context.Context, clnrpc.Openchannel2Sign) (any, error)) *Plugin {
+func (p *Plugin) SubscribeOpenchannel2Sign(handler func(context.Context, clnrpc.Openchannel2Sign) (json.RawMessage, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "openchannel2_sign",
@@ -202,7 +230,7 @@ func (p *Plugin) SubscribeOpenchannel2Sign(handler func(context.Context, clnrpc.
 }
 
 // SubscribeRbfChannel subscribes to the rbf_channel hook.
-func (p *Plugin) SubscribeRbfChannel(handler func(context.Context, clnrpc.RbfChannel) (any, error)) *Plugin {
+func (p *Plugin) SubscribeRbfChannel(handler func(context.Context, clnrpc.RbfChannel) (json.RawMessage, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "rbf_channel",
@@ -213,7 +241,7 @@ func (p *Plugin) SubscribeRbfChannel(handler func(context.Context, clnrpc.RbfCha
 }
 
 // SubscribeHTLCAccepted subscribes to the htlc_accepted hook.
-func (p *Plugin) SubscribeHTLCAccepted(handler func(context.Context, clnrpc.HTLCAccepted) (any, error)) *Plugin {
+func (p *Plugin) SubscribeHTLCAccepted(handler func(context.Context, clnrpc.HTLCAccepted) (json.RawMessage, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "htlc_accepted",
@@ -224,7 +252,7 @@ func (p *Plugin) SubscribeHTLCAccepted(handler func(context.Context, clnrpc.HTLC
 }
 
 // SubscribeRPCCommand subscribes to the rpc_command hook.
-func (p *Plugin) SubscribeRPCCommand(handler func(context.Context, clnrpc.RPCCommand) (any, error)) *Plugin {
+func (p *Plugin) SubscribeRPCCommand(handler func(context.Context, clnrpc.RPCCommand) (json.RawMessage, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "rpc_command",
@@ -235,7 +263,7 @@ func (p *Plugin) SubscribeRPCCommand(handler func(context.Context, clnrpc.RPCCom
 }
 
 // SubscribeCustommsg subscribes to the custommsg hook.
-func (p *Plugin) SubscribeCustommsg(handler func(context.Context, clnrpc.CustommsgHook) (any, error)) *Plugin {
+func (p *Plugin) SubscribeCustommsg(handler func(context.Context, clnrpc.CustommsgHook) (json.RawMessage, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "custommsg",
@@ -246,7 +274,7 @@ func (p *Plugin) SubscribeCustommsg(handler func(context.Context, clnrpc.Customm
 }
 
 // SubscribeOnionMessageRecv subscribes to the onion_message_recv hook.
-func (p *Plugin) SubscribeOnionMessageRecv(handler func(context.Context, clnrpc.OnionMessageRecv) (any, error)) *Plugin {
+func (p *Plugin) SubscribeOnionMessageRecv(handler func(context.Context, clnrpc.OnionMessageRecv) (json.RawMessage, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "onion_message_recv",
@@ -257,7 +285,7 @@ func (p *Plugin) SubscribeOnionMessageRecv(handler func(context.Context, clnrpc.
 }
 
 // SubscribeOnionMessageRecvSecret subscribes to the onion_message_recv_secret hook.
-func (p *Plugin) SubscribeOnionMessageRecvSecret(handler func(context.Context, clnrpc.OnionMessageRecvSecret) (any, error)) *Plugin {
+func (p *Plugin) SubscribeOnionMessageRecvSecret(handler func(context.Context, clnrpc.OnionMessageRecvSecret) (json.RawMessage, error)) *Plugin {
 	p.SubscribeHook(
 		ManifestHook{
 			Name: "onion_message_recv_secret",
@@ -294,8 +322,8 @@ func (p *pluginDeclarations) Manifest() Manifest {
 	return manifest
 }
 
-func unmarshallAndHandle[T any](handler func(context.Context, T) (any, error)) RequestHandler {
-	return func(ctx context.Context, message json.RawMessage) (any, error) {
+func unmarshallAndHandle[T any](handler func(context.Context, T) (json.RawMessage, error)) RequestHandler {
+	return func(ctx context.Context, message json.RawMessage) (json.RawMessage, error) {
 		var hook T
 		if err := json.Unmarshal(message, &hook); err != nil {
 			return nil, err

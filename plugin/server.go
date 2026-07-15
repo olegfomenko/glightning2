@@ -7,46 +7,20 @@ import (
 	"golang.org/x/exp/jsonrpc2"
 	"golang.org/x/sync/errgroup"
 	"os"
-	"runtime"
 )
 
-// DefaultMaxIntakeBuffer defines the default line size limit for input stream scanner.
-//
-// Following commit 258753fc in ElementsProject/glightning:
-// """
-// We don't expect to get gigantic inputs (like the client gets),
-// but just in case we should use a larger max buffer size. now can
-// grop up to 500MB.
-//
-// Note that it resets to the smaller, original buffer size (in this case
-// 1Kb) on every scan re-start
-// """
-const DefaultMaxIntakeBuffer = 500 * 1024 * 1024
-
-// maxIntakeBuffer is used for allow configuring of the line size limit for input stream scanner.
-// The default value is 500MB.
-var maxIntakeBuffer = DefaultMaxIntakeBuffer
-
-func SetMaxIntakeBuffer(sz int) {
-	maxIntakeBuffer = sz
-}
-
-var outChanCapacity = runtime.NumCPU()
-
-func SetOutChanCapacity(cap int) {
-	outChanCapacity = cap
-}
-
 func (p *Plugin) Start(ctx context.Context, in, out *os.File) error {
+	p.registerLifecycleMethods()
+
 	wg, ctx := errgroup.WithContext(ctx)
 
 	// Set max goroutines of processRequest to outChanCapacity
-	wg.SetLimit(outChanCapacity + 3)
+	wg.SetLimit(p.MaxConcurrentRequests + 3)
 
-	scanner := prepareScanner(in)
+	scanner := prepareScanner(in, p.MaxIntakeBuffer)
 	inChan := make(chan []byte)
 	defer close(inChan)
-	outChan := make(chan []byte, outChanCapacity)
+	outChan := make(chan []byte, p.MaxConcurrentRequests)
 	defer close(outChan)
 
 	wg.Go(func() error {
@@ -164,7 +138,7 @@ func (p *Plugin) processRequest(ctx context.Context, buf []byte, outChan chan<- 
 	return nil
 }
 
-func prepareScanner(in *os.File) *bufio.Scanner {
+func prepareScanner(in *os.File, maxIntakeBuffer int) *bufio.Scanner {
 	scanner := bufio.NewScanner(in)
 	scanner.Buffer(make([]byte, 1024), maxIntakeBuffer)
 	scanner.Split(func(data []byte, atEOF bool) (advance int, token []byte, err error) {
