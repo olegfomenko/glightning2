@@ -6,7 +6,6 @@ import (
 	"github.com/olegfomenko/glightning2/clnrpc"
 	"golang.org/x/exp/jsonrpc2"
 	"os"
-	"reflect"
 	"sort"
 	"testing"
 )
@@ -193,24 +192,13 @@ func TestPluginIntegration(t *testing.T) {
 
 	// Assertion
 
-	torV3Enabled := true
-	alwaysUseProxy := false
-	wantConfiguration := Configuration{
-		LightningDir: "/tmp/lightning/regtest",
-		RPCFile:      "lightning-rpc",
-		Startup:      true,
-		Network:      "regtest",
-		FeatureSet:   FeatureBits{Init: "02"},
-		Proxy: &Proxy{
-			Type:    "ipv4",
-			Address: "127.0.0.1",
-			Port:    9050,
-		},
-		TorV3Enabled:   &torV3Enabled,
-		AlwaysUseProxy: &alwaysUseProxy,
+	gotConfiguration, err := json.Marshal(plugin.GetConfiguration())
+	if err != nil {
+		t.Fatal(err)
 	}
-	if configuration := plugin.GetConfiguration(); !reflect.DeepEqual(configuration, wantConfiguration) {
-		t.Fatalf("configuration mismatch\nwant: %#v\n got: %#v", wantConfiguration, configuration)
+	wantConfiguration := `{"lightning-dir":"/tmp/lightning/regtest","rpc-file":"lightning-rpc","startup":true,"network":"regtest","feature_set":{"init":"02"},"proxy":{"type":"ipv4","address":"127.0.0.1","port":9050},"torv3-enabled":true,"always_use_proxy":false}`
+	if string(gotConfiguration) != wantConfiguration {
+		t.Fatalf("configuration mismatch\nwant: %s\n got: %s", wantConfiguration, gotConfiguration)
 	}
 
 	stringValue, err := plugin.GetStringOption("flag1")
