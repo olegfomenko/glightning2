@@ -3,11 +3,12 @@ package plugin
 import (
 	"context"
 	"encoding/json"
-	"github.com/olegfomenko/glightning2/clnrpc"
-	"golang.org/x/exp/jsonrpc2"
 	"os"
 	"sort"
 	"testing"
+
+	"github.com/olegfomenko/glightning2/clnrpc"
+	"golang.org/x/exp/jsonrpc2"
 )
 
 func TestPluginConfiguration(t *testing.T) {
@@ -84,6 +85,9 @@ func TestPluginIntegration(t *testing.T) {
 			return nil, nil
 		}).
 		AddNotification("user_saved", "User was saved")
+	if plugin.GetClient() != nil {
+		t.Fatal("client was initialized before init")
+	}
 
 	toPluginPipeR, toPluginPipeW, err := os.Pipe()
 	if err != nil {
@@ -199,6 +203,11 @@ func TestPluginIntegration(t *testing.T) {
 	wantConfiguration := `{"lightning-dir":"/tmp/lightning/regtest","rpc-file":"lightning-rpc","startup":true,"network":"regtest","feature_set":{"init":"02"},"proxy":{"type":"ipv4","address":"127.0.0.1","port":9050},"torv3-enabled":true,"always_use_proxy":false}`
 	if string(gotConfiguration) != wantConfiguration {
 		t.Fatalf("configuration mismatch\nwant: %s\n got: %s", wantConfiguration, gotConfiguration)
+	}
+
+	client := plugin.GetClient()
+	if client == nil {
+		t.Fatal("client was not initialized")
 	}
 
 	stringValue, err := plugin.GetStringOption("flag1")

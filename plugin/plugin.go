@@ -43,6 +43,7 @@ type Plugin struct {
 	optionValues         map[string]json.RawMessage
 
 	configuration Configuration
+	client        *clnrpc.Client
 
 	// MaxIntakeBuffer configures the line size limit for input stream scanner.
 	// The default value is 500MB.

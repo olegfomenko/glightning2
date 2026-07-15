@@ -3,6 +3,9 @@ package plugin
 import (
 	"context"
 	"encoding/json"
+	"path/filepath"
+
+	"github.com/olegfomenko/glightning2/clnrpc"
 )
 
 // InitRequest contains the plugin options and node configuration supplied by
@@ -59,6 +62,12 @@ func (p *Plugin) GetConfiguration() Configuration {
 	return cfg
 }
 
+// GetClient returns the Core Lightning RPC client initialized during init.
+// It returns nil before init is processed.
+func (p *Plugin) GetClient() *clnrpc.Client {
+	return p.client
+}
+
 func (p *Plugin) registerLifecycleMethods() {
 	p.requestHandlers["getmanifest"] = p.handleGetManifest
 	p.requestHandlers["init"] = p.handleInit
@@ -76,6 +85,7 @@ func (p *Plugin) handleInit(_ context.Context, params json.RawMessage) (json.Raw
 
 	p.configuration = request.Configuration
 	p.optionValues = request.Options
+	p.client = clnrpc.NewClient(filepath.Join(request.Configuration.LightningDir, request.Configuration.RPCFile))
 	return json.RawMessage(`{}`), nil
 }
 
