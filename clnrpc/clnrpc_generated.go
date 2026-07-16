@@ -22,7 +22,7 @@ const (
 
 type GetInfoAddress struct {
 	// Address Address in expected format for **type**.
-	Address string `json:"address,omitempty"`
+	Address *string `json:"address,omitempty"`
 	// Port Port number.
 	Port uint16 `json:"port"`
 	// ItemType Type of connection (until 23.08, `websocket` was also allowed).
@@ -43,13 +43,13 @@ const (
 
 type GetInfoBinding struct {
 	// Address Address in expected format for **type**.
-	Address string `json:"address,omitempty"`
+	Address *string `json:"address,omitempty"`
 	// Port Port number.
-	Port uint16 `json:"port,omitempty"`
+	Port *uint16 `json:"port,omitempty"`
 	// Socket Socket filename.
-	Socket string `json:"socket,omitempty"`
+	Socket *string `json:"socket,omitempty"`
 	// Subtype Type of address.
-	Subtype string `json:"subtype,omitempty"`
+	Subtype *string `json:"subtype,omitempty"`
 	// ItemType Type of connection.
 	ItemType GetInfoBindingType `json:"type"`
 }
@@ -72,7 +72,7 @@ type GetInfoResponse struct {
 	// Alias The fun alias this node will advertize.
 	Alias string `json:"alias"`
 	// Binding The addresses we are listening on.
-	Binding []GetInfoBinding `json:"binding,omitempty"`
+	Binding *[]GetInfoBinding `json:"binding,omitempty"`
 	// Blockheight The highest block height we've learned.
 	Blockheight uint32 `json:"blockheight"`
 	// Color The favorite RGB color this node will advertize.
@@ -94,13 +94,13 @@ type GetInfoResponse struct {
 	// NumPendingChannels The total count of channels being opened.
 	NumPendingChannels uint32 `json:"num_pending_channels"`
 	// OurFeatures Our BOLT #9 feature bits (as hexstring) for various contexts.
-	OurFeatures GetInfoOurFeatures `json:"our_features,omitempty"`
+	OurFeatures *GetInfoOurFeatures `json:"our_features,omitempty"`
 	// Version Identifies what bugs you are running into.
 	Version string `json:"version"`
 	// WarningBitcoindSync Bitcoind is not up-to-date with network.
-	WarningBitcoindSync string `json:"warning_bitcoind_sync,omitempty"`
+	WarningBitcoindSync *string `json:"warning_bitcoind_sync,omitempty"`
 	// WarningLightningdSync Lightningd is still loading latest blocks from bitcoind.
-	WarningLightningdSync string `json:"warning_lightningd_sync,omitempty"`
+	WarningLightningdSync *string `json:"warning_lightningd_sync,omitempty"`
 }
 
 // ListPeersLevel Supplying level will show log entries related to that peer at the given log level.
@@ -116,9 +116,9 @@ const (
 
 type ListPeersRequest struct {
 	// ID If supplied, limits the result to just the peer with the given ID, if it exists.
-	ID clntypes.PubKey `json:"id,omitempty"`
+	ID *clntypes.PubKey `json:"id,omitempty"`
 	// Level Supplying level will show log entries related to that peer at the given log level.
-	Level ListPeersLevel `json:"level,omitempty"`
+	Level *ListPeersLevel `json:"level,omitempty"`
 }
 
 type ListPeersPeersLogType string
@@ -136,17 +136,17 @@ const (
 
 type ListPeersPeersLog struct {
 	// Data The IO which occurred.
-	Data clntypes.Hex `json:"data,omitempty"`
+	Data *clntypes.Hex `json:"data,omitempty"`
 	// Log The actual log message.
-	Log string `json:"log,omitempty"`
+	Log *string `json:"log,omitempty"`
 	// NodeID The peer this is associated with.
-	NodeID clntypes.PubKey `json:"node_id,omitempty"`
+	NodeID *clntypes.PubKey `json:"node_id,omitempty"`
 	// NumSkipped Number of deleted/omitted entries.
-	NumSkipped uint32 `json:"num_skipped,omitempty"`
+	NumSkipped *uint32 `json:"num_skipped,omitempty"`
 	// Source The particular logbook this was found in.
-	Source string `json:"source,omitempty"`
+	Source *string `json:"source,omitempty"`
 	// Time UNIX timestamp with 9 decimal places.
-	Time     string                `json:"time,omitempty"`
+	Time     *string               `json:"time,omitempty"`
 	ItemType ListPeersPeersLogType `json:"type"`
 }
 
@@ -154,17 +154,17 @@ type ListPeersPeers struct {
 	// Connected Value showing the connection status.
 	Connected bool `json:"connected"`
 	// Features Bitmap of BOLT #9 features from peer's INIT message.
-	Features clntypes.Hex `json:"features,omitempty"`
+	Features *clntypes.Hex `json:"features,omitempty"`
 	// ID The unique id of the peer.
 	ID clntypes.PubKey `json:"id"`
 	// Log If *level* is specified, logs for this peer.
-	Log []ListPeersPeersLog `json:"log,omitempty"`
+	Log *[]ListPeersPeersLog `json:"log,omitempty"`
 	// Netaddr A single entry array.
-	Netaddr []string `json:"netaddr,omitempty"`
+	Netaddr *[]string `json:"netaddr,omitempty"`
 	// NumChannels The number of channels the peer has with this node.
 	NumChannels uint32 `json:"num_channels"`
 	// RemoteAddr The public IPv4/6 address the peer sees us from, e.g. 1.2.3.4:1234.
-	RemoteAddr string `json:"remote_addr,omitempty"`
+	RemoteAddr *string `json:"remote_addr,omitempty"`
 }
 
 type ListPeersResponse struct {
@@ -173,7 +173,7 @@ type ListPeersResponse struct {
 
 type ListFundsRequest struct {
 	// Spent If True, then the *outputs* will include spent outputs in addition to the unspent ones.
-	Spent bool `json:"spent,omitempty"`
+	Spent *bool `json:"spent,omitempty"`
 }
 
 // ListFundsChannelsState The channel state, in particular `CHANNELD_NORMAL` means the channel can be used normally.
@@ -212,7 +212,7 @@ type ListFundsChannels struct {
 	// PeerID The peer with which the channel is opened.
 	PeerID clntypes.PubKey `json:"peer_id"`
 	// ShortChannelID Short channel id of channel (only if funding reached lockin depth before closing). Short channel id of channel.
-	ShortChannelID clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
+	ShortChannelID *clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
 	// State The channel state, in particular `CHANNELD_NORMAL` means the channel can be used normally.
 	State ListFundsChannelsState `json:"state"`
 }
@@ -228,19 +228,19 @@ const (
 
 type ListFundsOutputs struct {
 	// Address The bitcoin address of the output.
-	Address string `json:"address,omitempty"`
+	Address *string `json:"address,omitempty"`
 	// AmountMSAT The amount of the output.
 	AmountMSAT clntypes.MSat `json:"amount_msat"`
 	// Blockheight Block height where it was confirmed.
-	Blockheight uint32 `json:"blockheight,omitempty"`
+	Blockheight *uint32 `json:"blockheight,omitempty"`
 	// Output The index within *txid*.
 	Output uint32 `json:"output"`
 	// Redeemscript The redeemscript, only if it's p2sh-wrapped.
-	Redeemscript clntypes.Hex `json:"redeemscript,omitempty"`
+	Redeemscript *clntypes.Hex `json:"redeemscript,omitempty"`
 	// Reserved Whether this UTXO is currently reserved for an in-flight tx.
 	Reserved bool `json:"reserved"`
 	// ReservedToBlock Block height where reservation will expire.
-	ReservedToBlock uint32 `json:"reserved_to_block,omitempty"`
+	ReservedToBlock *uint32 `json:"reserved_to_block,omitempty"`
 	// Scriptpubkey The scriptPubkey of the output.
 	Scriptpubkey clntypes.Hex           `json:"scriptpubkey"`
 	Status       ListFundsOutputsStatus `json:"status"`
@@ -255,45 +255,45 @@ type ListFundsResponse struct {
 
 type SendPayRoute struct {
 	// AmountMSAT The amount expected by the node at the end of this hop (older name for `amount_out_msat`).
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// AmountOutMSAT The amount expected at the far end of this hop.
-	AmountOutMSAT clntypes.MSat `json:"amount_out_msat,omitempty"`
+	AmountOutMSAT *clntypes.MSat `json:"amount_out_msat,omitempty"`
 	// Channel The channel joining these nodes (older name for `short_channel_id_dir`)
-	Channel clntypes.ShortChannelID `json:"channel,omitempty"`
+	Channel *clntypes.ShortChannelID `json:"channel,omitempty"`
 	// CltvOut The total CLTV expected by the node at the end of this hop.
-	CltvOut uint32 `json:"cltv_out,omitempty"`
+	CltvOut *uint32 `json:"cltv_out,omitempty"`
 	// Delay The total CLTV expected by the node at the end of this hop (older name for `cltv_out`).
-	Delay uint32 `json:"delay,omitempty"`
+	Delay *uint32 `json:"delay,omitempty"`
 	// ID The node at the end of this hop (older name for `node_id_out`).
-	ID clntypes.PubKey `json:"id,omitempty"`
+	ID *clntypes.PubKey `json:"id,omitempty"`
 	// NodeIDOut The node at the end of this hop.
-	NodeIDOut clntypes.PubKey `json:"node_id_out,omitempty"`
+	NodeIDOut *clntypes.PubKey `json:"node_id_out,omitempty"`
 	// ShortChannelIDDir The channel joining these nodes.
-	ShortChannelIDDir clntypes.ShortChannelIDDir `json:"short_channel_id_dir,omitempty"`
+	ShortChannelIDDir *clntypes.ShortChannelIDDir `json:"short_channel_id_dir,omitempty"`
 }
 
 type SendPayRequest struct {
 	// AmountMSAT Amount must be provided if *partid* is non-zero, or the payment is to-self, otherwise it must be equal to the final amount to the destination. it can be a whole number, or a whole number ending in *msat* or *sat*, or a number with three decimal places ending in *sat*, or a number with 1 to 11 decimal places ending in *btc*.
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// Bolt11 Bolt11 invoice to pay. If provided, will be returned in *waitsendpay* and *listsendpays* results.
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Description Description used in the invoice.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Groupid Allows you to attach a number which appears in **listsendpays** so payments can be identified as part of a logical group. The *pay* plugin uses this to identify one attempt at a MPP payment, for example.
-	Groupid uint64 `json:"groupid,omitempty"`
+	Groupid *uint64 `json:"groupid,omitempty"`
 	// Label The label provided when creating the invoice_request.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Localinvreqid Indicates that this payment is being made for a local invoice_request. This ensures that we only send a payment for a single-use invoice_request once.
-	Localinvreqid clntypes.Hex `json:"localinvreqid,omitempty"`
+	Localinvreqid *clntypes.Hex `json:"localinvreqid,omitempty"`
 	// Partid Must not be provided for self-payments. If provided and non-zero, allows for multiple parallel partial payments with the same *payment_hash*. The *amount_msat* amount (which must be provided) for each **sendpay** with matching *payment_hash* must be equal, and **sendpay** will fail if there are differing values given.
-	Partid uint64 `json:"partid,omitempty"`
+	Partid *uint64 `json:"partid,omitempty"`
 	// PaymentHash The hash of the payment_preimage.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// PaymentMetadata Placed in the final onion hop TLV.
-	PaymentMetadata clntypes.Hex `json:"payment_metadata,omitempty"`
+	PaymentMetadata *clntypes.Hex `json:"payment_metadata,omitempty"`
 	// PaymentSecret Value that the final recipient requires to accept the payment, as defined by the `payment_data` field in BOLT 4 and the `s` field in the BOLT 11 invoice format. It is required if *partid* is non-zero.
-	PaymentSecret clntypes.Secret `json:"payment_secret,omitempty"`
-	Route         []SendPayRoute  `json:"route"`
+	PaymentSecret *clntypes.Secret `json:"payment_secret,omitempty"`
+	Route         []SendPayRoute   `json:"route"`
 }
 
 // SendPayStatus Status of the payment (could be complete if already sent previously).
@@ -306,48 +306,48 @@ const (
 
 type SendPayResponse struct {
 	// AmountMSAT The amount delivered to destination (if known).
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// AmountSentMSAT The amount sent.
 	AmountSentMSAT clntypes.MSat `json:"amount_sent_msat"`
 	// Bolt11 The bolt11 string (if supplied).
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Bolt12 The bolt12 string (if supplied).
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// CompletedAt The UNIX timestamp showing when this payment was completed.
-	CompletedAt uint64 `json:"completed_at,omitempty"`
+	CompletedAt *uint64 `json:"completed_at,omitempty"`
 	// CreatedAt The UNIX timestamp showing when this payment was initiated.
 	CreatedAt uint64 `json:"created_at"`
 	// CreatedIndex 1-based index indicating order this payment was created in.
 	CreatedIndex uint64 `json:"created_index"`
 	// Destination The final destination of the payment if known.
-	Destination clntypes.PubKey `json:"destination,omitempty"`
+	Destination *clntypes.PubKey `json:"destination,omitempty"`
 	// Groupid Grouping key to disambiguate multiple attempts to pay an invoice or the same payment_hash.
-	Groupid uint64 `json:"groupid,omitempty"`
+	Groupid *uint64 `json:"groupid,omitempty"`
 	// ID Old synonym for created_index.
 	ID uint64 `json:"id"`
 	// Label The *label*, if given to sendpay.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Message Monitor status with listpays or waitsendpay.
-	Message string `json:"message,omitempty"`
+	Message *string `json:"message,omitempty"`
 	// Partid The *partid*, if given to sendpay.
-	Partid uint64 `json:"partid,omitempty"`
+	Partid *uint64 `json:"partid,omitempty"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// PaymentPreimage The proof of payment: SHA256 of this **payment_hash**.
-	PaymentPreimage clntypes.Secret `json:"payment_preimage,omitempty"`
+	PaymentPreimage *clntypes.Secret `json:"payment_preimage,omitempty"`
 	// Status Status of the payment (could be complete if already sent previously).
 	Status SendPayStatus `json:"status"`
 	// UpdatedIndex 1-based index indicating order this payment was changed (only present if it has changed since creation).
-	UpdatedIndex uint64 `json:"updated_index,omitempty"`
+	UpdatedIndex *uint64 `json:"updated_index,omitempty"`
 }
 
 type ListChannelsRequest struct {
 	// Destination If destination is a node id, then only channels leading to that node id are returned.
-	Destination clntypes.PubKey `json:"destination,omitempty"`
+	Destination *clntypes.PubKey `json:"destination,omitempty"`
 	// ShortChannelID If short_channel_id is a short channel id, then only known channels with a matching short_channel_id are returned. Otherwise, it must be null.
-	ShortChannelID clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
+	ShortChannelID *clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
 	// Source If source is a node id, then only channels leading from that node id are returned.
-	Source clntypes.PubKey `json:"source,omitempty"`
+	Source *clntypes.PubKey `json:"source,omitempty"`
 }
 
 type ListChannelsChannels struct {
@@ -370,7 +370,7 @@ type ListChannelsChannels struct {
 	// FeePerMillionth Proportional fee changed by *source* to use this channel, in parts-per-million.
 	FeePerMillionth uint32 `json:"fee_per_millionth"`
 	// HTLCMaximumMSAT The largest payment *source* will allow via this channel.
-	HTLCMaximumMSAT clntypes.MSat `json:"htlc_maximum_msat,omitempty"`
+	HTLCMaximumMSAT *clntypes.MSat `json:"htlc_maximum_msat,omitempty"`
 	// HTLCMinimumMSAT The smallest payment *source* will allow via this channel.
 	HTLCMinimumMSAT clntypes.MSat `json:"htlc_minimum_msat"`
 	// LastUpdate UNIX timestamp on the last channel_update from *source*.
@@ -399,11 +399,11 @@ type AddGossipResponse struct {
 
 type AddPSBTOutputRequest struct {
 	// Destination If it is not set, an internal address is generated.
-	Destination string `json:"destination,omitempty"`
+	Destination *string `json:"destination,omitempty"`
 	// Initialpsbt Base 64 encoded PSBT to add the output to. If not specified, one will be generated automatically.
-	Initialpsbt string `json:"initialpsbt,omitempty"`
+	Initialpsbt *string `json:"initialpsbt,omitempty"`
 	// Locktime If not set, it is set to a recent block height (if no initial psbt is specified).
-	Locktime uint32 `json:"locktime,omitempty"`
+	Locktime *uint32 `json:"locktime,omitempty"`
 	// Satoshi The satoshi value of the output. It can be a whole number, a whole number ending in *sat*, or a number with 1 to 8 decimal places ending in *btc*.
 	Satoshi clntypes.Sat `json:"satoshi"`
 }
@@ -487,13 +487,13 @@ type AutoCleanOnceAutocleanSucceededpays struct {
 }
 
 type AutoCleanOnceAutoclean struct {
-	Expiredinvoices   AutoCleanOnceAutocleanExpiredinvoices   `json:"expiredinvoices,omitempty"`
-	Failedforwards    AutoCleanOnceAutocleanFailedforwards    `json:"failedforwards,omitempty"`
-	Failedpays        AutoCleanOnceAutocleanFailedpays        `json:"failedpays,omitempty"`
-	Networkevents     AutoCleanOnceAutocleanNetworkevents     `json:"networkevents,omitempty"`
-	Paidinvoices      AutoCleanOnceAutocleanPaidinvoices      `json:"paidinvoices,omitempty"`
-	Succeededforwards AutoCleanOnceAutocleanSucceededforwards `json:"succeededforwards,omitempty"`
-	Succeededpays     AutoCleanOnceAutocleanSucceededpays     `json:"succeededpays,omitempty"`
+	Expiredinvoices   *AutoCleanOnceAutocleanExpiredinvoices   `json:"expiredinvoices,omitempty"`
+	Failedforwards    *AutoCleanOnceAutocleanFailedforwards    `json:"failedforwards,omitempty"`
+	Failedpays        *AutoCleanOnceAutocleanFailedpays        `json:"failedpays,omitempty"`
+	Networkevents     *AutoCleanOnceAutocleanNetworkevents     `json:"networkevents,omitempty"`
+	Paidinvoices      *AutoCleanOnceAutocleanPaidinvoices      `json:"paidinvoices,omitempty"`
+	Succeededforwards *AutoCleanOnceAutocleanSucceededforwards `json:"succeededforwards,omitempty"`
+	Succeededpays     *AutoCleanOnceAutocleanSucceededpays     `json:"succeededpays,omitempty"`
 }
 
 type AutoCleanOnceResponse struct {
@@ -515,12 +515,12 @@ const (
 
 type AutoCleanStatusRequest struct {
 	// Subsystem What subsystem to ask about. Currently supported subsystems are: * `failedforwards`: routed payments which did not succeed (`failed` or `local_failed` in listforwards `status`). * `succeededforwards`: routed payments which succeeded (`settled` in listforwards `status`). * `failedpays`: payment attempts which did not succeed (`failed` in listpays `status`). * `succeededpays`: payment attempts which succeeded (`complete` in listpays `status`). * `expiredinvoices`: invoices which were not paid (and cannot be) (`expired` in listinvoices `status`). * `paidinvoices`: invoices which were paid (`paid` in listinvoices `status). * `networkevents`: all events in listnetworkevents (added *v25.12*)
-	Subsystem AutoCleanStatusSubsystem `json:"subsystem,omitempty"`
+	Subsystem *AutoCleanStatusSubsystem `json:"subsystem,omitempty"`
 }
 
 type AutoCleanStatusAutocleanExpiredinvoices struct {
 	// Age Age (in seconds) to expired listinvoices.
-	Age uint64 `json:"age,omitempty"`
+	Age *uint64 `json:"age,omitempty"`
 	// Cleaned Total number of deletions done (ever).
 	Cleaned uint64 `json:"cleaned"`
 	// Enabled Whether autocleaning is enabled for expired (unpaid) listinvoices.
@@ -529,7 +529,7 @@ type AutoCleanStatusAutocleanExpiredinvoices struct {
 
 type AutoCleanStatusAutocleanFailedforwards struct {
 	// Age Age (in seconds) to delete failed listforwards.
-	Age uint64 `json:"age,omitempty"`
+	Age *uint64 `json:"age,omitempty"`
 	// Cleaned Total number of deletions done (ever).
 	Cleaned uint64 `json:"cleaned"`
 	// Enabled Whether autocleaning is enabled for failed listforwards.
@@ -538,7 +538,7 @@ type AutoCleanStatusAutocleanFailedforwards struct {
 
 type AutoCleanStatusAutocleanFailedpays struct {
 	// Age Age (in seconds) to delete failed listpays/listsendpays.
-	Age uint64 `json:"age,omitempty"`
+	Age *uint64 `json:"age,omitempty"`
 	// Cleaned Total number of deletions done (ever).
 	Cleaned uint64 `json:"cleaned"`
 	// Enabled Whether autocleaning is enabled for failed listpays/listsendpays.
@@ -547,7 +547,7 @@ type AutoCleanStatusAutocleanFailedpays struct {
 
 type AutoCleanStatusAutocleanNetworkevents struct {
 	// Age Age (in seconds) to clean networkevents.
-	Age uint64 `json:"age,omitempty"`
+	Age *uint64 `json:"age,omitempty"`
 	// Cleaned Total number of deletions done (ever).
 	Cleaned uint64 `json:"cleaned"`
 	// Enabled Whether autocleaning is enabled for networkevents.
@@ -556,7 +556,7 @@ type AutoCleanStatusAutocleanNetworkevents struct {
 
 type AutoCleanStatusAutocleanPaidinvoices struct {
 	// Age Age (in seconds) to paid listinvoices.
-	Age uint64 `json:"age,omitempty"`
+	Age *uint64 `json:"age,omitempty"`
 	// Cleaned Total number of deletions done (ever).
 	Cleaned uint64 `json:"cleaned"`
 	// Enabled Whether autocleaning is enabled for paid listinvoices.
@@ -565,7 +565,7 @@ type AutoCleanStatusAutocleanPaidinvoices struct {
 
 type AutoCleanStatusAutocleanSucceededforwards struct {
 	// Age Age (in seconds) to delete successful listforwards.
-	Age uint64 `json:"age,omitempty"`
+	Age *uint64 `json:"age,omitempty"`
 	// Cleaned Total number of deletions done (ever).
 	Cleaned uint64 `json:"cleaned"`
 	// Enabled Whether autocleaning is enabled for successful listforwards.
@@ -574,7 +574,7 @@ type AutoCleanStatusAutocleanSucceededforwards struct {
 
 type AutoCleanStatusAutocleanSucceededpays struct {
 	// Age Age (in seconds) to delete successful listpays/listsendpays.
-	Age uint64 `json:"age,omitempty"`
+	Age *uint64 `json:"age,omitempty"`
 	// Cleaned Total number of deletions done (ever).
 	Cleaned uint64 `json:"cleaned"`
 	// Enabled Whether autocleaning is enabled for successful listpays/listsendpays.
@@ -582,13 +582,13 @@ type AutoCleanStatusAutocleanSucceededpays struct {
 }
 
 type AutoCleanStatusAutoclean struct {
-	Expiredinvoices   AutoCleanStatusAutocleanExpiredinvoices   `json:"expiredinvoices,omitempty"`
-	Failedforwards    AutoCleanStatusAutocleanFailedforwards    `json:"failedforwards,omitempty"`
-	Failedpays        AutoCleanStatusAutocleanFailedpays        `json:"failedpays,omitempty"`
-	Networkevents     AutoCleanStatusAutocleanNetworkevents     `json:"networkevents,omitempty"`
-	Paidinvoices      AutoCleanStatusAutocleanPaidinvoices      `json:"paidinvoices,omitempty"`
-	Succeededforwards AutoCleanStatusAutocleanSucceededforwards `json:"succeededforwards,omitempty"`
-	Succeededpays     AutoCleanStatusAutocleanSucceededpays     `json:"succeededpays,omitempty"`
+	Expiredinvoices   *AutoCleanStatusAutocleanExpiredinvoices   `json:"expiredinvoices,omitempty"`
+	Failedforwards    *AutoCleanStatusAutocleanFailedforwards    `json:"failedforwards,omitempty"`
+	Failedpays        *AutoCleanStatusAutocleanFailedpays        `json:"failedpays,omitempty"`
+	Networkevents     *AutoCleanStatusAutocleanNetworkevents     `json:"networkevents,omitempty"`
+	Paidinvoices      *AutoCleanStatusAutocleanPaidinvoices      `json:"paidinvoices,omitempty"`
+	Succeededforwards *AutoCleanStatusAutocleanSucceededforwards `json:"succeededforwards,omitempty"`
+	Succeededpays     *AutoCleanStatusAutocleanSucceededpays     `json:"succeededpays,omitempty"`
 }
 
 type AutoCleanStatusResponse struct {
@@ -599,7 +599,7 @@ type CheckMessageRequest struct {
 	// Message Message to be checked against the signature.
 	Message string `json:"message"`
 	// Pubkey The Zbase32 encoded signature to verify.
-	Pubkey clntypes.PubKey `json:"pubkey,omitempty"`
+	Pubkey *clntypes.PubKey `json:"pubkey,omitempty"`
 	// Zbase The Zbase32 encoded signature to verify.
 	Zbase string `json:"zbase"`
 }
@@ -613,19 +613,19 @@ type CheckMessageResponse struct {
 
 type CloseRequest struct {
 	// Destination Any Bitcoin bech32 type. If the peer hasn't offered the option_shutdown_anysegwit feature, then taproot addresses (or other v1+ segwit) are not allowed. Tell your friends to upgrade!
-	Destination string `json:"destination,omitempty"`
+	Destination *string `json:"destination,omitempty"`
 	// FeeNegotiationStep It controls how closing fee negotiation is performed assuming the peer proposes a fee that is different than our estimate. (Note that modern peers use the quick-close protocol which does not allow negotiation: see *feerange* instead). On every negotiation step we must give up some amount from our proposal towards the peer's proposal. This parameter can be an integer in which case it is interpreted as number of satoshis to step at a time. Or it can be an integer followed by `%` to designate a percentage of the interval to give up. A few examples, assuming the peer proposes a closing fee of 3000 satoshi and our estimate shows it must be 4000: * `10`: our next proposal will be 4000-10=3990. * `10%`: our next proposal will be 4000-(10% of (4000-3000))=3900. * '1': our next proposal will be 3999. This is the most extreme case when we insist on our fee as much as possible. * `100%`: our next proposal will be 3000. This is the most relaxed case when we quickly accept the peer's proposal.
-	FeeNegotiationStep string `json:"fee_negotiation_step,omitempty"`
+	FeeNegotiationStep *string `json:"fee_negotiation_step,omitempty"`
 	// Feerange An optional array [ *min*, *max* ], indicating the minimum and maximum feerates to offer: the peer will obey these if it supports the quick-close protocol. *slow* and *unilateral_close* are the defaults. Note that the maximum fee will be capped at the final commitment transaction fee (unless the experimental anchor-outputs option is negotiated).
-	Feerange []clntypes.Feerate `json:"feerange,omitempty"`
+	Feerange *[]clntypes.Feerate `json:"feerange,omitempty"`
 	// ForceLeaseClosed If the channel has funds leased to the peer (option_will_fund), we prevent initiation of a mutual close unless this flag is passed in.
-	ForceLeaseClosed bool `json:"force_lease_closed,omitempty"`
+	ForceLeaseClosed *bool `json:"force_lease_closed,omitempty"`
 	// ID Peer id, channel id or short_channel_id. If the given *id* is a peer ID (66 hex digits as a string), then it applies to the active channel of the direct peer corresponding to the given peer ID. If the given *id* is a channel ID (64 hex digits as a string, or the short channel ID *blockheight:txindex:outindex* form), then it applies to that channel.
 	ID string `json:"id"`
 	// Unilateraltimeout If it is not zero, the command will unilaterally close the channel when that number of seconds is reached. If *unilateraltimeout* is zero, then the command will wait indefinitely until the peer is online and can negotiate a mutual close.
-	Unilateraltimeout uint32 `json:"unilateraltimeout,omitempty"`
+	Unilateraltimeout *uint32 `json:"unilateraltimeout,omitempty"`
 	// WrongFunding It can only be specified if both sides have offered the `shutdown_wrong_funding` feature (enabled by the **experimental-shutdown-wrong-funding** option). It must be a transaction id followed by a colon then the output number. Instead of negotiating a shutdown to spend the expected funding transaction, the shutdown transaction will spend this output instead. This is only allowed if this peer opened the channel and the channel is unused: it can rescue openings which have been manually miscreated.
-	WrongFunding clntypes.Outpoint `json:"wrong_funding,omitempty"`
+	WrongFunding *clntypes.Outpoint `json:"wrong_funding,omitempty"`
 }
 
 // CloseType Whether we successfully negotiated a mutual close, closed without them, or discarded not-yet-opened channel.
@@ -639,20 +639,20 @@ const (
 
 type CloseResponse struct {
 	// Txids The transaction ids of the *tx* field(s).
-	Txids []clntypes.TxID `json:"txids,omitempty"`
+	Txids *[]clntypes.TxID `json:"txids,omitempty"`
 	// Txs The raw bitcoin transactions used to close the channel (if it was open).
-	Txs []clntypes.Hex `json:"txs,omitempty"`
+	Txs *[]clntypes.Hex `json:"txs,omitempty"`
 	// ItemType Whether we successfully negotiated a mutual close, closed without them, or discarded not-yet-opened channel.
 	ItemType CloseType `json:"type"`
 }
 
 type ConnectRequest struct {
 	// Host The peer's hostname or IP address. If *host* is not specified (or doesn't work), the connection will be attempted to an IP belonging to *id* obtained through gossip with other already connected peers. If *host* begins with a `/` it is interpreted as a local path and the connection will be made to that local socket (see **bind-addr** in lightningd-config(5)).
-	Host string `json:"host,omitempty"`
+	Host *string `json:"host,omitempty"`
 	// ID The target node's public key. As a convenience, *id* may be of the form *id@host* or *id@host:port*. In this case, the *host* and *port* parameters must be omitted. This can fail if your C-lightning node is a fresh install that has not connected to any peers yet (your node has no gossip yet), or if the target *id* is a fresh install that has no channels yet (nobody will gossip about a node until it has one published channel).
 	ID string `json:"id"`
 	// Port The peer's port number. If not specified, the *port* depends on the current network: * bitcoin **mainnet**: 9735. * bitcoin **testnet**: 19735. * bitcoin **signet**: 39735. * bitcoin **regtest**: 19846.
-	Port uint16 `json:"port,omitempty"`
+	Port *uint16 `json:"port,omitempty"`
 }
 
 // ConnectAddressType Type of connection (*torv2*/*torv3* only if **direction** is *out*).
@@ -669,11 +669,11 @@ const (
 // ConnectAddress Address information (mainly useful if **direction** is *out*).
 type ConnectAddress struct {
 	// Address Address in expected format for **type**.
-	Address string `json:"address,omitempty"`
+	Address *string `json:"address,omitempty"`
 	// Port Port number.
-	Port uint16 `json:"port,omitempty"`
+	Port *uint16 `json:"port,omitempty"`
 	// Socket Socket filename.
-	Socket string `json:"socket,omitempty"`
+	Socket *string `json:"socket,omitempty"`
 	// ItemType Type of connection (*torv2*/*torv3* only if **direction** is *out*).
 	ItemType ConnectAddressType `json:"type"`
 }
@@ -725,13 +725,13 @@ const (
 
 type CreateInvoiceResponse struct {
 	// AmountMSAT The amount of the invoice (if it has one).
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// AmountReceivedMSAT Amount actually received (**status** *paid* only).
-	AmountReceivedMSAT clntypes.MSat `json:"amount_received_msat,omitempty"`
+	AmountReceivedMSAT *clntypes.MSat `json:"amount_received_msat,omitempty"`
 	// Bolt11 The bolt11 string (always present unless **bolt12** is).
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Bolt12 The bolt12 string instead of **bolt11**
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// CreatedIndex 1-based index indicating order this invoice was created in.
 	CreatedIndex uint64 `json:"created_index"`
 	// Description Description extracted from **bolt11** or **bolt12**.
@@ -739,21 +739,21 @@ type CreateInvoiceResponse struct {
 	// ExpiresAt UNIX timestamp of when invoice expires (or expired).
 	ExpiresAt uint64 `json:"expires_at"`
 	// InvreqPayerNote The optional *invreq_payer_note* from invoice_request which created this invoice.
-	InvreqPayerNote string `json:"invreq_payer_note,omitempty"`
+	InvreqPayerNote *string `json:"invreq_payer_note,omitempty"`
 	// Label The label for the invoice.
 	Label string `json:"label"`
 	// LocalOfferID The *id* of our offer which created this invoice.
-	LocalOfferID clntypes.Hex `json:"local_offer_id,omitempty"`
+	LocalOfferID *clntypes.Hex `json:"local_offer_id,omitempty"`
 	// PaidAt UNIX timestamp of when invoice was paid (**status** *paid* only).
-	PaidAt uint64 `json:"paid_at,omitempty"`
+	PaidAt *uint64 `json:"paid_at,omitempty"`
 	// PaidOutpoint Outpoint this invoice was paid with (**status** *paid* only).
-	PaidOutpoint CreateInvoicePaidOutpoint `json:"paid_outpoint,omitempty"`
+	PaidOutpoint *CreateInvoicePaidOutpoint `json:"paid_outpoint,omitempty"`
 	// PayIndex Incrementing id for when this was paid (**status** *paid* only).
-	PayIndex uint64 `json:"pay_index,omitempty"`
+	PayIndex *uint64 `json:"pay_index,omitempty"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// PaymentPreimage The proof of payment: SHA256 of this **payment_hash**.
-	PaymentPreimage clntypes.Secret `json:"payment_preimage,omitempty"`
+	PaymentPreimage *clntypes.Secret `json:"payment_preimage,omitempty"`
 	// Status Whether it has been paid, or can no longer be paid.
 	Status CreateInvoiceStatus `json:"status"`
 }
@@ -771,29 +771,29 @@ const (
 
 type DatastoreRequest struct {
 	// Generation If specified, means that the update will fail if the previously-existing data is not exactly that generation. This allows for simple atomicity. This is only legal with *mode* `must-replace` or `must-append`.
-	Generation uint64 `json:"generation,omitempty"`
+	Generation *uint64 `json:"generation,omitempty"`
 	// HEX Data to be saved in hex format.
-	HEX clntypes.Hex `json:"hex,omitempty"`
+	HEX *clntypes.Hex `json:"hex,omitempty"`
 	// Key A key can either have children or a value, never both: parents are created and removed automatically.
 	Key []string `json:"key"`
 	// Mode Write mode to determine how the record is updated: * `must-create`: fails if it already exists. * `must-replace`: fails if it doesn't already exist. * `create-or-replace`: never fails. * `must-append`: must already exist, append this to what's already there. * `create-or-append`: append if anything is there, otherwise create.
-	Mode DatastoreMode `json:"mode,omitempty"`
+	Mode *DatastoreMode `json:"mode,omitempty"`
 	// String Data to be saved in string format.
-	String string `json:"string,omitempty"`
+	String *string `json:"string,omitempty"`
 }
 
 type DatastoreResponse struct {
 	// Generation The number of times this has been updated.
-	Generation uint64 `json:"generation,omitempty"`
+	Generation *uint64 `json:"generation,omitempty"`
 	// HEX The hex data which has been added to the datastore.
-	HEX clntypes.Hex `json:"hex,omitempty"`
-	Key []string     `json:"key"`
+	HEX *clntypes.Hex `json:"hex,omitempty"`
+	Key []string      `json:"key"`
 	// String The data as a string, if it's valid utf-8.
-	String string `json:"string,omitempty"`
+	String *string `json:"string,omitempty"`
 }
 
 type DatastoreUsageRequest struct {
-	Key []string `json:"key,omitempty"`
+	Key *[]string `json:"key,omitempty"`
 }
 
 type DatastoreUsageDatastoreusage struct {
@@ -820,9 +820,9 @@ type CreateOnionRequest struct {
 	// Hops A JSON list of dicts, each specifying a node and the payload destined for that node.
 	Hops []CreateOnionHops `json:"hops"`
 	// OnionSize A size different from the default payment onion (1300 bytes). May be used for custom protocols like trampoline routing.
-	OnionSize uint16 `json:"onion_size,omitempty"`
+	OnionSize *uint16 `json:"onion_size,omitempty"`
 	// SessionKey Can be used to specify a secret that is used to generate the shared secrets used to encrypt the onion for each hop. It should only be used for testing or if a specific shared secret is important. If not specified it will be securely generated internally, and the shared secrets will be returned.
-	SessionKey clntypes.Secret `json:"session_key,omitempty"`
+	SessionKey *clntypes.Secret `json:"session_key,omitempty"`
 }
 
 type CreateOnionResponse struct {
@@ -834,18 +834,18 @@ type CreateOnionResponse struct {
 
 type DelDatastoreRequest struct {
 	// Generation If specified, means that the update will fail if the previously-existing data is not exactly that generation. This allows for simple atomicity. This is only legal with mode `must-replace` or `must-append`.
-	Generation uint64   `json:"generation,omitempty"`
+	Generation *uint64  `json:"generation,omitempty"`
 	Key        []string `json:"key"`
 }
 
 type DelDatastoreResponse struct {
 	// Generation The number of times this has been updated.
-	Generation uint64 `json:"generation,omitempty"`
+	Generation *uint64 `json:"generation,omitempty"`
 	// HEX The hex data which has removed from the datastore.
-	HEX clntypes.Hex `json:"hex,omitempty"`
-	Key []string     `json:"key"`
+	HEX *clntypes.Hex `json:"hex,omitempty"`
+	Key []string      `json:"key"`
 	// String The data as a string, if it's valid utf-8.
-	String string `json:"string,omitempty"`
+	String *string `json:"string,omitempty"`
 }
 
 // DelInvoiceStatus Label of the invoice to be deleted. The caller should be particularly aware of the error case caused by the *status* changing just before this command is invoked!
@@ -859,7 +859,7 @@ const (
 
 type DelInvoiceRequest struct {
 	// Desconly If set to True, the invoice is not deleted, but has its description removed (this can save space with very large descriptions, as would be used with lightning-invoice(7) *deschashonly*.
-	Desconly bool `json:"desconly,omitempty"`
+	Desconly *bool `json:"desconly,omitempty"`
 	// Label Label of the invoice to be deleted.
 	Label string `json:"label"`
 	// Status Label of the invoice to be deleted. The caller should be particularly aware of the error case caused by the *status* changing just before this command is invoked!
@@ -868,48 +868,48 @@ type DelInvoiceRequest struct {
 
 type DelInvoiceResponse struct {
 	// AmountMSAT The amount required to pay this invoice.
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// AmountReceivedMSAT How much was actually received.
-	AmountReceivedMSAT clntypes.MSat `json:"amount_received_msat,omitempty"`
+	AmountReceivedMSAT *clntypes.MSat `json:"amount_received_msat,omitempty"`
 	// Bolt11 BOLT11 string.
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Bolt12 BOLT12 string.
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// CreatedIndex 1-based index indicating order this invoice was created in.
 	CreatedIndex uint64 `json:"created_index"`
 	// Description Description used in the invoice.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// ExpiresAt UNIX timestamp when invoice expires (or expired).
 	ExpiresAt uint64 `json:"expires_at"`
 	// InvreqPayerNote The optional *invreq_payer_note* from invoice_request which created this invoice.
-	InvreqPayerNote string `json:"invreq_payer_note,omitempty"`
+	InvreqPayerNote *string `json:"invreq_payer_note,omitempty"`
 	// Label Unique label given at creation time.
 	Label string `json:"label"`
 	// LocalOfferID Offer for which this invoice was created.
-	LocalOfferID clntypes.Hex `json:"local_offer_id,omitempty"`
+	LocalOfferID *clntypes.Hex `json:"local_offer_id,omitempty"`
 	// PaidAt UNIX timestamp of when payment was received.
-	PaidAt uint64 `json:"paid_at,omitempty"`
+	PaidAt *uint64 `json:"paid_at,omitempty"`
 	// PayIndex Unique index for this invoice payment.
-	PayIndex uint64 `json:"pay_index,omitempty"`
+	PayIndex *uint64 `json:"pay_index,omitempty"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// PaymentPreimage SHA256 of this is the *payment_hash* offered in the invoice.
-	PaymentPreimage clntypes.Secret `json:"payment_preimage,omitempty"`
+	PaymentPreimage *clntypes.Secret `json:"payment_preimage,omitempty"`
 	// Status State of invoice.
 	Status DelInvoiceStatus `json:"status"`
 	// UpdatedIndex 1-based index indicating order this invoice was changed (only present if it has changed since creation).
-	UpdatedIndex uint64 `json:"updated_index,omitempty"`
+	UpdatedIndex *uint64 `json:"updated_index,omitempty"`
 }
 
 type DevForgetChannelRequest struct {
 	// ChannelID The channel id of the channel you want to remove.
-	ChannelID clntypes.Hash `json:"channel_id,omitempty"`
+	ChannelID *clntypes.Hash `json:"channel_id,omitempty"`
 	// Force Ignores UTXO check for forced removal.
-	Force bool `json:"force,omitempty"`
+	Force *bool `json:"force,omitempty"`
 	// ID The peer id of the channel to be forgotten. Checks if the channel is still active by checking its funding transaction.
 	ID clntypes.PubKey `json:"id"`
 	// ShortChannelID The short channel id of the channel you want to remove.
-	ShortChannelID clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
+	ShortChannelID *clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
 }
 
 type DevForgetChannelResponse struct {
@@ -932,16 +932,16 @@ type GetEmergencyRecoverDataRequest struct {
 }
 
 type GetEmergencyRecoverDataResponse struct {
-	BackedUpChannelIds []clntypes.Hash `json:"backed_up_channel_ids,omitempty"`
+	BackedUpChannelIds *[]clntypes.Hash `json:"backed_up_channel_ids,omitempty"`
 	// CanCreatePenalty If false, you are using legacy file version, which can not create penalty transactions, kindly delete emergency.recover and restart the node!
-	CanCreatePenalty bool `json:"can_create_penalty,omitempty"`
+	CanCreatePenalty *bool `json:"can_create_penalty,omitempty"`
 	// Filedata The raw, hex-encoded, emergency.recover file
 	Filedata clntypes.Hex `json:"filedata"`
 }
 
 type ExposeSecretRequest struct {
 	// Identifier A four-character, valid lowercase bech32 string (not 1, i, o or b) to use in the resulting BIP-93 output. If not specified, this is generated from the node alias.
-	Identifier string `json:"identifier,omitempty"`
+	Identifier *string `json:"identifier,omitempty"`
 	// Passphrase The passphrase, which must match the `exposesecret-passphrase` configuration parameter.
 	Passphrase string `json:"passphrase"`
 }
@@ -952,7 +952,7 @@ type ExposeSecretResponse struct {
 	// Identifier The four-character identifier used in the codex32 output. Redundant, but presented separately for clarity.
 	Identifier string `json:"identifier"`
 	// Mnemonic The BIP39 mnemonic phrase for the HSM secret (only present for mnemonic-based secrets).
-	Mnemonic string `json:"mnemonic,omitempty"`
+	Mnemonic *string `json:"mnemonic,omitempty"`
 }
 
 type RecoverRequest struct {
@@ -983,21 +983,21 @@ type InvoiceRequest struct {
 	// AmountMSAT The string `any`, which creates an invoice that can be paid with any amount. Otherwise it is a positive value in millisatoshi precision; it can be a whole number, or a whole number ending in *msat* or *sat*, or a number with three decimal places ending in *sat*, or a number with 1 to 11 decimal places ending in *btc*.
 	AmountMSAT clntypes.AmountOrAny `json:"amount_msat"`
 	// Cltv If specified, sets the *min_final_cltv_expiry* for the invoice. Otherwise, it's set to the parameter **cltv-final**.
-	Cltv uint32 `json:"cltv,omitempty"`
+	Cltv *uint32 `json:"cltv,omitempty"`
 	// Deschashonly If True, then the bolt11 returned contains a hash of the *description*, rather than the *description* itself: this allows much longer descriptions, but they must be communicated via some other mechanism.
-	Deschashonly bool `json:"deschashonly,omitempty"`
+	Deschashonly *bool `json:"deschashonly,omitempty"`
 	// Description A short description of purpose of payment, e.g. *1 cup of coffee*. This value is encoded into the BOLT11 invoice and is viewable by any node you send this invoice to (unless *deschashonly* is true as described below). It must be UTF-8, and cannot use *\u* JSON escape codes.
 	Description string `json:"description"`
 	// Expiry The time the invoice is valid for, in seconds. If no value is provided the default of 604800 (1 week) is used.
-	Expiry uint64 `json:"expiry,omitempty"`
+	Expiry *uint64 `json:"expiry,omitempty"`
 	// Exposeprivatechannels If specified, it overrides the default route hint logic, which will use unpublished channels only if there are no published channels.
-	Exposeprivatechannels []clntypes.ShortChannelID `json:"exposeprivatechannels,omitempty"`
+	Exposeprivatechannels *[]clntypes.ShortChannelID `json:"exposeprivatechannels,omitempty"`
 	// Fallbacks One or more fallback addresses to include in the invoice (in order from most- preferred to least): note that these arrays are not currently tracked to fulfill the invoice.
-	Fallbacks []string `json:"fallbacks,omitempty"`
+	Fallbacks *[]string `json:"fallbacks,omitempty"`
 	// Label A unique string or number (which is treated as a string, so `01` is different from `1`); it is never revealed to other nodes on the lightning network, but it can be used to query the status of this invoice.
 	Label string `json:"label"`
 	// Preimage A 64-digit hex string to be used as payment preimage for the created invoice. By default, if unspecified, lightningd will generate a secure pseudorandom preimage seeded from an appropriate entropy source on your system. **IMPORTANT**: if you specify the *preimage*, you are responsible, to ensure appropriate care for generating using a secure pseudorandom generator seeded with sufficient entropy, and keeping the preimage secret. This parameter is an advanced feature intended for use with cutting-edge cryptographic protocols and should not be used unless explicitly needed.
-	Preimage clntypes.Hex `json:"preimage,omitempty"`
+	Preimage *clntypes.Hex `json:"preimage,omitempty"`
 }
 
 type InvoiceResponse struct {
@@ -1012,30 +1012,30 @@ type InvoiceResponse struct {
 	// PaymentSecret The *payment_secret* to place in the onion.
 	PaymentSecret clntypes.Secret `json:"payment_secret"`
 	// WarningCapacity Even using all possible channels, there's not enough incoming capacity to pay this invoice.
-	WarningCapacity string `json:"warning_capacity,omitempty"`
+	WarningCapacity *string `json:"warning_capacity,omitempty"`
 	// WarningDeadends There would be enough incoming capacity, but some channels are dead-ends (no other public channels from those peers), so there isn't.
-	WarningDeadends string `json:"warning_deadends,omitempty"`
+	WarningDeadends *string `json:"warning_deadends,omitempty"`
 	// WarningMpp There is sufficient capacity, but not in a single channel, so the payer will have to use multi-part payments.
-	WarningMpp string `json:"warning_mpp,omitempty"`
+	WarningMpp *string `json:"warning_mpp,omitempty"`
 	// WarningOffline There would be enough incoming capacity, but some channels are offline, so there isn't.
-	WarningOffline string `json:"warning_offline,omitempty"`
+	WarningOffline *string `json:"warning_offline,omitempty"`
 	// WarningPrivateUnused There would be enough incoming capacity, but some channels are unannounced and *exposeprivatechannels* is *false*, so there isn't.
-	WarningPrivateUnused string `json:"warning_private_unused,omitempty"`
+	WarningPrivateUnused *string `json:"warning_private_unused,omitempty"`
 }
 
 type InvoiceRequestRequest struct {
 	// AbsoluteExpiry The time the offer is valid until, in seconds since the first day of 1970 UTC. If not set, the `invoice_request` remains valid (though it can be deactivated by the issuer of course). This is encoded in the `invoice_request`.
-	AbsoluteExpiry uint64 `json:"absolute_expiry,omitempty"`
+	AbsoluteExpiry *uint64 `json:"absolute_expiry,omitempty"`
 	// Amount A positive value in millisatoshi precision; it can be a whole number, or a whole number ending in *msat* or *sat*, or a number with three decimal places ending in *sat*, or a number with 1 to 11 decimal places ending in *btc*.
 	Amount clntypes.MSat `json:"amount"`
 	// Description A short description of purpose of the payment, e.g. *ATM withdrawl*. This value is encoded into the resulting `invoice_request` and is viewable by anyone you expose it to. It must be UTF-8, and cannot use *\u* JSON escape codes.
 	Description string `json:"description"`
 	// Issuer Who is issuing it (i.e. you) if appropriate.
-	Issuer string `json:"issuer,omitempty"`
+	Issuer *string `json:"issuer,omitempty"`
 	// Label An internal-use name for the offer, which can be any UTF-8 string.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// SingleUse Indicates that the `invoice_request` is only valid once; we may attempt multiple payments, but as soon as one is successful no more invoices are accepted (i.e. only one person can take the money).
-	SingleUse bool `json:"single_use,omitempty"`
+	SingleUse *bool `json:"single_use,omitempty"`
 }
 
 type InvoiceRequestResponse struct {
@@ -1046,7 +1046,7 @@ type InvoiceRequestResponse struct {
 	// InvreqID The SHA256 hash of all invoice_request fields less than 160.
 	InvreqID clntypes.Hash `json:"invreq_id"`
 	// Label The label provided when creating the invoice_request.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// SingleUse Whether the invoice_request will become inactive after we pay an invoice for it.
 	SingleUse bool `json:"single_use"`
 	// Used Whether the invoice_request has already been used.
@@ -1066,7 +1066,7 @@ type DisableInvoiceRequestResponse struct {
 	// InvreqID The SHA256 hash of all invoice_request fields less than 160.
 	InvreqID clntypes.Hash `json:"invreq_id"`
 	// Label The label provided when creating the invoice_request.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// SingleUse Whether the invoice_request will become inactive after we pay an invoice for it.
 	SingleUse bool `json:"single_use"`
 	// Used Whether the invoice_request has already been used.
@@ -1075,9 +1075,9 @@ type DisableInvoiceRequestResponse struct {
 
 type ListInvoiceRequestsRequest struct {
 	// ActiveOnly If it is *True* then only active invoice requests are returned.
-	ActiveOnly bool `json:"active_only,omitempty"`
+	ActiveOnly *bool `json:"active_only,omitempty"`
 	// InvreqID A specific invoice can be queried by providing the `invreq_id`, which is presented by lightning-invoicerequest(7), or can be calculated from a bolt12 invoice.
-	InvreqID string `json:"invreq_id,omitempty"`
+	InvreqID *string `json:"invreq_id,omitempty"`
 }
 
 type ListInvoiceRequestsInvoicerequests struct {
@@ -1088,7 +1088,7 @@ type ListInvoiceRequestsInvoicerequests struct {
 	// InvreqID The SHA256 hash of all invoice_request fields less than 160.
 	InvreqID clntypes.Hash `json:"invreq_id"`
 	// Label The label provided when creating the invoice_request.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// SingleUse Whether the invoice_request will become inactive after we pay an invoice for it.
 	SingleUse bool `json:"single_use"`
 	// Used Whether the invoice_request has already been used.
@@ -1100,17 +1100,17 @@ type ListInvoiceRequestsResponse struct {
 }
 
 type ListDatastoreRequest struct {
-	Key []string `json:"key,omitempty"`
+	Key *[]string `json:"key,omitempty"`
 }
 
 type ListDatastoreDatastore struct {
 	// Generation The number of times this has been updated.
-	Generation uint64 `json:"generation,omitempty"`
+	Generation *uint64 `json:"generation,omitempty"`
 	// HEX The hex data from the datastore.
-	HEX clntypes.Hex `json:"hex,omitempty"`
-	Key []string     `json:"key"`
+	HEX *clntypes.Hex `json:"hex,omitempty"`
+	Key []string      `json:"key"`
 	// String The data as a string, if it's valid utf-8.
-	String string `json:"string,omitempty"`
+	String *string `json:"string,omitempty"`
 }
 
 type ListDatastoreResponse struct {
@@ -1127,19 +1127,19 @@ const (
 
 type ListInvoicesRequest struct {
 	// Index If neither *in_channel* nor *out_channel* is specified, it controls ordering.
-	Index ListInvoicesIndex `json:"index,omitempty"`
+	Index *ListInvoicesIndex `json:"index,omitempty"`
 	// Invstring The string value to query a specific invoice.
-	Invstring string `json:"invstring,omitempty"`
+	Invstring *string `json:"invstring,omitempty"`
 	// Label A label used a the creation of the invoice to get a specific invoice.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Limit If `index` is specified, `limit` can be used to specify the maximum number of entries to return.
-	Limit uint32 `json:"limit,omitempty"`
+	Limit *uint32 `json:"limit,omitempty"`
 	// OfferID A local `offer_id` the invoice was issued for a specific invoice details.
-	OfferID string `json:"offer_id,omitempty"`
+	OfferID *string `json:"offer_id,omitempty"`
 	// PaymentHash A payment_hash of the invoice to get the details of a specific invoice.
-	PaymentHash clntypes.Hex `json:"payment_hash,omitempty"`
+	PaymentHash *clntypes.Hex `json:"payment_hash,omitempty"`
 	// Start If `index` is specified, `start` may be specified to start from that value, which is generally returned from lightning-wait(7).
-	Start uint64 `json:"start,omitempty"`
+	Start *uint64 `json:"start,omitempty"`
 }
 
 // ListInvoicesInvoicesPaidOutpoint Outpoint this invoice was paid with.
@@ -1161,39 +1161,39 @@ const (
 
 type ListInvoicesInvoices struct {
 	// AmountMSAT The amount required to pay this invoice.
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// AmountReceivedMSAT The amount actually received (could be slightly greater than *amount_msat*, since clients may overpay).
-	AmountReceivedMSAT clntypes.MSat `json:"amount_received_msat,omitempty"`
+	AmountReceivedMSAT *clntypes.MSat `json:"amount_received_msat,omitempty"`
 	// Bolt11 The BOLT11 string (always present unless *bolt12* is).
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Bolt12 The BOLT12 string (always present unless *bolt11* is).
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// CreatedIndex 1-based index indicating order this invoice was created in.
 	CreatedIndex uint64 `json:"created_index"`
 	// Description Description used in the invoice.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// ExpiresAt UNIX timestamp of when it will become / became unpayable.
 	ExpiresAt uint64 `json:"expires_at"`
 	// InvreqPayerNote The optional *invreq_payer_note* from invoice_request which created this invoice.
-	InvreqPayerNote string `json:"invreq_payer_note,omitempty"`
+	InvreqPayerNote *string `json:"invreq_payer_note,omitempty"`
 	// Label Unique label supplied at invoice creation.
 	Label string `json:"label"`
 	// LocalOfferID The *id* of our offer which created this invoice.
-	LocalOfferID clntypes.Hash `json:"local_offer_id,omitempty"`
+	LocalOfferID *clntypes.Hash `json:"local_offer_id,omitempty"`
 	// PaidAt UNIX timestamp of when it was paid.
-	PaidAt uint64 `json:"paid_at,omitempty"`
+	PaidAt *uint64 `json:"paid_at,omitempty"`
 	// PaidOutpoint Outpoint this invoice was paid with.
-	PaidOutpoint ListInvoicesInvoicesPaidOutpoint `json:"paid_outpoint,omitempty"`
+	PaidOutpoint *ListInvoicesInvoicesPaidOutpoint `json:"paid_outpoint,omitempty"`
 	// PayIndex Unique incrementing index for this payment.
-	PayIndex uint64 `json:"pay_index,omitempty"`
+	PayIndex *uint64 `json:"pay_index,omitempty"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// PaymentPreimage Proof of payment.
-	PaymentPreimage clntypes.Secret `json:"payment_preimage,omitempty"`
+	PaymentPreimage *clntypes.Secret `json:"payment_preimage,omitempty"`
 	// Status Whether it's paid, unpaid or unpayable.
 	Status ListInvoicesInvoicesStatus `json:"status"`
 	// UpdatedIndex 1-based index indicating order this invoice was changed (only present if it has changed since creation).
-	UpdatedIndex uint64 `json:"updated_index,omitempty"`
+	UpdatedIndex *uint64 `json:"updated_index,omitempty"`
 }
 
 type ListInvoicesResponse struct {
@@ -1212,31 +1212,31 @@ type SendOnionFirstHop struct {
 
 type SendOnionRequest struct {
 	// AmountMSAT Used to annotate the payment, and is returned by *waitsendpay* and *listsendpays*.
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// Bolt11 If provided, it will be returned in *waitsendpay* and *listsendpays* results.
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Description If provided, it will be returned in *waitsendpay* and *listsendpays* results.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Destination If provided, it will be returned in **listpays** result.
-	Destination clntypes.PubKey `json:"destination,omitempty"`
+	Destination *clntypes.PubKey `json:"destination,omitempty"`
 	// FirstHop Instructs Core Lightning which peer to send the onion to. It is a JSON dictionary that corresponds to the first element of the route array returned by *getroute* (so fields not mentioned here are ignored).
 	FirstHop SendOnionFirstHop `json:"first_hop"`
 	// Groupid Grouping key to disambiguate multiple attempts to pay an invoice or the same payment_hash.
-	Groupid uint64 `json:"groupid,omitempty"`
+	Groupid *uint64 `json:"groupid,omitempty"`
 	// Label Can be used to provide a human readable reference to retrieve the payment at a later time.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Localinvreqid `localinvreqid` is used by offers to link a payment attempt to a local `invoice_request` offer created by lightningd-invoicerequest(7).
-	Localinvreqid clntypes.Hash `json:"localinvreqid,omitempty"`
+	Localinvreqid *clntypes.Hash `json:"localinvreqid,omitempty"`
 	// Onion Hex-encoded 1366 bytes long blob that was returned by either of the tools that can generate onions. It contains the payloads destined for each hop and some metadata. Please refer to [BOLT 04][bolt04] for further details. If is specific to the route that is being used and the *payment_hash* used to construct, and therefore cannot be reused for other payments or to attempt a separate route. The custom onion can generally be created using the `devtools/onion` CLI tool, or the **createonion** RPC command.
 	Onion clntypes.Hex `json:"onion"`
 	// Partid If provided and non-zero, allows for multiple parallel partial payments with the same *payment_hash*.
-	Partid uint16 `json:"partid,omitempty"`
+	Partid *uint16 `json:"partid,omitempty"`
 	// PaymentHash Specifies the 32 byte hex-encoded hash to use as a challenge to the HTLC that we are sending. It is specific to the onion and has to match the one the onion was created with.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// SharedSecrets A JSON list of 32 byte hex-encoded secrets that were used when creating the onion. Core Lightning can send a payment with a custom onion without the knowledge of these secrets, however it will not be able to parse an eventual error message since that is encrypted with the shared secrets used in the onion. If *shared_secrets* is provided Core Lightning will decrypt the error, act accordingly, e.g., add a `channel_update` included in the error to its network view, and set the details in *listsendpays* correctly. If it is not provided Core Lightning will store the encrypted onion, and expose it in *listsendpays* allowing the caller to decrypt it externally. If it is not provided the Core Lightning node does not know how long the route is, which channels or nodes are involved, and what an eventual error could have been. It can therefore be used for oblivious payments.
-	SharedSecrets []clntypes.Secret `json:"shared_secrets,omitempty"`
+	SharedSecrets *[]clntypes.Secret `json:"shared_secrets,omitempty"`
 	// TotalAmountMSAT This is the full amount requested by the destination in the invoice. It is needed internally for multi-part payments. Its default value is 0 msat for backwards compatibility.
-	TotalAmountMSAT clntypes.MSat `json:"total_amount_msat,omitempty"`
+	TotalAmountMSAT *clntypes.MSat `json:"total_amount_msat,omitempty"`
 }
 
 // SendOnionStatus Status of the payment (could be complete if already sent previously).
@@ -1249,35 +1249,35 @@ const (
 
 type SendOnionResponse struct {
 	// AmountMSAT The amount delivered to destination (if known).
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// AmountSentMSAT The amount sent.
 	AmountSentMSAT clntypes.MSat `json:"amount_sent_msat"`
 	// Bolt11 The bolt11 string (if supplied).
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Bolt12 The bolt12 string (if supplied).
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// CreatedAt The UNIX timestamp showing when this payment was initiated.
 	CreatedAt uint64 `json:"created_at"`
 	// CreatedIndex 1-based index indicating order this payment was created in.
 	CreatedIndex uint64 `json:"created_index"`
 	// Destination The final destination of the payment if known.
-	Destination clntypes.PubKey `json:"destination,omitempty"`
+	Destination *clntypes.PubKey `json:"destination,omitempty"`
 	// ID Old synonym for created_index.
 	ID uint64 `json:"id"`
 	// Label The label, if given to sendpay.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Message Monitor status with listpays or waitsendpay.
-	Message string `json:"message,omitempty"`
+	Message *string `json:"message,omitempty"`
 	// Partid The partid (if supplied) to sendonion/sendpay.
-	Partid uint64 `json:"partid,omitempty"`
+	Partid *uint64 `json:"partid,omitempty"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// PaymentPreimage The proof of payment: SHA256 of this **payment_hash**.
-	PaymentPreimage clntypes.Secret `json:"payment_preimage,omitempty"`
+	PaymentPreimage *clntypes.Secret `json:"payment_preimage,omitempty"`
 	// Status Status of the payment (could be complete if already sent previously).
 	Status SendOnionStatus `json:"status"`
 	// UpdatedIndex 1-based index indicating order this payment was changed.
-	UpdatedIndex uint64 `json:"updated_index,omitempty"`
+	UpdatedIndex *uint64 `json:"updated_index,omitempty"`
 }
 
 // ListSendPaysIndex If neither bolt11 or payment_hash is specified, `index` controls ordering, by `created` (default) or `updated`.
@@ -1299,17 +1299,17 @@ const (
 
 type ListSendPaysRequest struct {
 	// Bolt11 Bolt11 invoice.
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Index If neither bolt11 or payment_hash is specified, `index` controls ordering, by `created` (default) or `updated`.
-	Index ListSendPaysIndex `json:"index,omitempty"`
+	Index *ListSendPaysIndex `json:"index,omitempty"`
 	// Limit If `index` is specified, `limit` can be used to specify the maximum number of entries to return.
-	Limit uint32 `json:"limit,omitempty"`
+	Limit *uint32 `json:"limit,omitempty"`
 	// PaymentHash The hash of the payment_preimage.
-	PaymentHash clntypes.Hash `json:"payment_hash,omitempty"`
+	PaymentHash *clntypes.Hash `json:"payment_hash,omitempty"`
 	// Start If `index` is specified, `start` may be specified to start from that value, which is generally returned from lightning-wait(7).
-	Start uint64 `json:"start,omitempty"`
+	Start *uint64 `json:"start,omitempty"`
 	// Status Whether the invoice has been paid, pending, or failed.
-	Status ListSendPaysStatus `json:"status,omitempty"`
+	Status *ListSendPaysStatus `json:"status,omitempty"`
 }
 
 // ListSendPaysPaymentsStatus Status of the payment.
@@ -1323,41 +1323,41 @@ const (
 
 type ListSendPaysPayments struct {
 	// AmountMSAT The amount delivered to destination (if known). This is not known in the case where sendonion(7) was used to manually initiate a payment without the `amount_msat` parameter.
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// AmountSentMSAT The amount sent.
 	AmountSentMSAT clntypes.MSat `json:"amount_sent_msat"`
 	// Bolt11 The bolt11 string (if pay supplied one).
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Bolt12 The bolt12 string (if supplied for pay).
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// CompletedAt The UNIX timestamp showing when this payment was completed.
-	CompletedAt uint64 `json:"completed_at,omitempty"`
+	CompletedAt *uint64 `json:"completed_at,omitempty"`
 	// CreatedAt The UNIX timestamp showing when this payment was initiated.
 	CreatedAt uint64 `json:"created_at"`
 	// CreatedIndex 1-based index indicating order this payment was created in.
 	CreatedIndex uint64 `json:"created_index"`
 	// Description The description matching the bolt11 description hash (if pay supplied one).
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Destination The final destination of the payment if known.
-	Destination clntypes.PubKey `json:"destination,omitempty"`
+	Destination *clntypes.PubKey `json:"destination,omitempty"`
 	// Erroronion The onion message returned.
-	Erroronion clntypes.Hex `json:"erroronion,omitempty"`
+	Erroronion *clntypes.Hex `json:"erroronion,omitempty"`
 	// Groupid Grouping key to disambiguate multiple attempts to pay an invoice or the same payment_hash.
 	Groupid uint64 `json:"groupid"`
 	// ID Old synonym for created_index.
 	ID uint64 `json:"id"`
 	// Label The label, if given to sendpay.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Partid Part number (for multiple parts to a single payment).
-	Partid uint64 `json:"partid,omitempty"`
+	Partid *uint64 `json:"partid,omitempty"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// PaymentPreimage The proof of payment: SHA256 of this **payment_hash**.
-	PaymentPreimage clntypes.Secret `json:"payment_preimage,omitempty"`
+	PaymentPreimage *clntypes.Secret `json:"payment_preimage,omitempty"`
 	// Status Status of the payment.
 	Status ListSendPaysPaymentsStatus `json:"status"`
 	// UpdatedIndex 1-based index indicating order this payment was changed (only present if it has changed since creation).
-	UpdatedIndex uint64 `json:"updated_index,omitempty"`
+	UpdatedIndex *uint64 `json:"updated_index,omitempty"`
 }
 
 type ListSendPaysResponse struct {
@@ -1410,9 +1410,9 @@ type ListTransactionsResponse struct {
 
 type MakeSecretRequest struct {
 	// HEX One of `hex` or `string` must be specified: `hex` can be any hex data.
-	HEX clntypes.Hex `json:"hex,omitempty"`
+	HEX *clntypes.Hex `json:"hex,omitempty"`
 	// String One of `hex` or `string` must be specified: `string` is a UTF-8 string interpreted literally.
-	String string `json:"string,omitempty"`
+	String *string `json:"string,omitempty"`
 }
 
 type MakeSecretResponse struct {
@@ -1422,31 +1422,31 @@ type MakeSecretResponse struct {
 
 type PayRequest struct {
 	// AmountMSAT *amount_msat* is in millisatoshi precision; it can be a whole number, or a whole number with suffix *msat* or *sat*, or a three decimal point number with suffix *sat*, or an 1 to 11 decimal point number suffixed by *btc*.
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// Bolt11 NOTE: `invstring` is an alternate name for this parameter, since v26.06, for xpay compatibility. Bolt11 or bolt12 invoice (such as one received from lightningd-fetchinvoice(7)). For a bolt11 invoice, if it does not contain an amount, *amount_msat* is required, otherwise if it is specified it must be *null*.
 	Bolt11 string `json:"bolt11"`
 	// Description It is only required for bolt11 invoices which do not contain a description themselves, but contain a description hash: in this case *description* is required. *description* is then checked against the hash inside the invoice before it will be paid.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Exclude *exclude* is a JSON array of short-channel-id/direction (e.g. [ '564334x877x1/0', '564195x1292x0/1' ]) or pubkey which should be excluded from consideration for routing.
-	Exclude []string `json:"exclude,omitempty"`
+	Exclude *[]string `json:"exclude,omitempty"`
 	// Exemptfee This option can be used for tiny payments which would be dominated by the fee leveraged by forwarding nodes. Setting `exemptfee` allows the `maxfeepercent` check to be skipped on fees that are smaller than `exemptfee`.
-	Exemptfee clntypes.MSat `json:"exemptfee,omitempty"`
+	Exemptfee *clntypes.MSat `json:"exemptfee,omitempty"`
 	// Label It is used to attach a label to payments, and is returned in lightning- listpays(7) and lightning-listsendpays(7).
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Localinvreqid `localinvreqid` is used by offers to link a payment attempt to a local `invoice_request` offer created by lightningd-invoicerequest(7). This ensures that we only make a single payment for an offer, and that the offer is marked `used` once paid.
-	Localinvreqid clntypes.Hex `json:"localinvreqid,omitempty"`
+	Localinvreqid *clntypes.Hex `json:"localinvreqid,omitempty"`
 	// Maxdelay A payment may be delayed for up to `maxdelay` blocks by another node; clients should be prepared for this worst case.
-	Maxdelay uint16 `json:"maxdelay,omitempty"`
+	Maxdelay *uint16 `json:"maxdelay,omitempty"`
 	// Maxfee *maxfee* overrides both *maxfeepercent* and *exemptfee* defaults (and if you specify *maxfee* you cannot specify either of those), and creates an absolute limit on what fee we will pay. This allows you to implement your own heuristics rather than the primitive ones used here.
-	Maxfee clntypes.MSat `json:"maxfee,omitempty"`
+	Maxfee *clntypes.MSat `json:"maxfee,omitempty"`
 	// Maxfeepercent Percentage of the amount that is to be paid.
-	Maxfeepercent float64 `json:"maxfeepercent,omitempty"`
+	Maxfeepercent *float64 `json:"maxfeepercent,omitempty"`
 	// PartialMSAT Explicitly state that you are only paying some part of the invoice. Presumably someone else is paying the rest (otherwise the payment will time out at the recipient). Note that this is currently not supported for self-payment (please file an issue if you need this)
-	PartialMSAT clntypes.MSat `json:"partial_msat,omitempty"`
+	PartialMSAT *clntypes.MSat `json:"partial_msat,omitempty"`
 	// RetryFor Until *retry_for* seconds passes, the command will keep finding routes and retrying the payment.
-	RetryFor uint16 `json:"retry_for,omitempty"`
+	RetryFor *uint16 `json:"retry_for,omitempty"`
 	// Riskfactor The *riskfactor* is described in detail in lightning-getroute(7).
-	Riskfactor float64 `json:"riskfactor,omitempty"`
+	Riskfactor *float64 `json:"riskfactor,omitempty"`
 }
 
 // PayStatus Status of payment.
@@ -1466,7 +1466,7 @@ type PayResponse struct {
 	// CreatedAt The UNIX timestamp showing when this payment was initiated.
 	CreatedAt float64 `json:"created_at"`
 	// Destination The final destination of the payment.
-	Destination clntypes.PubKey `json:"destination,omitempty"`
+	Destination *clntypes.PubKey `json:"destination,omitempty"`
 	// Parts How many attempts this took.
 	Parts uint32 `json:"parts"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
@@ -1476,12 +1476,12 @@ type PayResponse struct {
 	// Status Status of payment.
 	Status PayStatus `json:"status"`
 	// WarningPartialCompletion Not all parts of a multi-part payment have completed.
-	WarningPartialCompletion string `json:"warning_partial_completion,omitempty"`
+	WarningPartialCompletion *string `json:"warning_partial_completion,omitempty"`
 }
 
 type ListNodesRequest struct {
 	// ID The public key of the node to list.
-	ID clntypes.PubKey `json:"id,omitempty"`
+	ID *clntypes.PubKey `json:"id,omitempty"`
 }
 
 // ListNodesNodesAddressesType Type of connection (until 23.08, `websocket` was also allowed).
@@ -1497,7 +1497,7 @@ const (
 
 type ListNodesNodesAddresses struct {
 	// Address Address in expected format for **type**.
-	Address string `json:"address,omitempty"`
+	Address *string `json:"address,omitempty"`
 	// Port Port number.
 	Port uint16 `json:"port"`
 	// ItemType Type of connection (until 23.08, `websocket` was also allowed).
@@ -1521,18 +1521,18 @@ type ListNodesNodesOptionWillFund struct {
 
 type ListNodesNodes struct {
 	// Addresses The addresses this node advertized.
-	Addresses []ListNodesNodesAddresses `json:"addresses,omitempty"`
+	Addresses *[]ListNodesNodesAddresses `json:"addresses,omitempty"`
 	// Alias The fun alias this node advertized.
-	Alias string `json:"alias,omitempty"`
+	Alias *string `json:"alias,omitempty"`
 	// Color The favorite RGB color this node advertized.
-	Color clntypes.Hex `json:"color,omitempty"`
+	Color *clntypes.Hex `json:"color,omitempty"`
 	// Features BOLT #9 features bitmap this node advertized.
-	Features clntypes.Hex `json:"features,omitempty"`
+	Features *clntypes.Hex `json:"features,omitempty"`
 	// LastTimestamp A node_announcement has been received for this node (UNIX timestamp).
-	LastTimestamp uint32 `json:"last_timestamp,omitempty"`
+	LastTimestamp *uint32 `json:"last_timestamp,omitempty"`
 	// Nodeid The public key of the node.
-	Nodeid         clntypes.PubKey              `json:"nodeid"`
-	OptionWillFund ListNodesNodesOptionWillFund `json:"option_will_fund,omitempty"`
+	Nodeid         clntypes.PubKey               `json:"nodeid"`
+	OptionWillFund *ListNodesNodesOptionWillFund `json:"option_will_fund,omitempty"`
 }
 
 type ListNodesResponse struct {
@@ -1541,9 +1541,9 @@ type ListNodesResponse struct {
 
 type WaitAnyInvoiceRequest struct {
 	// LastpayIndex Ignores any invoices paid prior to or including this index. 0 is equivalent to not specifying and negative value is invalid.
-	LastpayIndex uint64 `json:"lastpay_index,omitempty"`
+	LastpayIndex *uint64 `json:"lastpay_index,omitempty"`
 	// Timeout If specified, wait at most that number of seconds, which must be an integer. If the specified *timeout* is reached, this command will return with an error. You can specify this to 0 so that **waitanyinvoice** will return immediately with an error if no pending invoice is available yet. If unspecified, this command will wait indefinitely.
-	Timeout uint64 `json:"timeout,omitempty"`
+	Timeout *uint64 `json:"timeout,omitempty"`
 }
 
 // WaitAnyInvoicePaidOutpoint Outpoint this invoice was paid with.
@@ -1564,35 +1564,35 @@ const (
 
 type WaitAnyInvoiceResponse struct {
 	// AmountMSAT The amount required to pay this invoice.
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// AmountReceivedMSAT The amount actually received (could be slightly greater than *amount_msat*, since clients may overpay).
-	AmountReceivedMSAT clntypes.MSat `json:"amount_received_msat,omitempty"`
+	AmountReceivedMSAT *clntypes.MSat `json:"amount_received_msat,omitempty"`
 	// Bolt11 The BOLT11 string (always present unless *bolt12* is).
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Bolt12 The BOLT12 string (always present unless *bolt11* is).
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// CreatedIndex 1-based index indicating order this invoice was created in.
 	CreatedIndex uint64 `json:"created_index"`
 	// Description Description used in the invoice.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// ExpiresAt UNIX timestamp of when it will become / became unpayable.
 	ExpiresAt uint64 `json:"expires_at"`
 	// Label Unique label supplied at invoice creation.
 	Label string `json:"label"`
 	// PaidAt UNIX timestamp of when it was paid.
-	PaidAt uint64 `json:"paid_at,omitempty"`
+	PaidAt *uint64 `json:"paid_at,omitempty"`
 	// PaidOutpoint Outpoint this invoice was paid with.
-	PaidOutpoint WaitAnyInvoicePaidOutpoint `json:"paid_outpoint,omitempty"`
+	PaidOutpoint *WaitAnyInvoicePaidOutpoint `json:"paid_outpoint,omitempty"`
 	// PayIndex Unique incrementing index for this payment.
-	PayIndex uint64 `json:"pay_index,omitempty"`
+	PayIndex *uint64 `json:"pay_index,omitempty"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// PaymentPreimage Proof of payment.
-	PaymentPreimage clntypes.Secret `json:"payment_preimage,omitempty"`
+	PaymentPreimage *clntypes.Secret `json:"payment_preimage,omitempty"`
 	// Status Whether it's paid or expired.
 	Status WaitAnyInvoiceStatus `json:"status"`
 	// UpdatedIndex 1-based index indicating order this invoice was changed (only present if it has changed since creation).
-	UpdatedIndex uint64 `json:"updated_index,omitempty"`
+	UpdatedIndex *uint64 `json:"updated_index,omitempty"`
 }
 
 type WaitInvoiceRequest struct {
@@ -1618,46 +1618,46 @@ const (
 
 type WaitInvoiceResponse struct {
 	// AmountMSAT The amount required to pay this invoice.
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// AmountReceivedMSAT The amount actually received (could be slightly greater than *amount_msat*, since clients may overpay).
-	AmountReceivedMSAT clntypes.MSat `json:"amount_received_msat,omitempty"`
+	AmountReceivedMSAT *clntypes.MSat `json:"amount_received_msat,omitempty"`
 	// Bolt11 The BOLT11 string (always present unless *bolt12* is).
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Bolt12 The BOLT12 string (always present unless *bolt11* is).
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// CreatedIndex 1-based index indicating order this invoice was created in.
 	CreatedIndex uint64 `json:"created_index"`
 	// Description Description used in the invoice.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// ExpiresAt UNIX timestamp of when it will become / became unpayable.
 	ExpiresAt uint64 `json:"expires_at"`
 	// Label Unique label supplied at invoice creation.
 	Label string `json:"label"`
 	// PaidAt UNIX timestamp of when it was paid.
-	PaidAt uint64 `json:"paid_at,omitempty"`
+	PaidAt *uint64 `json:"paid_at,omitempty"`
 	// PaidOutpoint Outpoint this invoice was paid with.
-	PaidOutpoint WaitInvoicePaidOutpoint `json:"paid_outpoint,omitempty"`
+	PaidOutpoint *WaitInvoicePaidOutpoint `json:"paid_outpoint,omitempty"`
 	// PayIndex Unique incrementing index for this payment.
-	PayIndex uint64 `json:"pay_index,omitempty"`
+	PayIndex *uint64 `json:"pay_index,omitempty"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// PaymentPreimage Proof of payment.
-	PaymentPreimage clntypes.Secret `json:"payment_preimage,omitempty"`
+	PaymentPreimage *clntypes.Secret `json:"payment_preimage,omitempty"`
 	// Status Whether it's paid or expired.
 	Status WaitInvoiceStatus `json:"status"`
 	// UpdatedIndex 1-based index indicating order this invoice was changed (only present if it has changed since creation).
-	UpdatedIndex uint64 `json:"updated_index,omitempty"`
+	UpdatedIndex *uint64 `json:"updated_index,omitempty"`
 }
 
 type WaitSendPayRequest struct {
 	// Groupid Grouping key to disambiguate multiple attempts to pay the same payment_hash.
-	Groupid uint64 `json:"groupid,omitempty"`
+	Groupid *uint64 `json:"groupid,omitempty"`
 	// Partid Unique ID within this (multi-part) payment. It must match that of the **sendpay** command.
-	Partid uint64 `json:"partid,omitempty"`
+	Partid *uint64 `json:"partid,omitempty"`
 	// PaymentHash The hash of the *payment_preimage*.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// Timeout A timeout in seconds, for this RPC command to return. If the *timeout* is provided and the given amount of time passes without the payment definitely succeeding or definitely failing, this command returns with a 200 error code (payment still in progress). If *timeout* is not provided this call will wait indefinitely. Indicating a *timeout* of 0 effectively makes this call a pollable query of the status of the payment.
-	Timeout uint32 `json:"timeout,omitempty"`
+	Timeout *uint32 `json:"timeout,omitempty"`
 }
 
 // WaitSendPayStatus Status of the payment.
@@ -1669,37 +1669,37 @@ const (
 
 type WaitSendPayResponse struct {
 	// AmountMSAT The amount delivered to destination (if known).
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// AmountSentMSAT The amount sent.
 	AmountSentMSAT clntypes.MSat `json:"amount_sent_msat"`
 	// Bolt11 The bolt11 string (if pay supplied one).
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Bolt12 The bolt12 string (if supplied for pay).
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// CompletedAt The UNIX timestamp showing when this payment was completed.
-	CompletedAt float64 `json:"completed_at,omitempty"`
+	CompletedAt *float64 `json:"completed_at,omitempty"`
 	// CreatedAt The UNIX timestamp showing when this payment was initiated.
 	CreatedAt uint64 `json:"created_at"`
 	// CreatedIndex 1-based index indicating order this payment was created in.
 	CreatedIndex uint64 `json:"created_index"`
 	// Destination The final destination of the payment if known.
-	Destination clntypes.PubKey `json:"destination,omitempty"`
+	Destination *clntypes.PubKey `json:"destination,omitempty"`
 	// Groupid Grouping key to disambiguate multiple attempts to pay an invoice or the same payment_hash.
-	Groupid uint64 `json:"groupid,omitempty"`
+	Groupid *uint64 `json:"groupid,omitempty"`
 	// ID Old synonym for created_index.
 	ID uint64 `json:"id"`
 	// Label The label, if given to sendpay.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Partid The *partid*, if given to sendpay.
-	Partid uint64 `json:"partid,omitempty"`
+	Partid *uint64 `json:"partid,omitempty"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// PaymentPreimage The proof of payment: SHA256 of this **payment_hash**.
-	PaymentPreimage clntypes.Secret `json:"payment_preimage,omitempty"`
+	PaymentPreimage *clntypes.Secret `json:"payment_preimage,omitempty"`
 	// Status Status of the payment.
 	Status WaitSendPayStatus `json:"status"`
 	// UpdatedIndex 1-based index indicating order this payment was changed (only present if it has changed since creation).
-	UpdatedIndex uint64 `json:"updated_index,omitempty"`
+	UpdatedIndex *uint64 `json:"updated_index,omitempty"`
 }
 
 // NewAddrAddresstype It specifies the type of address wanted; currently *bech32* (e.g. `tb1qu9j4lg5f9rgjyfhvfd905vw46eg39czmktxqgg` on bitcoin testnet or `bc1qwqdg6squsna38e46795at95yu9atm8azzmyvckulcc7kytlcckxswvvzej` on bitcoin mainnet), or *p2tr* taproot addresses. The special value *all* generates all known address types for the same underlying key.
@@ -1713,27 +1713,27 @@ const (
 
 type NewAddrRequest struct {
 	// Addresstype It specifies the type of address wanted; currently *bech32* (e.g. `tb1qu9j4lg5f9rgjyfhvfd905vw46eg39czmktxqgg` on bitcoin testnet or `bc1qwqdg6squsna38e46795at95yu9atm8azzmyvckulcc7kytlcckxswvvzej` on bitcoin mainnet), or *p2tr* taproot addresses. The special value *all* generates all known address types for the same underlying key.
-	Addresstype NewAddrAddresstype `json:"addresstype,omitempty"`
+	Addresstype *NewAddrAddresstype `json:"addresstype,omitempty"`
 }
 
 type NewAddrResponse struct {
 	// Bech32 The bech32 (native segwit) address.
-	Bech32 string `json:"bech32,omitempty"`
+	Bech32 *string `json:"bech32,omitempty"`
 	// P2tr The taproot address.
-	P2tr string `json:"p2tr,omitempty"`
+	P2tr *string `json:"p2tr,omitempty"`
 }
 
 type WithdrawRequest struct {
 	// Destination Any Bitcoin accepted type, including bech32.
 	Destination string `json:"destination"`
 	// Feerate Used for the withdrawal as initial feerate.
-	Feerate clntypes.Feerate `json:"feerate,omitempty"`
+	Feerate *clntypes.Feerate `json:"feerate,omitempty"`
 	// Minconf Minimum number of confirmations that used outputs should have.
-	Minconf uint16 `json:"minconf,omitempty"`
+	Minconf *uint16 `json:"minconf,omitempty"`
 	// Satoshi The amount to be withdrawn from the internal wallet (expressed, as name suggests, in satoshi). The string *all* can be used to specify withdrawal of all available funds (possibly restricted by the `utxos` parameter, and note that if we have any anchor channels, this will always leave at least `min-emergency-msat` as change). Otherwise, it is in satoshi precision; it can be a whole number, a whole number ending in *sat*, a whole number ending in *000msat*, or a number with 1 to 8 decimal places ending in *btc*.
 	Satoshi clntypes.AmountOrAll `json:"satoshi"`
 	// Utxos Specifies the utxos to be used to be withdrawn from, as an array of `txid:vout`. These must be drawn from the node's available UTXO set.
-	Utxos []clntypes.Outpoint `json:"utxos,omitempty"`
+	Utxos *[]clntypes.Outpoint `json:"utxos,omitempty"`
 }
 
 type WithdrawResponse struct {
@@ -1751,20 +1751,20 @@ type KeySendRequest struct {
 	// Destination The 33 byte, hex-encoded, node ID of the node that the payment should go to.
 	Destination clntypes.PubKey `json:"destination"`
 	// Exemptfee Used for tiny payments which would be dominated by the fee leveraged by forwarding nodes. Setting `exemptfee` allows the `maxfeepercent` check to be skipped on fees that are smaller than *exemptfee*.
-	Exemptfee clntypes.MSat `json:"exemptfee,omitempty"`
+	Exemptfee *clntypes.MSat `json:"exemptfee,omitempty"`
 	// Extratlvs Dictionary of additional fields to insert into the final tlv. The format is 'fieldnumber': 'hexstring'.
-	Extratlvs any `json:"extratlvs,omitempty"`
+	Extratlvs *any `json:"extratlvs,omitempty"`
 	// Label Used to attach a label to payments, and is returned in lightning-listpays(7) and lightning-listsendpays(7).
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Maxdelay Number of blocks the payment may be delayed.
-	Maxdelay uint32 `json:"maxdelay,omitempty"`
+	Maxdelay *uint32 `json:"maxdelay,omitempty"`
 	// Maxfee *maxfee* overrides both *maxfeepercent* and *exemptfee* defaults (and if you specify *maxfee* you cannot specify either of those), and creates an absolute limit on what fee we will pay. This allows you to implement your own heuristics rather than the primitive ones used here.
-	Maxfee clntypes.MSat `json:"maxfee,omitempty"`
+	Maxfee *clntypes.MSat `json:"maxfee,omitempty"`
 	// Maxfeepercent Limits the money paid in fees as percentage of the total amount that is to be transferred.
-	Maxfeepercent float64 `json:"maxfeepercent,omitempty"`
+	Maxfeepercent *float64 `json:"maxfeepercent,omitempty"`
 	// RetryFor Until *retry_for* seconds passes, the command will keep finding routes and retrying the payment. However, a payment may be delayed for up to `maxdelay` blocks by another node; clients should be prepared for this worst case.
-	RetryFor   uint32 `json:"retry_for,omitempty"`
-	Routehints any    `json:"routehints,omitempty"`
+	RetryFor   *uint32 `json:"retry_for,omitempty"`
+	Routehints *any    `json:"routehints,omitempty"`
 }
 
 // KeySendStatus Status of payment.
@@ -1782,7 +1782,7 @@ type KeySendResponse struct {
 	// CreatedAt The UNIX timestamp showing when this payment was initiated.
 	CreatedAt float64 `json:"created_at"`
 	// Destination The final destination of the payment.
-	Destination clntypes.PubKey `json:"destination,omitempty"`
+	Destination *clntypes.PubKey `json:"destination,omitempty"`
 	// Parts How many attempts this took.
 	Parts uint32 `json:"parts"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
@@ -1792,26 +1792,26 @@ type KeySendResponse struct {
 	// Status Status of payment.
 	Status KeySendStatus `json:"status"`
 	// WarningPartialCompletion Not all parts of a multi-part payment have completed.
-	WarningPartialCompletion string `json:"warning_partial_completion,omitempty"`
+	WarningPartialCompletion *string `json:"warning_partial_completion,omitempty"`
 }
 
 type FundPSBTRequest struct {
 	// ExcessAsChange Flag to add a change output for the excess sats.
-	ExcessAsChange bool `json:"excess_as_change,omitempty"`
+	ExcessAsChange *bool `json:"excess_as_change,omitempty"`
 	// Feerate Used for the transaction as initial feerate.
 	Feerate clntypes.Feerate `json:"feerate"`
 	// Locktime The locktime of the transaction. if not set, it is set to a recent block height.
-	Locktime uint32 `json:"locktime,omitempty"`
+	Locktime *uint32 `json:"locktime,omitempty"`
 	// MinWitnessWeight Minimum weight to use for a UTXO's witness. If the actual witness weight is greater than the provided minimum, the actual witness weight will be used.
-	MinWitnessWeight uint32 `json:"min_witness_weight,omitempty"`
+	MinWitnessWeight *uint32 `json:"min_witness_weight,omitempty"`
 	// Minconf The minimum number of confirmations that used outputs should have.
-	Minconf uint32 `json:"minconf,omitempty"`
+	Minconf *uint32 `json:"minconf,omitempty"`
 	// Nonwrapped To signal to filter out any p2sh-wrapped inputs from funding this PSBT.
-	Nonwrapped bool `json:"nonwrapped,omitempty"`
+	Nonwrapped *bool `json:"nonwrapped,omitempty"`
 	// OpeningAnchorChannel To signel that it needs emergency reserve for anchors so that we can lowball our commitment tx fees, and min-emergency-msat for reserving some sats for closing anchor channels.
-	OpeningAnchorChannel bool `json:"opening_anchor_channel,omitempty"`
+	OpeningAnchorChannel *bool `json:"opening_anchor_channel,omitempty"`
 	// Reserve If not zero, then *reserveinputs* is called (successfully, with *exclusive* true) on the returned PSBT for this number of blocks.
-	Reserve uint32 `json:"reserve,omitempty"`
+	Reserve *uint32 `json:"reserve,omitempty"`
 	// Satoshi The minimum satoshi value of the output(s) needed (or the string `all` meaning use all unreserved inputs). If a value, it can be a whole number, a whole number ending in *sat*, a whole number ending in *000msat*, or a number with 1 to 8 decimal places ending in *btc*.
 	Satoshi clntypes.AmountOrAll `json:"satoshi"`
 	// Startweight The weight of the transaction before *fundpsbt* has added any inputs.
@@ -1833,7 +1833,7 @@ type FundPSBTReservations struct {
 
 type FundPSBTResponse struct {
 	// ChangeOutnum The 0-based output number where change was placed (only if parameter *excess_as_change* was true and there was sufficient funds).
-	ChangeOutnum uint32 `json:"change_outnum,omitempty"`
+	ChangeOutnum *uint32 `json:"change_outnum,omitempty"`
 	// EstimatedFinalWeight The estimated weight of the transaction once fully signed.
 	EstimatedFinalWeight uint32 `json:"estimated_final_weight"`
 	// ExcessMSAT The amount above *satoshi* which is available. This could be zero, or dust; it will be zero if *change_outnum* is also returned.
@@ -1843,14 +1843,14 @@ type FundPSBTResponse struct {
 	// PSBT Unsigned PSBT which fulfills the parameters given.
 	PSBT string `json:"psbt"`
 	// Reservations If *reserve* was true or a non-zero number, just as per lightning- reserveinputs(7).
-	Reservations []FundPSBTReservations `json:"reservations,omitempty"`
+	Reservations *[]FundPSBTReservations `json:"reservations,omitempty"`
 }
 
 type SendPSBTRequest struct {
 	// PSBT The fully signed psbt to be sent.
 	PSBT string `json:"psbt"`
 	// Reserve Number of blocks to increase reservation of any of our inputs by.
-	Reserve uint32 `json:"reserve,omitempty"`
+	Reserve *uint32 `json:"reserve,omitempty"`
 }
 
 type SendPSBTResponse struct {
@@ -1864,7 +1864,7 @@ type SignPSBTRequest struct {
 	// PSBT The psbt to be signed.
 	PSBT string `json:"psbt"`
 	// Signonly Input numbers to sign.
-	Signonly []uint32 `json:"signonly,omitempty"`
+	Signonly *[]uint32 `json:"signonly,omitempty"`
 }
 
 type SignPSBTResponse struct {
@@ -1874,19 +1874,19 @@ type SignPSBTResponse struct {
 
 type UTXOPSBTRequest struct {
 	// ExcessAsChange Flag to add a change output for the excess sats.
-	ExcessAsChange bool `json:"excess_as_change,omitempty"`
+	ExcessAsChange *bool `json:"excess_as_change,omitempty"`
 	// Feerate Used for the transaction as initial feerate.
 	Feerate clntypes.Feerate `json:"feerate"`
 	// Locktime If not set, it is set to a recent block height.
-	Locktime uint32 `json:"locktime,omitempty"`
+	Locktime *uint32 `json:"locktime,omitempty"`
 	// MinWitnessWeight Minimum weight to use for a UTXO's witness. If the actual witness weight is greater than the provided minimum, the actual witness weight will be used.
-	MinWitnessWeight uint32 `json:"min_witness_weight,omitempty"`
+	MinWitnessWeight *uint32 `json:"min_witness_weight,omitempty"`
 	// OpeningAnchorChannel To signel that it needs emergency reserve for anchors so that we can lowball our commitment tx fees, and min-emergency-msat for reserving some sats for closing anchor channels.
-	OpeningAnchorChannel bool `json:"opening_anchor_channel,omitempty"`
+	OpeningAnchorChannel *bool `json:"opening_anchor_channel,omitempty"`
 	// Reserve If not zero, then *reserveinputs* is called (successfully, with *exclusive* true) on the returned PSBT for this number of blocks.
-	Reserve uint32 `json:"reserve,omitempty"`
+	Reserve *uint32 `json:"reserve,omitempty"`
 	// Reservedok If set to true, it will also fail if any of the *utxos* are already reserved.
-	Reservedok bool `json:"reservedok,omitempty"`
+	Reservedok *bool `json:"reservedok,omitempty"`
 	// Satoshi The minimum satoshi value of the output(s) needed (or the string `all` meaning use all unreserved inputs). If a value, it can be a whole number, a whole number ending in *sat*, a whole number ending in *000msat*, or a number with 1 to 8 decimal places ending in *btc*.
 	Satoshi clntypes.AmountOrAll `json:"satoshi"`
 	// Startweight The weight of the transaction before *fundpsbt* has added any inputs.
@@ -1910,7 +1910,7 @@ type UTXOPSBTReservations struct {
 
 type UTXOPSBTResponse struct {
 	// ChangeOutnum The 0-based output number where change was placed (only if parameter *excess_as_change* was true and there was sufficient funds).
-	ChangeOutnum uint32 `json:"change_outnum,omitempty"`
+	ChangeOutnum *uint32 `json:"change_outnum,omitempty"`
 	// EstimatedFinalWeight The estimated weight of the transaction once fully signed.
 	EstimatedFinalWeight uint32 `json:"estimated_final_weight"`
 	// ExcessMSAT The amount above *satoshi* which is available. This could be zero, or dust; it will be zero if *change_outnum* is also returned.
@@ -1920,7 +1920,7 @@ type UTXOPSBTResponse struct {
 	// PSBT Unsigned PSBT which fulfills the parameters given.
 	PSBT string `json:"psbt"`
 	// Reservations If *reserve* was true or a non-zero number, just as per lightning- reserveinputs(7).
-	Reservations []UTXOPSBTReservations `json:"reservations,omitempty"`
+	Reservations *[]UTXOPSBTReservations `json:"reservations,omitempty"`
 }
 
 type TXDiscardRequest struct {
@@ -1937,13 +1937,13 @@ type TXDiscardResponse struct {
 
 type TXPrepareRequest struct {
 	// Feerate Used for the transaction as initial feerate.
-	Feerate clntypes.Feerate `json:"feerate,omitempty"`
+	Feerate *clntypes.Feerate `json:"feerate,omitempty"`
 	// Minconf The minimum number of confirmations that used outputs should have.
-	Minconf uint32 `json:"minconf,omitempty"`
+	Minconf *uint32 `json:"minconf,omitempty"`
 	// Outputs Format is like: `[{destination1: amount1}, {destination2: amount2}]` or `[{destination: *all*}]`. It supports any number of **confirmed** outputs.
 	Outputs []clntypes.OutputDesc `json:"outputs"`
 	// Utxos To be used to fund the transaction, as an array of `txid:vout`. These must be drawn from the node's available UTXO set.
-	Utxos []clntypes.Outpoint `json:"utxos,omitempty"`
+	Utxos *[]clntypes.Outpoint `json:"utxos,omitempty"`
 }
 
 type TXPrepareResponse struct {
@@ -1971,18 +1971,18 @@ type TXSendResponse struct {
 
 type ListPeerChannelsRequest struct {
 	// ChannelID If supplied, limits the channels to just this channel_id, if it exists. Cannot be used with 'id' or 'short_channel_id'.
-	ChannelID clntypes.Hash `json:"channel_id,omitempty"`
+	ChannelID *clntypes.Hash `json:"channel_id,omitempty"`
 	// ID If supplied, limits the channels to just the peer with the given ID, if it exists. Cannot be used with 'short_channel_id' or 'channel_id'.
-	ID clntypes.PubKey `json:"id,omitempty"`
+	ID *clntypes.PubKey `json:"id,omitempty"`
 	// ShortChannelID If supplied, limits the channels to just this short_channel_id (or local alias), if it exists. Cannot be used with 'id' or 'channel_id'.
-	ShortChannelID clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
+	ShortChannelID *clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
 }
 
 type ListPeerChannelsChannelsAlias struct {
 	// Local An alias assigned by this node to this channel, used for outgoing payments.
-	Local clntypes.ShortChannelID `json:"local,omitempty"`
+	Local *clntypes.ShortChannelID `json:"local,omitempty"`
 	// Remote An alias assigned by the remote node to this channel, usable in routehints and invoices.
-	Remote clntypes.ShortChannelID `json:"remote,omitempty"`
+	Remote *clntypes.ShortChannelID `json:"remote,omitempty"`
 }
 
 // ListPeerChannelsChannelsChannelTypeNames Name of feature bit.
@@ -2023,19 +2023,19 @@ type ListPeerChannelsChannelsFeerate struct {
 
 type ListPeerChannelsChannelsFunding struct {
 	// FeePaidMSAT Amount we paid peer at open.
-	FeePaidMSAT clntypes.MSat `json:"fee_paid_msat,omitempty"`
+	FeePaidMSAT *clntypes.MSat `json:"fee_paid_msat,omitempty"`
 	// FeeRcvdMSAT Amount we were paid by peer at open.
-	FeeRcvdMSAT clntypes.MSat `json:"fee_rcvd_msat,omitempty"`
+	FeeRcvdMSAT *clntypes.MSat `json:"fee_rcvd_msat,omitempty"`
 	// LocalFundsMSAT Amount of channel we funded.
 	LocalFundsMSAT clntypes.MSat `json:"local_funds_msat"`
 	// PSBT The PSBT (may be non-final or unsigned) we should use to open the channel, if any. This is initially from `fundchannel_complete`, but will be updated with if `sendpsbt` is called with an updated PSBT.
-	PSBT string `json:"psbt,omitempty"`
+	PSBT *string `json:"psbt,omitempty"`
 	// PushedMSAT Amount pushed from opener to peer.
-	PushedMSAT clntypes.MSat `json:"pushed_msat,omitempty"`
+	PushedMSAT *clntypes.MSat `json:"pushed_msat,omitempty"`
 	// RemoteFundsMSAT Amount of channel they funded.
 	RemoteFundsMSAT clntypes.MSat `json:"remote_funds_msat"`
 	// Withheld True if `fundchannel_complete` told us it will not broadcast the funding transaction (so we know not to bother with any other onchain transactions in the case of this channel). This is set to false if `sendpsbt` is send on the above PSBT.
-	Withheld bool `json:"withheld,omitempty"`
+	Withheld *bool `json:"withheld,omitempty"`
 }
 
 // ListPeerChannelsChannelsHtlcsDirection Whether it came from peer, or is going to peer.
@@ -2082,13 +2082,13 @@ type ListPeerChannelsChannelsHtlcs struct {
 	// ID Unique ID for this htlc on this channel in this direction.
 	ID uint64 `json:"id"`
 	// LocalTrimmed If this is too small to enforce onchain; it doesn't appear in the commitment transaction and will not be enforced in a unilateral close. Generally true if the HTLC (after subtracting onchain fees) is below the `dust_limit_msat` for the channel.
-	LocalTrimmed bool `json:"local_trimmed,omitempty"`
+	LocalTrimmed *bool `json:"local_trimmed,omitempty"`
 	// PaymentHash The hash of the payment_preimage which will prove payment.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// State Status of the HTLC.
 	State ListPeerChannelsChannelsHtlcsState `json:"state"`
 	// Status Set if this HTLC is currently waiting on a hook (and shows what plugin).
-	Status string `json:"status,omitempty"`
+	Status *string `json:"status,omitempty"`
 }
 
 type ListPeerChannelsChannelsInflight struct {
@@ -2101,7 +2101,7 @@ type ListPeerChannelsChannelsInflight struct {
 	// OurFundingMSAT Amount we have in the channel.
 	OurFundingMSAT clntypes.MSat `json:"our_funding_msat"`
 	// ScratchTXID The commitment transaction txid we would use if we went onchain now.
-	ScratchTXID clntypes.TxID `json:"scratch_txid,omitempty"`
+	ScratchTXID *clntypes.TxID `json:"scratch_txid,omitempty"`
 	// SpliceAmount The amount of sats we're splicing in or out.
 	SpliceAmount int64 `json:"splice_amount"`
 	// TotalFundingMSAT Total amount in the channel.
@@ -2234,128 +2234,128 @@ type ListPeerChannelsChannelsUpdates struct {
 	// Local Our gossip for channel.
 	Local ListPeerChannelsChannelsUpdatesLocal `json:"local"`
 	// Remote Peer's gossip for channel.
-	Remote ListPeerChannelsChannelsUpdatesRemote `json:"remote,omitempty"`
+	Remote *ListPeerChannelsChannelsUpdatesRemote `json:"remote,omitempty"`
 }
 
 type ListPeerChannelsChannels struct {
-	Alias ListPeerChannelsChannelsAlias `json:"alias,omitempty"`
+	Alias *ListPeerChannelsChannelsAlias `json:"alias,omitempty"`
 	// ChannelID The full channel_id (funding txid Xored with output number).
-	ChannelID clntypes.Hash `json:"channel_id,omitempty"`
+	ChannelID *clntypes.Hash `json:"channel_id,omitempty"`
 	// ChannelType Channel_type as negotiated with peer.
-	ChannelType ListPeerChannelsChannelsChannelType `json:"channel_type,omitempty"`
+	ChannelType *ListPeerChannelsChannelsChannelType `json:"channel_type,omitempty"`
 	// CloseTo ScriptPubkey which we have to close to if we mutual close.
-	CloseTo clntypes.Hex `json:"close_to,omitempty"`
+	CloseTo *clntypes.Hex `json:"close_to,omitempty"`
 	// CloseToAddr The bitcoin address we will close to (present if close_to_addr is a standardized address).
-	CloseToAddr string `json:"close_to_addr,omitempty"`
+	CloseToAddr *string `json:"close_to_addr,omitempty"`
 	// Closer Who initiated the channel close (only present if closing).
-	Closer ListPeerChannelsChannelsCloser `json:"closer,omitempty"`
+	Closer *ListPeerChannelsChannelsCloser `json:"closer,omitempty"`
 	// Direction 0 if we're the lesser node_id, 1 if we're the greater (as used in BOLT #7 channel_update). The direction of the channel (i.e. 0 if we are the lesser node id, 1 if we are the greater).
-	Direction uint32 `json:"direction,omitempty"`
+	Direction *uint32 `json:"direction,omitempty"`
 	// DustLimitMSAT Minimum amount for an output on the channel transactions.
-	DustLimitMSAT clntypes.MSat `json:"dust_limit_msat,omitempty"`
-	Features      []string      `json:"features"`
+	DustLimitMSAT *clntypes.MSat `json:"dust_limit_msat,omitempty"`
+	Features      []string       `json:"features"`
 	// FeeBaseMSAT Amount we charge to use the channel.
-	FeeBaseMSAT clntypes.MSat `json:"fee_base_msat,omitempty"`
+	FeeBaseMSAT *clntypes.MSat `json:"fee_base_msat,omitempty"`
 	// FeeProportionalMillionths Amount we charge to use the channel in parts-per-million.
-	FeeProportionalMillionths uint32 `json:"fee_proportional_millionths,omitempty"`
+	FeeProportionalMillionths *uint32 `json:"fee_proportional_millionths,omitempty"`
 	// Feerate Feerates for the current tx.
-	Feerate ListPeerChannelsChannelsFeerate `json:"feerate,omitempty"`
-	Funding ListPeerChannelsChannelsFunding `json:"funding,omitempty"`
+	Feerate *ListPeerChannelsChannelsFeerate `json:"feerate,omitempty"`
+	Funding *ListPeerChannelsChannelsFunding `json:"funding,omitempty"`
 	// FundingOutnum The 0-based output number of the funding transaction which opens the channel.
-	FundingOutnum uint32 `json:"funding_outnum,omitempty"`
+	FundingOutnum *uint32 `json:"funding_outnum,omitempty"`
 	// FundingTXID ID of the funding transaction.
-	FundingTXID clntypes.TxID `json:"funding_txid,omitempty"`
+	FundingTXID *clntypes.TxID `json:"funding_txid,omitempty"`
 	// Htlcs Current HTLCs in this channel.
-	Htlcs []ListPeerChannelsChannelsHtlcs `json:"htlcs,omitempty"`
+	Htlcs *[]ListPeerChannelsChannelsHtlcs `json:"htlcs,omitempty"`
 	// IgnoreFeeLimits Set if we allow this peer to set fees to anything they want.
-	IgnoreFeeLimits bool `json:"ignore_fee_limits,omitempty"`
+	IgnoreFeeLimits *bool `json:"ignore_fee_limits,omitempty"`
 	// InFulfilledMSAT Total amount of successful incoming payment attempts.
-	InFulfilledMSAT clntypes.MSat `json:"in_fulfilled_msat,omitempty"`
+	InFulfilledMSAT *clntypes.MSat `json:"in_fulfilled_msat,omitempty"`
 	// InOfferedMSAT Total amount of incoming payment attempts.
-	InOfferedMSAT clntypes.MSat `json:"in_offered_msat,omitempty"`
+	InOfferedMSAT *clntypes.MSat `json:"in_offered_msat,omitempty"`
 	// InPaymentsFulfilled Number of successful incoming payment attempts.
-	InPaymentsFulfilled uint64 `json:"in_payments_fulfilled,omitempty"`
+	InPaymentsFulfilled *uint64 `json:"in_payments_fulfilled,omitempty"`
 	// InPaymentsOffered Number of incoming payment attempts.
-	InPaymentsOffered uint64 `json:"in_payments_offered,omitempty"`
+	InPaymentsOffered *uint64 `json:"in_payments_offered,omitempty"`
 	// Inflight Current candidate funding transactions.
-	Inflight []ListPeerChannelsChannelsInflight `json:"inflight,omitempty"`
+	Inflight *[]ListPeerChannelsChannelsInflight `json:"inflight,omitempty"`
 	// InitialFeerate For inflight opens, the first feerate used to initiate the channel open. The feerate for the initial funding transaction in per-1000-weight, with `kpw` appended.
-	InitialFeerate string `json:"initial_feerate,omitempty"`
+	InitialFeerate *string `json:"initial_feerate,omitempty"`
 	// LastFeerate For inflight opens, the most recent feerate used on the channel open. The feerate for the latest funding transaction in per-1000-weight, with `kpw` appended.
-	LastFeerate string `json:"last_feerate,omitempty"`
+	LastFeerate *string `json:"last_feerate,omitempty"`
 	// LastStableConnection Last time we reestablished the open channel and stayed connected for 1 minute.
-	LastStableConnection uint64 `json:"last_stable_connection,omitempty"`
+	LastStableConnection *uint64 `json:"last_stable_connection,omitempty"`
 	// LastTXFeeMSAT Fee attached to this the current tx.
-	LastTXFeeMSAT clntypes.MSat `json:"last_tx_fee_msat,omitempty"`
+	LastTXFeeMSAT *clntypes.MSat `json:"last_tx_fee_msat,omitempty"`
 	// LostState Set if we are fallen behind i.e. lost some channel state.
-	LostState bool `json:"lost_state,omitempty"`
+	LostState *bool `json:"lost_state,omitempty"`
 	// MaxAcceptedHtlcs Maximum number of incoming HTLC we will accept at once.
-	MaxAcceptedHtlcs uint32 `json:"max_accepted_htlcs,omitempty"`
+	MaxAcceptedHtlcs *uint32 `json:"max_accepted_htlcs,omitempty"`
 	// MaxToUsMSAT Most amount owed to us ever. If we were to successfully steal from the peer, this is the amount we could potentially get.
-	MaxToUsMSAT clntypes.MSat `json:"max_to_us_msat,omitempty"`
+	MaxToUsMSAT *clntypes.MSat `json:"max_to_us_msat,omitempty"`
 	// MaximumHTLCOutMSAT The maximum amount HTLC we will send.
-	MaximumHTLCOutMSAT clntypes.MSat `json:"maximum_htlc_out_msat,omitempty"`
+	MaximumHTLCOutMSAT *clntypes.MSat `json:"maximum_htlc_out_msat,omitempty"`
 	// MinToUsMSAT Least amount owed to us ever. If the peer were to successfully steal from us, this is the amount we would still retain.
-	MinToUsMSAT clntypes.MSat `json:"min_to_us_msat,omitempty"`
+	MinToUsMSAT *clntypes.MSat `json:"min_to_us_msat,omitempty"`
 	// MinimumHTLCInMSAT The minimum amount HTLC we accept.
-	MinimumHTLCInMSAT clntypes.MSat `json:"minimum_htlc_in_msat,omitempty"`
+	MinimumHTLCInMSAT *clntypes.MSat `json:"minimum_htlc_in_msat,omitempty"`
 	// MinimumHTLCOutMSAT The minimum amount HTLC we will send.
-	MinimumHTLCOutMSAT clntypes.MSat `json:"minimum_htlc_out_msat,omitempty"`
+	MinimumHTLCOutMSAT *clntypes.MSat `json:"minimum_htlc_out_msat,omitempty"`
 	// NextFeeStep For inflight opens, the next feerate step we'll use for the channel open.
-	NextFeeStep uint32 `json:"next_fee_step,omitempty"`
+	NextFeeStep *uint32 `json:"next_fee_step,omitempty"`
 	// NextFeerate For inflight opens, the next feerate we'll use for the channel open. The minimum feerate for the next funding transaction in per-1000-weight, with `kpw` appended.
-	NextFeerate string `json:"next_feerate,omitempty"`
+	NextFeerate *string `json:"next_feerate,omitempty"`
 	// Opener Who initiated the channel.
 	Opener ListPeerChannelsChannelsOpener `json:"opener"`
 	// OurMaxHTLCValueInFlightMSAT Cap on total value of outstanding HTLCs we accept from the remote node. This limits the total amount in flight we can receive through this channel.
-	OurMaxHTLCValueInFlightMSAT clntypes.MSat `json:"our_max_htlc_value_in_flight_msat,omitempty"`
+	OurMaxHTLCValueInFlightMSAT *clntypes.MSat `json:"our_max_htlc_value_in_flight_msat,omitempty"`
 	// OurReserveMSAT Minimum they insist we keep in channel. If you have less than this in the channel, you cannot send out via this channel.
-	OurReserveMSAT clntypes.MSat `json:"our_reserve_msat,omitempty"`
+	OurReserveMSAT *clntypes.MSat `json:"our_reserve_msat,omitempty"`
 	// OurToSelfDelay The number of blocks before we can take our funds if we unilateral close.
-	OurToSelfDelay uint32 `json:"our_to_self_delay,omitempty"`
+	OurToSelfDelay *uint32 `json:"our_to_self_delay,omitempty"`
 	// OutFulfilledMSAT Total amount of successful outgoing payment attempts.
-	OutFulfilledMSAT clntypes.MSat `json:"out_fulfilled_msat,omitempty"`
+	OutFulfilledMSAT *clntypes.MSat `json:"out_fulfilled_msat,omitempty"`
 	// OutOfferedMSAT Total amount of outgoing payment attempts.
-	OutOfferedMSAT clntypes.MSat `json:"out_offered_msat,omitempty"`
+	OutOfferedMSAT *clntypes.MSat `json:"out_offered_msat,omitempty"`
 	// OutPaymentsFulfilled Number of successful outgoing payment attempts.
-	OutPaymentsFulfilled uint64 `json:"out_payments_fulfilled,omitempty"`
+	OutPaymentsFulfilled *uint64 `json:"out_payments_fulfilled,omitempty"`
 	// OutPaymentsOffered Number of outgoing payment attempts.
-	OutPaymentsOffered uint64 `json:"out_payments_offered,omitempty"`
+	OutPaymentsOffered *uint64 `json:"out_payments_offered,omitempty"`
 	// Owner The current subdaemon controlling this connection.
-	Owner string `json:"owner,omitempty"`
+	Owner *string `json:"owner,omitempty"`
 	// PeerConnected A boolean flag that is set to true if the peer is online.
 	PeerConnected bool `json:"peer_connected"`
 	// PeerID Node Public key.
 	PeerID clntypes.PubKey `json:"peer_id"`
 	// Private If True, we will not announce this channel.
-	Private bool `json:"private,omitempty"`
+	Private *bool `json:"private,omitempty"`
 	// ReceivableMSAT An estimate of the total peer could send through channel.
-	ReceivableMSAT clntypes.MSat `json:"receivable_msat,omitempty"`
+	ReceivableMSAT *clntypes.MSat `json:"receivable_msat,omitempty"`
 	// Reestablished A boolean flag that is set to true if we have successfully exchanged reestablish messages with this connection. True if we have successfully exchanged reestablish messages this connection.
-	Reestablished bool `json:"reestablished,omitempty"`
+	Reestablished *bool `json:"reestablished,omitempty"`
 	// ScratchTXID The txid we would use if we went onchain now.
-	ScratchTXID clntypes.TxID `json:"scratch_txid,omitempty"`
+	ScratchTXID *clntypes.TxID `json:"scratch_txid,omitempty"`
 	// ShortChannelID The short_channel_id (once locked in).
-	ShortChannelID clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
+	ShortChannelID *clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
 	// SpendableMSAT An estimate of the total we could send through channel (can be wrong because adding HTLCs requires an increase in fees paid to onchain miners, and onchain fees change dynamically according to onchain activity).
-	SpendableMSAT clntypes.MSat `json:"spendable_msat,omitempty"`
+	SpendableMSAT *clntypes.MSat `json:"spendable_msat,omitempty"`
 	// State The channel state, in particular `CHANNELD_NORMAL` means the channel can be used normally.
 	State ListPeerChannelsChannelsState `json:"state"`
 	// StateChanges Prior state changes.
-	StateChanges []ListPeerChannelsChannelsStateChanges `json:"state_changes,omitempty"`
-	Status       []string                               `json:"status,omitempty"`
+	StateChanges *[]ListPeerChannelsChannelsStateChanges `json:"state_changes,omitempty"`
+	Status       *[]string                               `json:"status,omitempty"`
 	// TheirMaxHTLCValueInFlightMSAT Cap on total value of outstanding HTLCs offered to the remote node. This limits the total amount in flight we can send through this channel.
-	TheirMaxHTLCValueInFlightMSAT clntypes.MSat `json:"their_max_htlc_value_in_flight_msat,omitempty"`
+	TheirMaxHTLCValueInFlightMSAT *clntypes.MSat `json:"their_max_htlc_value_in_flight_msat,omitempty"`
 	// TheirReserveMSAT Minimum we insist they keep in channel. If they have less than this in the channel, they cannot send to us on that channel.
-	TheirReserveMSAT clntypes.MSat `json:"their_reserve_msat,omitempty"`
+	TheirReserveMSAT *clntypes.MSat `json:"their_reserve_msat,omitempty"`
 	// TheirToSelfDelay The number of blocks before they can take their funds if they unilateral close.
-	TheirToSelfDelay uint32 `json:"their_to_self_delay,omitempty"`
+	TheirToSelfDelay *uint32 `json:"their_to_self_delay,omitempty"`
 	// ToUsMSAT How much of channel is owed to us.
-	ToUsMSAT clntypes.MSat `json:"to_us_msat,omitempty"`
+	ToUsMSAT *clntypes.MSat `json:"to_us_msat,omitempty"`
 	// TotalMSAT Total amount in the channel.
-	TotalMSAT clntypes.MSat `json:"total_msat,omitempty"`
+	TotalMSAT *clntypes.MSat `json:"total_msat,omitempty"`
 	// Updates Latest gossip updates sent/received.
-	Updates ListPeerChannelsChannelsUpdates `json:"updates,omitempty"`
+	Updates *ListPeerChannelsChannelsUpdates `json:"updates,omitempty"`
 }
 
 type ListPeerChannelsResponse struct {
@@ -2364,14 +2364,14 @@ type ListPeerChannelsResponse struct {
 
 type ListClosedChannelsRequest struct {
 	// ID If no *id* is supplied, then channel data on all historical channels are given. Supplying *id* will filter the results to only match channels to that peer. Note that prior to v23.05, old peers were forgotten.
-	ID clntypes.PubKey `json:"id,omitempty"`
+	ID *clntypes.PubKey `json:"id,omitempty"`
 }
 
 type ListClosedChannelsClosedchannelsAlias struct {
 	// Local An alias assigned by this node to this channel, used for outgoing payments.
-	Local clntypes.ShortChannelID `json:"local,omitempty"`
+	Local *clntypes.ShortChannelID `json:"local,omitempty"`
 	// Remote An alias assigned by the remote node to this channel, usable in routehints and invoices.
-	Remote clntypes.ShortChannelID `json:"remote,omitempty"`
+	Remote *clntypes.ShortChannelID `json:"remote,omitempty"`
 }
 
 // ListClosedChannelsClosedchannelsChannelTypeNames Name of feature bit.
@@ -2423,37 +2423,37 @@ const (
 )
 
 type ListClosedChannelsClosedchannels struct {
-	Alias ListClosedChannelsClosedchannelsAlias `json:"alias,omitempty"`
+	Alias *ListClosedChannelsClosedchannelsAlias `json:"alias,omitempty"`
 	// ChannelID The full channel_id (funding txid Xored with output number).
 	ChannelID clntypes.Hash `json:"channel_id"`
 	// ChannelType Channel_type as negotiated with peer.
-	ChannelType ListClosedChannelsClosedchannelsChannelType `json:"channel_type,omitempty"`
+	ChannelType *ListClosedChannelsClosedchannelsChannelType `json:"channel_type,omitempty"`
 	// CloseCause What caused the channel to close.
 	CloseCause ListClosedChannelsClosedchannelsCloseCause `json:"close_cause"`
 	// Closer Who initiated the channel close (only present if closing).
-	Closer ListClosedChannelsClosedchannelsCloser `json:"closer,omitempty"`
+	Closer *ListClosedChannelsClosedchannelsCloser `json:"closer,omitempty"`
 	// FinalToUsMSAT Our balance in final commitment transaction.
 	FinalToUsMSAT clntypes.MSat `json:"final_to_us_msat"`
 	// FundingFeePaidMSAT How much we paid to lease the channel (iff `leased` is true and `opener` is local).
-	FundingFeePaidMSAT clntypes.MSat `json:"funding_fee_paid_msat,omitempty"`
+	FundingFeePaidMSAT *clntypes.MSat `json:"funding_fee_paid_msat,omitempty"`
 	// FundingFeeRcvdMSAT How much they paid to lease the channel (iff `leased` is true and `opener` is remote).
-	FundingFeeRcvdMSAT clntypes.MSat `json:"funding_fee_rcvd_msat,omitempty"`
+	FundingFeeRcvdMSAT *clntypes.MSat `json:"funding_fee_rcvd_msat,omitempty"`
 	// FundingOutnum The 0-based output number of the funding transaction which opens the channel.
 	FundingOutnum uint32 `json:"funding_outnum"`
 	// FundingPSBT The PSBT (may be non-final or unsigned) we should use to open the channel, if any
-	FundingPSBT string `json:"funding_psbt,omitempty"`
+	FundingPSBT *string `json:"funding_psbt,omitempty"`
 	// FundingPushedMSAT How much `opener` pushed immediate (if non-zero).
-	FundingPushedMSAT clntypes.MSat `json:"funding_pushed_msat,omitempty"`
+	FundingPushedMSAT *clntypes.MSat `json:"funding_pushed_msat,omitempty"`
 	// FundingTXID ID of the funding transaction.
 	FundingTXID clntypes.TxID `json:"funding_txid"`
 	// FundingWithheld True if we have not broadcast the funding transaction (see fundchannel_complete).
-	FundingWithheld bool `json:"funding_withheld,omitempty"`
+	FundingWithheld *bool `json:"funding_withheld,omitempty"`
 	// LastCommitmentFeeMSAT The fee on `last_commitment_txid`.
-	LastCommitmentFeeMSAT clntypes.MSat `json:"last_commitment_fee_msat,omitempty"`
+	LastCommitmentFeeMSAT *clntypes.MSat `json:"last_commitment_fee_msat,omitempty"`
 	// LastCommitmentTXID The final commitment tx's txid (or mutual close, if we accepted it). Not present for some very old, small channels pre-0.7.0.
-	LastCommitmentTXID clntypes.Hash `json:"last_commitment_txid,omitempty"`
+	LastCommitmentTXID *clntypes.Hash `json:"last_commitment_txid,omitempty"`
 	// LastStableConnection Last time we reestablished the open channel and stayed connected for 1 minute.
-	LastStableConnection uint64 `json:"last_stable_connection,omitempty"`
+	LastStableConnection *uint64 `json:"last_stable_connection,omitempty"`
 	// Leased Whether this channel was leased from `opener`.
 	Leased bool `json:"leased"`
 	// MaxToUsMSAT Most amount owed to us ever. If we were to successfully steal from the peer, this is the amount we could potentially get.
@@ -2463,11 +2463,11 @@ type ListClosedChannelsClosedchannels struct {
 	// Opener Who initiated the channel.
 	Opener ListClosedChannelsClosedchannelsOpener `json:"opener"`
 	// PeerID Peer public key (can be missing with pre-v23.05 closes!).
-	PeerID clntypes.PubKey `json:"peer_id,omitempty"`
+	PeerID *clntypes.PubKey `json:"peer_id,omitempty"`
 	// Private If True, we will not announce this channel.
 	Private bool `json:"private"`
 	// ShortChannelID The short_channel_id.
-	ShortChannelID clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
+	ShortChannelID *clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
 	// TotalHtlcsSent Number of HTLCs we ever sent.
 	TotalHtlcsSent uint64 `json:"total_htlcs_sent"`
 	// TotalLocalCommitments Number of commitment transaction we made.
@@ -2507,7 +2507,7 @@ const (
 
 type DecodeFallbacks struct {
 	// Addr The address in appropriate format for *type*.
-	Addr string `json:"addr,omitempty"`
+	Addr *string `json:"addr,omitempty"`
 	// HEX Raw encoded address.
 	HEX clntypes.Hex `json:"hex"`
 	// ItemType The address type (if known).
@@ -2516,7 +2516,7 @@ type DecodeFallbacks struct {
 
 type DecodeInvoiceFallbacks struct {
 	// Address Bech32 segwit address.
-	Address string `json:"address,omitempty"`
+	Address *string `json:"address,omitempty"`
 	// HEX Raw encoded segwit address.
 	HEX clntypes.Hex `json:"hex"`
 	// Version Segwit address version.
@@ -2540,20 +2540,20 @@ type DecodeInvoicePathsPayinfo struct {
 	// FeeProportionalMillionths Proportional fee for path.
 	FeeProportionalMillionths uint32 `json:"fee_proportional_millionths"`
 	// HTLCMaximumMSAT Maximum amount which can be sent via path.
-	HTLCMaximumMSAT clntypes.MSat `json:"htlc_maximum_msat,omitempty"`
+	HTLCMaximumMSAT *clntypes.MSat `json:"htlc_maximum_msat,omitempty"`
 	// HTLCMinimumMSAT Minimum amount which can be sent via path.
-	HTLCMinimumMSAT clntypes.MSat `json:"htlc_minimum_msat,omitempty"`
+	HTLCMinimumMSAT *clntypes.MSat `json:"htlc_minimum_msat,omitempty"`
 }
 
 type DecodeInvoicePaths struct {
 	// FirstNodeID The (presumably well-known) public key of the start of the path.
-	FirstNodeID clntypes.PubKey `json:"first_node_id,omitempty"`
+	FirstNodeID *clntypes.PubKey `json:"first_node_id,omitempty"`
 	// FirstPathKey Path key to deliver to first hop on this path.
-	FirstPathKey clntypes.PubKey `json:"first_path_key,omitempty"`
+	FirstPathKey *clntypes.PubKey `json:"first_path_key,omitempty"`
 	// FirstSCID the short channel id of the start of the path (alternative to first_node_id)
-	FirstSCID clntypes.ShortChannelID `json:"first_scid,omitempty"`
+	FirstSCID *clntypes.ShortChannelID `json:"first_scid,omitempty"`
 	// FirstSCIDDir which end of the first_scid is the start of the path
-	FirstSCIDDir uint32 `json:"first_scid_dir,omitempty"`
+	FirstSCIDDir *uint32 `json:"first_scid_dir,omitempty"`
 	// Path An individual path.
 	Path    []DecodeInvoicePathsPath  `json:"path"`
 	Payinfo DecodeInvoicePathsPayinfo `json:"payinfo"`
@@ -2562,9 +2562,9 @@ type DecodeInvoicePaths struct {
 // DecodeInvreqBIP353Name BIP 353 name which this invoice request is for.
 type DecodeInvreqBIP353Name struct {
 	// Domain The domain (part after the @).
-	Domain string `json:"domain,omitempty"`
+	Domain *string `json:"domain,omitempty"`
 	// Name The name (part before the @).
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 }
 
 type DecodeInvreqPathsPath struct {
@@ -2576,13 +2576,13 @@ type DecodeInvreqPathsPath struct {
 
 type DecodeInvreqPaths struct {
 	// FirstNodeID The (presumably well-known) public key of the start of the path.
-	FirstNodeID clntypes.PubKey `json:"first_node_id,omitempty"`
+	FirstNodeID *clntypes.PubKey `json:"first_node_id,omitempty"`
 	// FirstPathKey Path key to deliver to first hop on this path.
-	FirstPathKey clntypes.PubKey `json:"first_path_key,omitempty"`
+	FirstPathKey *clntypes.PubKey `json:"first_path_key,omitempty"`
 	// FirstSCID the short channel id of the start of the path (alternative to first_node_id)
-	FirstSCID clntypes.ShortChannelID `json:"first_scid,omitempty"`
+	FirstSCID *clntypes.ShortChannelID `json:"first_scid,omitempty"`
 	// FirstSCIDDir which end of the first_scid is the start of the path
-	FirstSCIDDir uint32 `json:"first_scid_dir,omitempty"`
+	FirstSCIDDir *uint32 `json:"first_scid_dir,omitempty"`
 	// Path An individual path.
 	Path []DecodeInvreqPathsPath `json:"path"`
 }
@@ -2596,13 +2596,13 @@ type DecodeOfferPathsPath struct {
 
 type DecodeOfferPaths struct {
 	// FirstNodeID The (presumably well-known) public key of the start of the path.
-	FirstNodeID clntypes.PubKey `json:"first_node_id,omitempty"`
+	FirstNodeID *clntypes.PubKey `json:"first_node_id,omitempty"`
 	// FirstPathKey Path key to deliver to first hop on this path.
-	FirstPathKey clntypes.PubKey `json:"first_path_key,omitempty"`
+	FirstPathKey *clntypes.PubKey `json:"first_path_key,omitempty"`
 	// FirstSCID the short channel id of the start of the path (alternative to first_node_id)
-	FirstSCID clntypes.ShortChannelID `json:"first_scid,omitempty"`
+	FirstSCID *clntypes.ShortChannelID `json:"first_scid,omitempty"`
 	// FirstSCIDDir which end of the first_scid is the start of the path
-	FirstSCIDDir uint32 `json:"first_scid_dir,omitempty"`
+	FirstSCIDDir *uint32 `json:"first_scid_dir,omitempty"`
 	// Path An individual path.
 	Path []DecodeOfferPathsPath `json:"path"`
 }
@@ -2610,7 +2610,7 @@ type DecodeOfferPaths struct {
 // DecodeOfferRecurrencePaywindow When within a period will payment be accepted.
 type DecodeOfferRecurrencePaywindow struct {
 	// ProportionalAmount Amount should be scaled if paid after period start.
-	ProportionalAmount bool `json:"proportional_amount,omitempty"`
+	ProportionalAmount *bool `json:"proportional_amount,omitempty"`
 	// SecondsAfter Seconds after to period start.
 	SecondsAfter uint32 `json:"seconds_after"`
 	// SecondsBefore Seconds prior to period start.
@@ -2620,19 +2620,19 @@ type DecodeOfferRecurrencePaywindow struct {
 // DecodeOfferRecurrence How often to this offer should be used.
 type DecodeOfferRecurrence struct {
 	// Basetime Period starts at this UNIX timestamp.
-	Basetime uint64 `json:"basetime,omitempty"`
+	Basetime *uint64 `json:"basetime,omitempty"`
 	// CompulsoryField True if this is the `offer_recurrence_compulsory` field (which means readers which don't understand recurrence cannot use it), false if this is the `offer_recurrence_optional` field.
-	CompulsoryField bool `json:"compulsory_field,omitempty"`
+	CompulsoryField *bool `json:"compulsory_field,omitempty"`
 	// Limit Maximum period number for recurrence.
-	Limit uint32 `json:"limit,omitempty"`
+	Limit *uint32 `json:"limit,omitempty"`
 	// Paywindow When within a period will payment be accepted.
-	Paywindow DecodeOfferRecurrencePaywindow `json:"paywindow,omitempty"`
+	Paywindow *DecodeOfferRecurrencePaywindow `json:"paywindow,omitempty"`
 	// Period How many `time_unit` per payment period.
 	Period uint32 `json:"period"`
 	// TimeUnit The BOLT12 time unit.
 	TimeUnit uint32 `json:"time_unit"`
 	// TimeUnitName The name of `time_unit` (if valid).
-	TimeUnitName string `json:"time_unit_name,omitempty"`
+	TimeUnitName *string `json:"time_unit_name,omitempty"`
 }
 
 type DecodeRestrictions struct {
@@ -2693,197 +2693,197 @@ type DecodeUnknownPayerProofTlvs struct {
 
 type DecodeResponse struct {
 	// AmountMSAT Amount the invoice asked for.
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// CreatedAt The UNIX-style timestamp of the invoice.
-	CreatedAt uint64 `json:"created_at,omitempty"`
+	CreatedAt *uint64 `json:"created_at,omitempty"`
 	// Currency The BIP173 name for the currency.
-	Currency string `json:"currency,omitempty"`
+	Currency *string `json:"currency,omitempty"`
 	// CurrencyMinorUnit The number of decimal places to apply to amount (if currency known).
-	CurrencyMinorUnit uint32 `json:"currency_minor_unit,omitempty"`
+	CurrencyMinorUnit *uint32 `json:"currency_minor_unit,omitempty"`
 	// Decrypted The decrypted value of the provided bech32 of emergency.recover.
-	Decrypted clntypes.Hex `json:"decrypted,omitempty"`
+	Decrypted *clntypes.Hex `json:"decrypted,omitempty"`
 	// Description The description of the purpose of the purchase.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// DescriptionHash The hash of the description, in place of *description*.
-	DescriptionHash clntypes.Hash `json:"description_hash,omitempty"`
+	DescriptionHash *clntypes.Hash `json:"description_hash,omitempty"`
 	// Expiry The number of seconds this is valid after `created_at`.
-	Expiry uint64 `json:"expiry,omitempty"`
+	Expiry *uint64 `json:"expiry,omitempty"`
 	// Extra Any extra fields we didn't know how to parse.
-	Extra []DecodeExtra `json:"extra,omitempty"`
+	Extra *[]DecodeExtra `json:"extra,omitempty"`
 	// Fallbacks Onchain addresses.
-	Fallbacks []DecodeFallbacks `json:"fallbacks,omitempty"`
+	Fallbacks *[]DecodeFallbacks `json:"fallbacks,omitempty"`
 	// Features The features bitmap for this invoice.
-	Features clntypes.Hex `json:"features,omitempty"`
+	Features *clntypes.Hex `json:"features,omitempty"`
 	// HEX The raw rune in hex.
-	HEX clntypes.Hex `json:"hex,omitempty"`
+	HEX *clntypes.Hex `json:"hex,omitempty"`
 	// InvoiceAmountMSAT The amount required to fulfill invoice.
-	InvoiceAmountMSAT clntypes.MSat `json:"invoice_amount_msat,omitempty"`
+	InvoiceAmountMSAT *clntypes.MSat `json:"invoice_amount_msat,omitempty"`
 	// InvoiceCreatedAt The UNIX timestamp of invoice creation.
-	InvoiceCreatedAt uint64 `json:"invoice_created_at,omitempty"`
+	InvoiceCreatedAt *uint64 `json:"invoice_created_at,omitempty"`
 	// InvoiceFallbacks Onchain addresses.
-	InvoiceFallbacks []DecodeInvoiceFallbacks `json:"invoice_fallbacks,omitempty"`
+	InvoiceFallbacks *[]DecodeInvoiceFallbacks `json:"invoice_fallbacks,omitempty"`
 	// InvoiceFeatures The feature bits of the invoice.
-	InvoiceFeatures clntypes.Hex `json:"invoice_features,omitempty"`
+	InvoiceFeatures *clntypes.Hex `json:"invoice_features,omitempty"`
 	// InvoiceNodeID The id to pay (usually the same as offer_issuer_id).
-	InvoiceNodeID clntypes.PubKey `json:"invoice_node_id,omitempty"`
+	InvoiceNodeID *clntypes.PubKey `json:"invoice_node_id,omitempty"`
 	// InvoicePaths Paths to pay the destination.
-	InvoicePaths []DecodeInvoicePaths `json:"invoice_paths,omitempty"`
+	InvoicePaths *[]DecodeInvoicePaths `json:"invoice_paths,omitempty"`
 	// InvoicePaymentHash The hash of the *payment_preimage*. The hash of the *proof_preimage*.
-	InvoicePaymentHash clntypes.Hex `json:"invoice_payment_hash,omitempty"`
+	InvoicePaymentHash *clntypes.Hex `json:"invoice_payment_hash,omitempty"`
 	// InvoiceRecurrenceBasetime The UNIX timestamp to base the invoice periods on.
-	InvoiceRecurrenceBasetime uint64 `json:"invoice_recurrence_basetime,omitempty"`
+	InvoiceRecurrenceBasetime *uint64 `json:"invoice_recurrence_basetime,omitempty"`
 	// InvoiceRelativeExpiry The number of seconds after *invoice_created_at* when this expires.
-	InvoiceRelativeExpiry uint32 `json:"invoice_relative_expiry,omitempty"`
+	InvoiceRelativeExpiry *uint32 `json:"invoice_relative_expiry,omitempty"`
 	// InvreqAmountMSAT The amount the invoice should be for.
-	InvreqAmountMSAT clntypes.MSat `json:"invreq_amount_msat,omitempty"`
+	InvreqAmountMSAT *clntypes.MSat `json:"invreq_amount_msat,omitempty"`
 	// InvreqBIP353Name BIP 353 name which this invoice request is for.
-	InvreqBIP353Name DecodeInvreqBIP353Name `json:"invreq_bip_353_name,omitempty"`
+	InvreqBIP353Name *DecodeInvreqBIP353Name `json:"invreq_bip_353_name,omitempty"`
 	// InvreqChain Which blockchain this offer is for (missing implies bitcoin mainnet only).
-	InvreqChain clntypes.Hex `json:"invreq_chain,omitempty"`
+	InvreqChain *clntypes.Hex `json:"invreq_chain,omitempty"`
 	// InvreqFeatures The feature bits of the invoice_request.
-	InvreqFeatures clntypes.Hex `json:"invreq_features,omitempty"`
+	InvreqFeatures *clntypes.Hex `json:"invreq_features,omitempty"`
 	// InvreqMetadata The payer-provided blob to derive invreq_payer_id.
-	InvreqMetadata clntypes.Hex `json:"invreq_metadata,omitempty"`
+	InvreqMetadata *clntypes.Hex `json:"invreq_metadata,omitempty"`
 	// InvreqPaths Paths to the destination.
-	InvreqPaths []DecodeInvreqPaths `json:"invreq_paths,omitempty"`
+	InvreqPaths *[]DecodeInvreqPaths `json:"invreq_paths,omitempty"`
 	// InvreqPayerID The payer's key. The payer-provided key.
-	InvreqPayerID clntypes.Hex `json:"invreq_payer_id,omitempty"`
+	InvreqPayerID *clntypes.Hex `json:"invreq_payer_id,omitempty"`
 	// InvreqPayerNote A note attached by the payer.
-	InvreqPayerNote string `json:"invreq_payer_note,omitempty"`
+	InvreqPayerNote *string `json:"invreq_payer_note,omitempty"`
 	// InvreqQuantity The number of items to invoice for.
-	InvreqQuantity uint64 `json:"invreq_quantity,omitempty"`
+	InvreqQuantity *uint64 `json:"invreq_quantity,omitempty"`
 	// InvreqRecurrenceCancel Present to cancel a recurring invoice
-	InvreqRecurrenceCancel bool `json:"invreq_recurrence_cancel,omitempty"`
+	InvreqRecurrenceCancel *bool `json:"invreq_recurrence_cancel,omitempty"`
 	// InvreqRecurrenceCounter Which number request this is for the same invoice.
-	InvreqRecurrenceCounter uint32 `json:"invreq_recurrence_counter,omitempty"`
+	InvreqRecurrenceCounter *uint32 `json:"invreq_recurrence_counter,omitempty"`
 	// InvreqRecurrenceStart When we're requesting to start an invoice at a non-zero period.
-	InvreqRecurrenceStart uint32 `json:"invreq_recurrence_start,omitempty"`
+	InvreqRecurrenceStart *uint32 `json:"invreq_recurrence_start,omitempty"`
 	// MinFinalCltvExpiry The minimum CLTV delay for the final node.
-	MinFinalCltvExpiry uint32 `json:"min_final_cltv_expiry,omitempty"`
+	MinFinalCltvExpiry *uint32 `json:"min_final_cltv_expiry,omitempty"`
 	// OfferAbsoluteExpiry UNIX timestamp of when this offer expires.
-	OfferAbsoluteExpiry uint64 `json:"offer_absolute_expiry,omitempty"`
+	OfferAbsoluteExpiry *uint64 `json:"offer_absolute_expiry,omitempty"`
 	// OfferAmount The amount in the `offer_currency` adjusted by `currency_minor_unit`, if any.
-	OfferAmount uint64 `json:"offer_amount,omitempty"`
+	OfferAmount *uint64 `json:"offer_amount,omitempty"`
 	// OfferAmountMSAT The amount in bitcoin (if specified, and no `offer_currency`).
-	OfferAmountMSAT clntypes.MSat `json:"offer_amount_msat,omitempty"`
+	OfferAmountMSAT *clntypes.MSat `json:"offer_amount_msat,omitempty"`
 	// OfferChains Which blockchains this offer is for (missing implies bitcoin mainnet only).
-	OfferChains []clntypes.Hash `json:"offer_chains,omitempty"`
+	OfferChains *[]clntypes.Hash `json:"offer_chains,omitempty"`
 	// OfferCurrency ISO 4217 code of the currency (missing implies Bitcoin).
-	OfferCurrency string `json:"offer_currency,omitempty"`
+	OfferCurrency *string `json:"offer_currency,omitempty"`
 	// OfferDescription The description of the purpose of the offer.
-	OfferDescription string `json:"offer_description,omitempty"`
+	OfferDescription *string `json:"offer_description,omitempty"`
 	// OfferFeatures The feature bits of the offer.
-	OfferFeatures clntypes.Hex `json:"offer_features,omitempty"`
+	OfferFeatures *clntypes.Hex `json:"offer_features,omitempty"`
 	// OfferID The id we use to identify this offer.
-	OfferID clntypes.Hex `json:"offer_id,omitempty"`
+	OfferID *clntypes.Hex `json:"offer_id,omitempty"`
 	// OfferIssuer The description of the creator of the offer.
-	OfferIssuer string `json:"offer_issuer,omitempty"`
+	OfferIssuer *string `json:"offer_issuer,omitempty"`
 	// OfferIssuerID Public key of the offering node (can be a node id). The pubkey associated with the offer (can be a node id).
-	OfferIssuerID clntypes.PubKey `json:"offer_issuer_id,omitempty"`
+	OfferIssuerID *clntypes.PubKey `json:"offer_issuer_id,omitempty"`
 	// OfferMetadata Any metadata the creator of the offer includes.
-	OfferMetadata clntypes.Hex `json:"offer_metadata,omitempty"`
+	OfferMetadata *clntypes.Hex `json:"offer_metadata,omitempty"`
 	// OfferPaths Paths to the destination.
-	OfferPaths []DecodeOfferPaths `json:"offer_paths,omitempty"`
+	OfferPaths *[]DecodeOfferPaths `json:"offer_paths,omitempty"`
 	// OfferQuantityMax The maximum quantity (or, if 0, means any quantity).
-	OfferQuantityMax uint64 `json:"offer_quantity_max,omitempty"`
+	OfferQuantityMax *uint64 `json:"offer_quantity_max,omitempty"`
 	// OfferRecurrence How often to this offer should be used.
-	OfferRecurrence DecodeOfferRecurrence `json:"offer_recurrence,omitempty"`
+	OfferRecurrence *DecodeOfferRecurrence `json:"offer_recurrence,omitempty"`
 	// Payee The public key of the recipient.
-	Payee clntypes.PubKey `json:"payee,omitempty"`
+	Payee *clntypes.PubKey `json:"payee,omitempty"`
 	// PaymentHash The hash of the *payment_preimage*.
-	PaymentHash clntypes.Hash `json:"payment_hash,omitempty"`
+	PaymentHash *clntypes.Hash `json:"payment_hash,omitempty"`
 	// PaymentMetadata The payment_metadata to put in the payment.
-	PaymentMetadata clntypes.Hex `json:"payment_metadata,omitempty"`
+	PaymentMetadata *clntypes.Hex `json:"payment_metadata,omitempty"`
 	// PaymentSecret The secret to hand to the payee node.
-	PaymentSecret clntypes.Secret `json:"payment_secret,omitempty"`
+	PaymentSecret *clntypes.Secret `json:"payment_secret,omitempty"`
 	// ProofLeafHashes Nonce hashes for each disclosed non-signature TLV field.
-	ProofLeafHashes []clntypes.Hash `json:"proof_leaf_hashes,omitempty"`
+	ProofLeafHashes *[]clntypes.Hash `json:"proof_leaf_hashes,omitempty"`
 	// ProofMissingHashes Merkle hashes needed to reconstruct omitted subtrees.
-	ProofMissingHashes []clntypes.Hash `json:"proof_missing_hashes,omitempty"`
+	ProofMissingHashes *[]clntypes.Hash `json:"proof_missing_hashes,omitempty"`
 	// ProofNote Optional note attached to the proof by the payer.
-	ProofNote string `json:"proof_note,omitempty"`
+	ProofNote *string `json:"proof_note,omitempty"`
 	// ProofOmittedTlvs TLV type markers for fields omitted from the proof.
-	ProofOmittedTlvs []uint64 `json:"proof_omitted_tlvs,omitempty"`
+	ProofOmittedTlvs *[]uint64 `json:"proof_omitted_tlvs,omitempty"`
 	// ProofPreimage The payment preimage proving payment.
-	ProofPreimage clntypes.Hex `json:"proof_preimage,omitempty"`
+	ProofPreimage *clntypes.Hex `json:"proof_preimage,omitempty"`
 	// ProofSignature BIP-340 signature of `invreq_payer_id` over the proof.
-	ProofSignature clntypes.Bip340Sig `json:"proof_signature,omitempty"`
+	ProofSignature *clntypes.Bip340Sig `json:"proof_signature,omitempty"`
 	// Restrictions Restrictions built into the rune: all must pass.
-	Restrictions []DecodeRestrictions `json:"restrictions,omitempty"`
+	Restrictions *[]DecodeRestrictions `json:"restrictions,omitempty"`
 	// Routes Route hints to the *payee*.
-	Routes any `json:"routes,omitempty"`
+	Routes *any `json:"routes,omitempty"`
 	// Signature BIP-340 signature of `invoice_node_id` over the disclosed invoice fields. BIP-340 signature of the `invreq_payer_id` on this invoice_request. BIP-340 signature of the `offer_issuer_id` on this invoice. Signature of the *payee* on this invoice.
-	Signature clntypes.Bip340Sig `json:"signature,omitempty"`
+	Signature *clntypes.Bip340Sig `json:"signature,omitempty"`
 	// String The string encoding of the rune.
-	String string `json:"string,omitempty"`
+	String *string `json:"string,omitempty"`
 	// ItemType What kind of object it decoded to.
 	ItemType DecodeType `json:"type"`
 	// UniqueID Unique id (always a numeric id on runes we create).
-	UniqueID string `json:"unique_id,omitempty"`
+	UniqueID *string `json:"unique_id,omitempty"`
 	// UnknownInvoiceRequestTlvs Any extra fields we didn't know how to parse.
-	UnknownInvoiceRequestTlvs []DecodeUnknownInvoiceRequestTlvs `json:"unknown_invoice_request_tlvs,omitempty"`
+	UnknownInvoiceRequestTlvs *[]DecodeUnknownInvoiceRequestTlvs `json:"unknown_invoice_request_tlvs,omitempty"`
 	// UnknownInvoiceTlvs Any extra fields we didn't know how to parse.
-	UnknownInvoiceTlvs []DecodeUnknownInvoiceTlvs `json:"unknown_invoice_tlvs,omitempty"`
+	UnknownInvoiceTlvs *[]DecodeUnknownInvoiceTlvs `json:"unknown_invoice_tlvs,omitempty"`
 	// UnknownOfferTlvs Any extra fields we didn't know how to parse.
-	UnknownOfferTlvs []DecodeUnknownOfferTlvs `json:"unknown_offer_tlvs,omitempty"`
+	UnknownOfferTlvs *[]DecodeUnknownOfferTlvs `json:"unknown_offer_tlvs,omitempty"`
 	// UnknownPayerProofTlvs Any extra fields we didn't know how to parse.
-	UnknownPayerProofTlvs []DecodeUnknownPayerProofTlvs `json:"unknown_payer_proof_tlvs,omitempty"`
+	UnknownPayerProofTlvs *[]DecodeUnknownPayerProofTlvs `json:"unknown_payer_proof_tlvs,omitempty"`
 	// Valid If this is false, you *MUST* not use the result except for diagnostics!
 	Valid bool `json:"valid"`
 	// Version Rune version, not currently set on runes we create.
-	Version string `json:"version,omitempty"`
+	Version *string `json:"version,omitempty"`
 	// WarningEmptyBlindedPath The blinded path has 0 hops.
-	WarningEmptyBlindedPath string `json:"warning_empty_blinded_path,omitempty"`
+	WarningEmptyBlindedPath *string `json:"warning_empty_blinded_path,omitempty"`
 	// WarningInvalidInvoiceRequestSignature Incorrect `signature`.
-	WarningInvalidInvoiceRequestSignature string `json:"warning_invalid_invoice_request_signature,omitempty"`
+	WarningInvalidInvoiceRequestSignature *string `json:"warning_invalid_invoice_request_signature,omitempty"`
 	// WarningInvalidInvoiceSignature Incorrect `signature`.
-	WarningInvalidInvoiceSignature string `json:"warning_invalid_invoice_signature,omitempty"`
+	WarningInvalidInvoiceSignature *string `json:"warning_invalid_invoice_signature,omitempty"`
 	// WarningInvalidInvreqPayerNote `invreq_payer_note` is not valid UTF8.
-	WarningInvalidInvreqPayerNote string `json:"warning_invalid_invreq_payer_note,omitempty"`
+	WarningInvalidInvreqPayerNote *string `json:"warning_invalid_invreq_payer_note,omitempty"`
 	// WarningInvalidOfferCurrency `offer_currency_code` is not valid UTF8.
-	WarningInvalidOfferCurrency string `json:"warning_invalid_offer_currency,omitempty"`
+	WarningInvalidOfferCurrency *string `json:"warning_invalid_offer_currency,omitempty"`
 	// WarningInvalidOfferDescription `offer_description` is not valid UTF8.
-	WarningInvalidOfferDescription string `json:"warning_invalid_offer_description,omitempty"`
+	WarningInvalidOfferDescription *string `json:"warning_invalid_offer_description,omitempty"`
 	// WarningInvalidOfferIssuer `offer_issuer` is not valid UTF8.
-	WarningInvalidOfferIssuer string `json:"warning_invalid_offer_issuer,omitempty"`
+	WarningInvalidOfferIssuer *string `json:"warning_invalid_offer_issuer,omitempty"`
 	// WarningInvreqBIP353NameDomainInvalid `invreq_bip_353_name` domain field contains unusual characters.
-	WarningInvreqBIP353NameDomainInvalid string `json:"warning_invreq_bip_353_name_domain_invalid,omitempty"`
+	WarningInvreqBIP353NameDomainInvalid *string `json:"warning_invreq_bip_353_name_domain_invalid,omitempty"`
 	// WarningInvreqBIP353NameNameInvalid `invreq_bip_353_name` name field contains unusual characters.
-	WarningInvreqBIP353NameNameInvalid string `json:"warning_invreq_bip_353_name_name_invalid,omitempty"`
+	WarningInvreqBIP353NameNameInvalid *string `json:"warning_invreq_bip_353_name_name_invalid,omitempty"`
 	// WarningInvreqRecurrenceCancelWithZeroCounter `invreq_recurrence_cancel` is present, but `invreq_recurrence_counter` is 0.
-	WarningInvreqRecurrenceCancelWithZeroCounter string `json:"warning_invreq_recurrence_cancel_with_zero_counter,omitempty"`
+	WarningInvreqRecurrenceCancelWithZeroCounter *string `json:"warning_invreq_recurrence_cancel_with_zero_counter,omitempty"`
 	// WarningInvreqRecurrenceCancelWithoutCounter `invreq_recurrence_cancel` is present, but `invreq_recurrence_counter` isn't.
-	WarningInvreqRecurrenceCancelWithoutCounter string `json:"warning_invreq_recurrence_cancel_without_counter,omitempty"`
+	WarningInvreqRecurrenceCancelWithoutCounter *string `json:"warning_invreq_recurrence_cancel_without_counter,omitempty"`
 	// WarningMissingInvoiceAmount `invoice_amount` is not present.
-	WarningMissingInvoiceAmount string `json:"warning_missing_invoice_amount,omitempty"`
+	WarningMissingInvoiceAmount *string `json:"warning_missing_invoice_amount,omitempty"`
 	// WarningMissingInvoiceBlindedpay `invoice_blindedpay` is not present.
-	WarningMissingInvoiceBlindedpay string `json:"warning_missing_invoice_blindedpay,omitempty"`
+	WarningMissingInvoiceBlindedpay *string `json:"warning_missing_invoice_blindedpay,omitempty"`
 	// WarningMissingInvoiceCreatedAt `invoice_created_at` is not present.
-	WarningMissingInvoiceCreatedAt string `json:"warning_missing_invoice_created_at,omitempty"`
+	WarningMissingInvoiceCreatedAt *string `json:"warning_missing_invoice_created_at,omitempty"`
 	// WarningMissingInvoiceNodeID `invoice_node_id` is not present.
-	WarningMissingInvoiceNodeID string `json:"warning_missing_invoice_node_id,omitempty"`
+	WarningMissingInvoiceNodeID *string `json:"warning_missing_invoice_node_id,omitempty"`
 	// WarningMissingInvoicePaths `invoice_paths` is not present.
-	WarningMissingInvoicePaths string `json:"warning_missing_invoice_paths,omitempty"`
+	WarningMissingInvoicePaths *string `json:"warning_missing_invoice_paths,omitempty"`
 	// WarningMissingInvoicePaymentHash `invoice_payment_hash` is not present.
-	WarningMissingInvoicePaymentHash string `json:"warning_missing_invoice_payment_hash,omitempty"`
+	WarningMissingInvoicePaymentHash *string `json:"warning_missing_invoice_payment_hash,omitempty"`
 	// WarningMissingInvoiceRecurrenceBasetime `invoice_recurrence_basetime` is not present.
-	WarningMissingInvoiceRecurrenceBasetime string `json:"warning_missing_invoice_recurrence_basetime,omitempty"`
+	WarningMissingInvoiceRecurrenceBasetime *string `json:"warning_missing_invoice_recurrence_basetime,omitempty"`
 	// WarningMissingInvoiceRequestSignature `signature` is not present.
-	WarningMissingInvoiceRequestSignature string `json:"warning_missing_invoice_request_signature,omitempty"`
+	WarningMissingInvoiceRequestSignature *string `json:"warning_missing_invoice_request_signature,omitempty"`
 	// WarningMissingInvoiceSignature `signature` is not present.
-	WarningMissingInvoiceSignature string `json:"warning_missing_invoice_signature,omitempty"`
+	WarningMissingInvoiceSignature *string `json:"warning_missing_invoice_signature,omitempty"`
 	// WarningMissingInvreqMetadata `invreq_metadata` is not present.
-	WarningMissingInvreqMetadata string `json:"warning_missing_invreq_metadata,omitempty"`
+	WarningMissingInvreqMetadata *string `json:"warning_missing_invreq_metadata,omitempty"`
 	// WarningMissingInvreqPayerID `invreq_payer_id` is not present.
-	WarningMissingInvreqPayerID string `json:"warning_missing_invreq_payer_id,omitempty"`
+	WarningMissingInvreqPayerID *string `json:"warning_missing_invreq_payer_id,omitempty"`
 	// WarningMissingOfferDescription `offer_description` is not present.
-	WarningMissingOfferDescription string `json:"warning_missing_offer_description,omitempty"`
+	WarningMissingOfferDescription *string `json:"warning_missing_offer_description,omitempty"`
 	// WarningMissingOfferIssuerID `offer_issuer_id` is not present and there are no offer_paths
-	WarningMissingOfferIssuerID string `json:"warning_missing_offer_issuer_id,omitempty"`
+	WarningMissingOfferIssuerID *string `json:"warning_missing_offer_issuer_id,omitempty"`
 	// WarningRuneInvalidUtf8 The rune contains invalid UTF-8 strings.
-	WarningRuneInvalidUtf8 string `json:"warning_rune_invalid_utf8,omitempty"`
+	WarningRuneInvalidUtf8 *string `json:"warning_rune_invalid_utf8,omitempty"`
 	// WarningUnknownOfferCurrency The currency code is unknown (so no `currency_minor_unit`).
-	WarningUnknownOfferCurrency string `json:"warning_unknown_offer_currency,omitempty"`
+	WarningUnknownOfferCurrency *string `json:"warning_unknown_offer_currency,omitempty"`
 }
 
 // DelPayStatus Expected status of the payment. Only deletes if the payment status matches. Deleting a `pending` payment will return an error.
@@ -2896,9 +2896,9 @@ const (
 
 type DelPayRequest struct {
 	// Groupid Specific groupid to delete (must be paired with *partid*).
-	Groupid uint64 `json:"groupid,omitempty"`
+	Groupid *uint64 `json:"groupid,omitempty"`
 	// Partid Specific partid to delete (must be paired with *groupid*).
-	Partid uint64 `json:"partid,omitempty"`
+	Partid *uint64 `json:"partid,omitempty"`
 	// PaymentHash The unique identifier of a payment.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// Status Expected status of the payment. Only deletes if the payment status matches. Deleting a `pending` payment will return an error.
@@ -2916,39 +2916,39 @@ const (
 
 type DelPayPayments struct {
 	// AmountMSAT The amount the destination received, if known.
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// AmountSentMSAT The amount we actually sent, including fees.
 	AmountSentMSAT clntypes.MSat `json:"amount_sent_msat"`
 	// Bolt11 The bolt11 string (if pay supplied one).
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Bolt12 The bolt12 string (if supplied for pay).
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// CompletedAt The UNIX timestamp showing when this payment was completed.
-	CompletedAt uint64 `json:"completed_at,omitempty"`
+	CompletedAt *uint64 `json:"completed_at,omitempty"`
 	// CreatedAt The UNIX timestamp showing when this payment was initiated.
 	CreatedAt uint64 `json:"created_at"`
 	// CreatedIndex 1-based index indicating order this payment was created in.
 	CreatedIndex uint64 `json:"created_index"`
 	// Destination The final destination of the payment if known.
-	Destination clntypes.PubKey `json:"destination,omitempty"`
+	Destination *clntypes.PubKey `json:"destination,omitempty"`
 	// Erroronion The error onion returned on failure, if any.
-	Erroronion clntypes.Hex `json:"erroronion,omitempty"`
+	Erroronion *clntypes.Hex `json:"erroronion,omitempty"`
 	// Groupid Grouping key to disambiguate multiple attempts to pay an invoice or the same payment_hash.
-	Groupid uint64 `json:"groupid,omitempty"`
+	Groupid *uint64 `json:"groupid,omitempty"`
 	// ID Old synonym for created_index.
 	ID uint64 `json:"id"`
 	// Label The label, if given to sendpay.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Partid Unique ID within this (multi-part) payment.
-	Partid uint64 `json:"partid,omitempty"`
+	Partid *uint64 `json:"partid,omitempty"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// PaymentPreimage Proof of payment.
-	PaymentPreimage clntypes.Secret `json:"payment_preimage,omitempty"`
+	PaymentPreimage *clntypes.Secret `json:"payment_preimage,omitempty"`
 	// Status Status of the payment.
 	Status DelPayPaymentsStatus `json:"status"`
 	// UpdatedIndex 1-based index indicating order this payment was changed (only present if it has changed since creation).
-	UpdatedIndex uint64 `json:"updated_index,omitempty"`
+	UpdatedIndex *uint64 `json:"updated_index,omitempty"`
 }
 
 type DelPayResponse struct {
@@ -2987,11 +2987,11 @@ type DisableOfferResponse struct {
 	// Bolt12 The bolt12 string representing this offer.
 	Bolt12 string `json:"bolt12"`
 	// Description The user-specified bolt 12 description.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// ForcePaths True if `fronting_nodes` (or the `payment-fronting-node` configuration entry) is set: implies any invoice issued for this offer must use a subset of the same blinded paths.
-	ForcePaths bool `json:"force_paths,omitempty"`
+	ForcePaths *bool `json:"force_paths,omitempty"`
 	// Label The label provided when offer was created.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// OfferID The merkle hash of the offer.
 	OfferID clntypes.Hash `json:"offer_id"`
 	// SingleUse Whether the offer is disabled after first successful use.
@@ -3011,11 +3011,11 @@ type EnableOfferResponse struct {
 	// Bolt12 The bolt12 string representing this offer.
 	Bolt12 string `json:"bolt12"`
 	// Description The user-specified bolt 12 description.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// ForcePaths True if `fronting_nodes` (or the `payment-fronting-node` configuration entry) is set: implies any invoice issued for this offer must use a subset of the same blinded paths.
-	ForcePaths bool `json:"force_paths,omitempty"`
+	ForcePaths *bool `json:"force_paths,omitempty"`
 	// Label The label provided when offer was created.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// OfferID The merkle hash of the offer.
 	OfferID clntypes.Hash `json:"offer_id"`
 	// SingleUse Whether the offer is disabled after first successful use.
@@ -3026,7 +3026,7 @@ type EnableOfferResponse struct {
 
 type DisconnectRequest struct {
 	// Force If set to True, it will disconnect even with an active channel.
-	Force bool `json:"force,omitempty"`
+	Force *bool `json:"force,omitempty"`
 	// ID The public key of the peer to terminate the connection. It can be discovered as peer_id in the output of the listpeerchannels command.
 	ID clntypes.PubKey `json:"id"`
 }
@@ -3057,7 +3057,7 @@ type FeeratesOnchainFeeEstimates struct {
 	// OpeningChannelSatoshis Estimated cost of typical channel open.
 	OpeningChannelSatoshis uint64 `json:"opening_channel_satoshis"`
 	// UnilateralCloseNonanchorSatoshis Estimated cost of non-anchor typical unilateral close (without HTLCs).
-	UnilateralCloseNonanchorSatoshis uint64 `json:"unilateral_close_nonanchor_satoshis,omitempty"`
+	UnilateralCloseNonanchorSatoshis *uint64 `json:"unilateral_close_nonanchor_satoshis,omitempty"`
 	// UnilateralCloseSatoshis Estimated cost of typical unilateral close (without HTLCs). If anchors are supported, this assumes a channel with anchors.
 	UnilateralCloseSatoshis uint64 `json:"unilateral_close_satoshis"`
 }
@@ -3082,17 +3082,17 @@ type FeeratesPerkb struct {
 	// MinAcceptable The smallest feerate that we allow peers to specify: half the 100-block estimate.
 	MinAcceptable uint32 `json:"min_acceptable"`
 	// MutualClose Feerate to aim for in cooperative shutdown. Note that since mutual close is a **negotiation**, the actual feerate used in mutual close will be somewhere between this and the corresponding mutual close feerate of the peer.
-	MutualClose uint32 `json:"mutual_close,omitempty"`
+	MutualClose *uint32 `json:"mutual_close,omitempty"`
 	// Opening Default feerate for lightning-fundchannel(7) and lightning-withdraw(7).
-	Opening uint32 `json:"opening,omitempty"`
+	Opening *uint32 `json:"opening,omitempty"`
 	// Penalty Feerate to use when creating penalty tx for watchtowers.
-	Penalty uint32 `json:"penalty,omitempty"`
+	Penalty *uint32 `json:"penalty,omitempty"`
 	// Splice Feerate to use when performing a splice.
-	Splice uint32 `json:"splice,omitempty"`
+	Splice *uint32 `json:"splice,omitempty"`
 	// UnilateralAnchorClose Feerate for commitment_transaction in a live channel which we originally funded (if anchor_outputs was negotiated).
-	UnilateralAnchorClose uint32 `json:"unilateral_anchor_close,omitempty"`
+	UnilateralAnchorClose *uint32 `json:"unilateral_anchor_close,omitempty"`
 	// UnilateralClose Feerate for commitment_transaction in a live channel which we originally funded.
-	UnilateralClose uint32 `json:"unilateral_close,omitempty"`
+	UnilateralClose *uint32 `json:"unilateral_close,omitempty"`
 }
 
 type FeeratesPerkwEstimates struct {
@@ -3115,27 +3115,27 @@ type FeeratesPerkw struct {
 	// MinAcceptable The smallest feerate that you can use, usually the minimum relayed feerate of the backend.
 	MinAcceptable uint32 `json:"min_acceptable"`
 	// MutualClose Feerate to aim for in cooperative shutdown. Note that since mutual close is a **negotiation**, the actual feerate used in mutual close will be somewhere between this and the corresponding mutual close feerate of the peer.
-	MutualClose uint32 `json:"mutual_close,omitempty"`
+	MutualClose *uint32 `json:"mutual_close,omitempty"`
 	// Opening Default feerate for lightning-fundchannel(7) and lightning-withdraw(7).
-	Opening uint32 `json:"opening,omitempty"`
+	Opening *uint32 `json:"opening,omitempty"`
 	// Penalty Feerate to use when creating penalty tx for watchtowers.
-	Penalty uint32 `json:"penalty,omitempty"`
+	Penalty *uint32 `json:"penalty,omitempty"`
 	// Splice Feerate to use when performing a splice.
-	Splice uint32 `json:"splice,omitempty"`
+	Splice *uint32 `json:"splice,omitempty"`
 	// UnilateralAnchorClose Feerate for commitment_transaction in a live channel which we originally funded (if anchor_outputs was negotiated).
-	UnilateralAnchorClose uint32 `json:"unilateral_anchor_close,omitempty"`
+	UnilateralAnchorClose *uint32 `json:"unilateral_anchor_close,omitempty"`
 	// UnilateralClose Feerate for commitment_transaction in a live channel which we originally funded (if anchor_outputs was not negotiated).
-	UnilateralClose uint32 `json:"unilateral_close,omitempty"`
+	UnilateralClose *uint32 `json:"unilateral_close,omitempty"`
 }
 
 type FeeratesResponse struct {
-	OnchainFeeEstimates FeeratesOnchainFeeEstimates `json:"onchain_fee_estimates,omitempty"`
+	OnchainFeeEstimates *FeeratesOnchainFeeEstimates `json:"onchain_fee_estimates,omitempty"`
 	// Perkb If *style* parameter was perkb.
-	Perkb FeeratesPerkb `json:"perkb,omitempty"`
+	Perkb *FeeratesPerkb `json:"perkb,omitempty"`
 	// Perkw If *style* parameter was perkw.
-	Perkw FeeratesPerkw `json:"perkw,omitempty"`
+	Perkw *FeeratesPerkw `json:"perkw,omitempty"`
 	// WarningMissingFeerates Some fee estimates are missing.
-	WarningMissingFeerates string `json:"warning_missing_feerates,omitempty"`
+	WarningMissingFeerates *string `json:"warning_missing_feerates,omitempty"`
 }
 
 type FetchBip353Request struct {
@@ -3145,15 +3145,15 @@ type FetchBip353Request struct {
 
 type FetchBip353Instructions struct {
 	// Description Optional description of the payment instruction.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// OffchainAmountMSAT Optional lightning payment amount in millisatoshis, present only if offer is specified.
-	OffchainAmountMSAT uint64 `json:"offchain_amount_msat,omitempty"`
+	OffchainAmountMSAT *uint64 `json:"offchain_amount_msat,omitempty"`
 	// Offer An offer string for a bolt12 payment.
-	Offer string `json:"offer,omitempty"`
+	Offer *string `json:"offer,omitempty"`
 	// Onchain A bitcoin onchain address.
-	Onchain string `json:"onchain,omitempty"`
+	Onchain *string `json:"onchain,omitempty"`
 	// OnchainAmountSat Optional onchain payment amount in satoshis, present only if onchain is specified.
-	OnchainAmountSat uint64 `json:"onchain_amount_sat,omitempty"`
+	OnchainAmountSat *uint64 `json:"onchain_amount_sat,omitempty"`
 }
 
 type FetchBip353Response struct {
@@ -3165,39 +3165,39 @@ type FetchBip353Response struct {
 
 type FetchInvoiceRequest struct {
 	// AmountMSAT Required if the offer does not specify an amount at all, otherwise it is optional (but presumably if you set it to less than the offer, you will get an error from the issuer).
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// Bip353 BIP353 string (optionally with ₿) indicating where we fetched the offer from
-	Bip353 string `json:"bip353,omitempty"`
+	Bip353 *string `json:"bip353,omitempty"`
 	// Offer Offer string to get an actual invoice that can be paid.
 	Offer string `json:"offer"`
 	// PayerMetadata Derive the payer_id from the specified payer_metadata. Please be sure that `payer_metdata` can not be derived by anyone, so put some secret into it.
-	PayerMetadata string `json:"payer_metadata,omitempty"`
+	PayerMetadata *string `json:"payer_metadata,omitempty"`
 	// PayerNote To ask the issuer to include in the fetched invoice.
-	PayerNote string `json:"payer_note,omitempty"`
+	PayerNote *string `json:"payer_note,omitempty"`
 	// Quantity Required if the offer specifies quantity_max, otherwise it is not allowed.
-	Quantity uint64 `json:"quantity,omitempty"`
+	Quantity *uint64 `json:"quantity,omitempty"`
 	// RecurrenceCounter Required if the offer specifies recurrence, otherwise it is not allowed. recurrence_counter should first be set to 0, and incremented for each successive invoice in a given series.
-	RecurrenceCounter uint64 `json:"recurrence_counter,omitempty"`
+	RecurrenceCounter *uint64 `json:"recurrence_counter,omitempty"`
 	// RecurrenceLabel Required if recurrence_counter is set, and otherwise is not allowed. It must be the same as prior fetchinvoice calls for the same recurrence, as it is used to link them together.
-	RecurrenceLabel string `json:"recurrence_label,omitempty"`
+	RecurrenceLabel *string `json:"recurrence_label,omitempty"`
 	// RecurrenceStart Indicates what period number to start at (usually 0).
-	RecurrenceStart float64 `json:"recurrence_start,omitempty"`
+	RecurrenceStart *float64 `json:"recurrence_start,omitempty"`
 	// Timeout If we don't get a reply before this we fail (default, 60 seconds).
-	Timeout float64 `json:"timeout,omitempty"`
+	Timeout *float64 `json:"timeout,omitempty"`
 }
 
 // FetchInvoiceChanges Summary of changes from offer.
 type FetchInvoiceChanges struct {
 	// AmountMSAT The amount, if different from the offer amount multiplied by any *quantity* (or the offer had no amount, or was not in BTC).
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// Description A completely replaced *description* field.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// DescriptionAppended Extra characters appended to the *description* field.
-	DescriptionAppended string `json:"description_appended,omitempty"`
+	DescriptionAppended *string `json:"description_appended,omitempty"`
 	// Vendor A completely replaced *vendor* field.
-	Vendor string `json:"vendor,omitempty"`
+	Vendor *string `json:"vendor,omitempty"`
 	// VendorRemoved The *vendor* from the offer, which is missing in the invoice.
-	VendorRemoved string `json:"vendor_removed,omitempty"`
+	VendorRemoved *string `json:"vendor_removed,omitempty"`
 }
 
 // FetchInvoiceNextPeriod Only for recurring invoices if the next period is under the *recurrence_limit*.
@@ -3220,22 +3220,22 @@ type FetchInvoiceResponse struct {
 	// Invoice The BOLT12 invoice we fetched.
 	Invoice string `json:"invoice"`
 	// NextPeriod Only for recurring invoices if the next period is under the *recurrence_limit*.
-	NextPeriod FetchInvoiceNextPeriod `json:"next_period,omitempty"`
+	NextPeriod *FetchInvoiceNextPeriod `json:"next_period,omitempty"`
 }
 
 type CancelRecurringInvoiceRequest struct {
 	// Bip353 BIP353 string (optionally with ₿) indicating where we fetched the offer from
-	Bip353 string `json:"bip353,omitempty"`
+	Bip353 *string `json:"bip353,omitempty"`
 	// Offer Offer string (must be recurring) which we have been paying.
 	Offer string `json:"offer"`
 	// PayerNote To tell the issuer the reason for the cancellation.
-	PayerNote string `json:"payer_note,omitempty"`
+	PayerNote *string `json:"payer_note,omitempty"`
 	// RecurrenceCounter One later than the last-specified recurrence_counter for the last invoice.
 	RecurrenceCounter uint64 `json:"recurrence_counter"`
 	// RecurrenceLabel This must be the same as prior fetchinvoice calls for the same recurrence, as it is used to link them together.
 	RecurrenceLabel string `json:"recurrence_label"`
 	// RecurrenceStart Indicates what period number to start at (usually 0). This will be the same as previous fetchinvoice calls.
-	RecurrenceStart float64 `json:"recurrence_start,omitempty"`
+	RecurrenceStart *float64 `json:"recurrence_start,omitempty"`
 }
 
 type CancelRecurringInvoiceResponse struct {
@@ -3259,7 +3259,7 @@ type FundChannelCompleteRequest struct {
 	// PSBT Transaction to use for funding (does not need to be signed but must be otherwise complete).
 	PSBT string `json:"psbt"`
 	// Withhold Mark this channel 'withheld' so we know we haven't broadcast the funding transaction. If the channel is closed before we call `sendpsbt` on this psbt, it will simply be closed immediately.
-	Withhold bool `json:"withhold,omitempty"`
+	Withhold *bool `json:"withhold,omitempty"`
 }
 
 type FundChannelCompleteResponse struct {
@@ -3273,28 +3273,28 @@ type FundChannelRequest struct {
 	// Amount The amount in satoshis taken from the internal wallet to fund the channel (but if we have any anchor channels, this will always leave at least `min-emergency- msat` as change). The string *all* can be used to specify all available funds (may be restricted by the `utxos` parameter, and limited to 16777215 satoshi if large channels were not negotiated with the peer). Otherwise, it is in satoshi precision; it can be a whole number, a whole number ending in *sat*, a whole number ending in *000msat*, or a number with 1 to 8 decimal places ending in *btc*. The value cannot be less than the dust limit, currently set to 546, nor more than 16777215 satoshi (unless large channels were negotiated with the peer).
 	Amount clntypes.AmountOrAll `json:"amount"`
 	// Announce Whether to announce this channel or not. An unannounced channel is considered private.
-	Announce    bool     `json:"announce,omitempty"`
-	ChannelType []uint32 `json:"channel_type,omitempty"`
+	Announce    *bool     `json:"announce,omitempty"`
+	ChannelType *[]uint32 `json:"channel_type,omitempty"`
 	// CloseTo A Bitcoin address to which the channel funds should be sent to on close. Only valid if both peers have negotiated `option_upfront_shutdown_script`. Returns `close_to` set to closing script iff is negotiated.
-	CloseTo string `json:"close_to,omitempty"`
+	CloseTo *string `json:"close_to,omitempty"`
 	// CompactLease A compact representation of the peer's expected channel lease terms. If the peer's terms don't match this set, we will fail to open the channel.
-	CompactLease string `json:"compact_lease,omitempty"`
+	CompactLease *string `json:"compact_lease,omitempty"`
 	// Feerate Used for the opening transaction and (unless *option_anchors* is negotiated), as initial feerate for commitment and HTLC transactions (see NOTES in lightning-feerates(7)).
-	Feerate clntypes.Feerate `json:"feerate,omitempty"`
+	Feerate *clntypes.Feerate `json:"feerate,omitempty"`
 	// ID Id is the peer id obtained from connect.
 	ID clntypes.PubKey `json:"id"`
 	// Minconf The minimum number of confirmations that used outputs should have.
-	Minconf uint32 `json:"minconf,omitempty"`
+	Minconf *uint32 `json:"minconf,omitempty"`
 	// Mindepth Number of confirmations required before we consider the channel active.
-	Mindepth uint32 `json:"mindepth,omitempty"`
+	Mindepth *uint32 `json:"mindepth,omitempty"`
 	// PushMSAT The amount of millisatoshis to push to the channel peer at open. Note that this is a gift to the peer -- these satoshis are added to the initial balance of the peer at channel start and are largely unrecoverable once pushed.
-	PushMSAT clntypes.MSat `json:"push_msat,omitempty"`
+	PushMSAT *clntypes.MSat `json:"push_msat,omitempty"`
 	// RequestAmt An amount of liquidity you'd like to lease from the peer. If peer supports `option_will_fund`, indicates to them to include this much liquidity into the channel. Must also pass in *compact_lease*.
-	RequestAmt clntypes.Sat `json:"request_amt,omitempty"`
+	RequestAmt *clntypes.Sat `json:"request_amt,omitempty"`
 	// Reserve The amount we want the peer to maintain on its side of the channel. It can be a whole number, a whole number ending in *sat*, a whole number ending in *000msat*, or a number with 1 to 8 decimal places ending in *btc*.
-	Reserve clntypes.Sat `json:"reserve,omitempty"`
+	Reserve *clntypes.Sat `json:"reserve,omitempty"`
 	// Utxos The utxos to be used to fund the channel, as an array of `txid:vout`.
-	Utxos []clntypes.Outpoint `json:"utxos,omitempty"`
+	Utxos *[]clntypes.Outpoint `json:"utxos,omitempty"`
 }
 
 // FundChannelChannelTypeNames Name of feature bit.
@@ -3323,9 +3323,9 @@ type FundChannelResponse struct {
 	// ChannelType Channel_type as negotiated with peer.
 	ChannelType FundChannelChannelType `json:"channel_type"`
 	// CloseTo The raw scriptPubkey which mutual close will go to; only present if *close_to* parameter was specified and peer supports `option_upfront_shutdown_script`.
-	CloseTo clntypes.Hex `json:"close_to,omitempty"`
+	CloseTo *clntypes.Hex `json:"close_to,omitempty"`
 	// Mindepth Number of confirmations before we consider the channel active.
-	Mindepth uint32 `json:"mindepth,omitempty"`
+	Mindepth *uint32 `json:"mindepth,omitempty"`
 	// Outnum The 0-based output index showing which output funded the channel.
 	Outnum uint32 `json:"outnum"`
 	// TX The raw transaction which funded the channel.
@@ -3338,21 +3338,21 @@ type FundChannelStartRequest struct {
 	// Amount Satoshi value that the channel will be funded at. This value MUST be accurate, otherwise the negotiated commitment transactions will not encompass the correct channel value.
 	Amount clntypes.Sat `json:"amount"`
 	// Announce Whether or not to announce this channel.
-	Announce bool `json:"announce,omitempty"`
+	Announce *bool `json:"announce,omitempty"`
 	// ChannelType Each bit set in this channel_type.
-	ChannelType []uint32 `json:"channel_type,omitempty"`
+	ChannelType *[]uint32 `json:"channel_type,omitempty"`
 	// CloseTo Bitcoin address to which the channel funds should be sent to on close. Only valid if both peers have negotiated `option_upfront_shutdown_script`. Returns `close_to` set to closing script iff is negotiated.
-	CloseTo string `json:"close_to,omitempty"`
+	CloseTo *string `json:"close_to,omitempty"`
 	// Feerate Feerate for subsequent commitment transactions: see **fundchannel**. Note that this is ignored for channels with *option_anchors* (we always use a low commitment fee for these).
-	Feerate clntypes.Feerate `json:"feerate,omitempty"`
+	Feerate *clntypes.Feerate `json:"feerate,omitempty"`
 	// ID The peer id obtained from connect.
 	ID clntypes.PubKey `json:"id"`
 	// Mindepth Number of confirmations required before we consider the channel active.
-	Mindepth uint32 `json:"mindepth,omitempty"`
+	Mindepth *uint32 `json:"mindepth,omitempty"`
 	// PushMSAT Amount of millisatoshis to push to the channel peer at open. Note that this is a gift to the peer -- these satoshis are added to the initial balance of the peer at channel start and are largely unrecoverable once pushed.
-	PushMSAT clntypes.MSat `json:"push_msat,omitempty"`
+	PushMSAT *clntypes.MSat `json:"push_msat,omitempty"`
 	// Reserve The amount we want the peer to maintain on its side.
-	Reserve clntypes.Sat `json:"reserve,omitempty"`
+	Reserve *clntypes.Sat `json:"reserve,omitempty"`
 }
 
 // FundChannelStartChannelTypeNames Name of feature bit.
@@ -3377,13 +3377,13 @@ type FundChannelStartChannelType struct {
 
 type FundChannelStartResponse struct {
 	// ChannelType Channel_type as negotiated with peer.
-	ChannelType FundChannelStartChannelType `json:"channel_type,omitempty"`
+	ChannelType *FundChannelStartChannelType `json:"channel_type,omitempty"`
 	// CloseTo The raw scriptPubkey which mutual close will go to; only present if *close_to* parameter was specified and peer supports `option_upfront_shutdown_script`.
-	CloseTo clntypes.Hex `json:"close_to,omitempty"`
+	CloseTo *clntypes.Hex `json:"close_to,omitempty"`
 	// FundingAddress The address to send funding to for the channel. DO NOT SEND COINS TO THIS ADDRESS YET.
 	FundingAddress string `json:"funding_address"`
 	// Mindepth Number of confirmations before we consider the channel active.
-	Mindepth uint32 `json:"mindepth,omitempty"`
+	Mindepth *uint32 `json:"mindepth,omitempty"`
 	// Scriptpubkey The raw scriptPubkey for the address.
 	Scriptpubkey clntypes.Hex `json:"scriptpubkey"`
 	// WarningUsage A warning not to prematurely broadcast the funding transaction (always present!).
@@ -3404,7 +3404,7 @@ const (
 
 type GetLogRequest struct {
 	// Level A string that represents the log level.
-	Level GetLogLevel `json:"level,omitempty"`
+	Level *GetLogLevel `json:"level,omitempty"`
 }
 
 type GetLogLogType string
@@ -3422,17 +3422,17 @@ const (
 
 type GetLogLog struct {
 	// Data The IO which occurred.
-	Data clntypes.Hex `json:"data,omitempty"`
+	Data *clntypes.Hex `json:"data,omitempty"`
 	// Log The actual log message. The associated log message.
-	Log string `json:"log,omitempty"`
+	Log *string `json:"log,omitempty"`
 	// NodeID The peer this is associated with.
-	NodeID clntypes.PubKey `json:"node_id,omitempty"`
+	NodeID *clntypes.PubKey `json:"node_id,omitempty"`
 	// NumSkipped Number of unprinted log entries (deleted or below *level* parameter).
-	NumSkipped uint32 `json:"num_skipped,omitempty"`
+	NumSkipped *uint32 `json:"num_skipped,omitempty"`
 	// Source The particular logbook this was found in.
-	Source string `json:"source,omitempty"`
+	Source *string `json:"source,omitempty"`
 	// Time Seconds after **created_at**, with 9 decimal places. UNIX timestamp with 9 decimal places after **created_at**.
-	Time     string        `json:"time,omitempty"`
+	Time     *string       `json:"time,omitempty"`
 	ItemType GetLogLogType `json:"type"`
 }
 
@@ -3457,56 +3457,56 @@ const (
 
 type FunderUpdateRequest struct {
 	// ChannelFeeMaxBaseMSAT A commitment to a maximum `channel_fee_base_msat` that your node will charge for routing payments over this leased channel during the lease duration.
-	ChannelFeeMaxBaseMSAT clntypes.MSat `json:"channel_fee_max_base_msat,omitempty"`
+	ChannelFeeMaxBaseMSAT *clntypes.MSat `json:"channel_fee_max_base_msat,omitempty"`
 	// ChannelFeeMaxProportionalThousandths A commitment to a maximum `channel_fee_proportional_millionths` that your node will charge for routing payments over this leased channel during the lease duration. Note that it's denominated in 'thousandths'. A setting of `1` is equal to 1k ppm; `5` is 5k ppm, etc.
-	ChannelFeeMaxProportionalThousandths uint32 `json:"channel_fee_max_proportional_thousandths,omitempty"`
+	ChannelFeeMaxProportionalThousandths *uint32 `json:"channel_fee_max_proportional_thousandths,omitempty"`
 	// CompactLease A compact description of the channel lease params. When opening a channel, passed in to `fundchannel` to indicate the terms we expect from the peer.
-	CompactLease clntypes.Hex `json:"compact_lease,omitempty"`
+	CompactLease *clntypes.Hex `json:"compact_lease,omitempty"`
 	// FundProbability The percent of v2 channel open requests to apply our policy to. Valid values are integers from 0 (fund 0% of all open requests) to 100 (fund every request). Useful for randomizing opens that receive funds. Useful for randomizing opens that receive funds.
-	FundProbability uint32 `json:"fund_probability,omitempty"`
+	FundProbability *uint32 `json:"fund_probability,omitempty"`
 	// FundingWeight To calculate the fee the peer will compensate your node for its contributing inputs to the funding transaction. The total fee is calculated as the `open_channel2`.`funding_feerate_perkw` times this *funding_weight* divided by 1000. Node will have this funding fee added to their channel balance, paid by the opening node.
-	FundingWeight uint32 `json:"funding_weight,omitempty"`
+	FundingWeight *uint32 `json:"funding_weight,omitempty"`
 	// FuzzPercent A percentage to fuzz the resulting contribution amount by. Valid values are 0 to 100. Note that turning this on with (match, 100) policy will randomly fail `option_will_fund` leases, as most clients expect an exact or greater match of their `requested_funds`.
-	FuzzPercent uint32 `json:"fuzz_percent,omitempty"`
+	FuzzPercent *uint32 `json:"fuzz_percent,omitempty"`
 	// LeaseFeeBaseMSAT Flat fee for a channel lease. Node will receive this much extra added to their channel balance, paid by the opening node. Note that the minimum is 1sat.
-	LeaseFeeBaseMSAT clntypes.MSat `json:"lease_fee_base_msat,omitempty"`
+	LeaseFeeBaseMSAT *clntypes.MSat `json:"lease_fee_base_msat,omitempty"`
 	// LeaseFeeBasis A basis fee that's calculated as 1/10k of the total requested funds the peer is asking for. Node will receive the total of *lease_fee_basis* times requested funds / 10k satoshis added to their channel balance, paid by the opening node.
-	LeaseFeeBasis uint32 `json:"lease_fee_basis,omitempty"`
+	LeaseFeeBasis *uint32 `json:"lease_fee_basis,omitempty"`
 	// LeasesOnly Only contribute funds to `option_will_fund` requests which pay to lease funds. It will fund any v2 open request using *policy* even if it's they're not seeking to lease funds. Note that `option_will_fund` commits funds for 4032 blocks (~1mo). Must also set *lease_fee_base_msat*, *lease_fee_basis*, *funding_weight*, *channel_fee_max_base_msat*, and *channel_fee_max_proportional_thousandths* to advertise available channel leases.
-	LeasesOnly bool `json:"leases_only,omitempty"`
+	LeasesOnly *bool `json:"leases_only,omitempty"`
 	// MaxTheirFundingMSAT Maximum funding sats that we will consider to activate our contribution policy to the v2 open. Any channel open above this will not be funded.
-	MaxTheirFundingMSAT clntypes.MSat `json:"max_their_funding_msat,omitempty"`
+	MaxTheirFundingMSAT *clntypes.MSat `json:"max_their_funding_msat,omitempty"`
 	// MinTheirFundingMSAT Minimum funding sats that we require in order to activate our contribution policy to the v2 open.
-	MinTheirFundingMSAT clntypes.MSat `json:"min_their_funding_msat,omitempty"`
+	MinTheirFundingMSAT *clntypes.MSat `json:"min_their_funding_msat,omitempty"`
 	// PerChannelMaxMSAT Maximum amount that we will contribute to a channel open.
-	PerChannelMaxMSAT clntypes.MSat `json:"per_channel_max_msat,omitempty"`
+	PerChannelMaxMSAT *clntypes.MSat `json:"per_channel_max_msat,omitempty"`
 	// PerChannelMinMSAT Minimum amount that we will contribute to a channel open.
-	PerChannelMinMSAT clntypes.MSat `json:"per_channel_min_msat,omitempty"`
+	PerChannelMinMSAT *clntypes.MSat `json:"per_channel_min_msat,omitempty"`
 	// Policy Funder plugin will use to decide how much capital to commit to a v2 open channel request. There are three policy options, detailed below: * `match` -- Contribute *policy_mod* percent of their requested funds. Valid *policy_mod* values are 0 to 200. If this is a channel lease request, we match based on their requested funds. If it is not a channel lease request (and *lease_only* is false), then we match their funding amount. Note: any lease match less than 100 will likely fail, as clients will not accept a lease less than their request. * `available` -- Contribute *policy_mod* percent of our available node wallet funds. Valid *policy_mod* values are 0 to 100. * `fixed` -- Contributes a fixed *policy_mod* sats to v2 channel open requests.
-	Policy FunderUpdatePolicy `json:"policy,omitempty"`
+	Policy *FunderUpdatePolicy `json:"policy,omitempty"`
 	// PolicyMod Number or 'modification' to apply to the policy.
-	PolicyMod clntypes.MSat `json:"policy_mod,omitempty"`
+	PolicyMod *clntypes.MSat `json:"policy_mod,omitempty"`
 	// ReserveTankMSAT Amount of sats to leave available in the node wallet.
-	ReserveTankMSAT clntypes.MSat `json:"reserve_tank_msat,omitempty"`
+	ReserveTankMSAT *clntypes.MSat `json:"reserve_tank_msat,omitempty"`
 }
 
 type FunderUpdateResponse struct {
 	// ChannelFeeMaxBaseMSAT Maximum channel_fee_base_msat we'll charge for routing funds leased on this channel.
-	ChannelFeeMaxBaseMSAT clntypes.MSat `json:"channel_fee_max_base_msat,omitempty"`
+	ChannelFeeMaxBaseMSAT *clntypes.MSat `json:"channel_fee_max_base_msat,omitempty"`
 	// ChannelFeeMaxProportionalThousandths Maximum channel_fee_proportional_millitionths we'll charge for routing funds leased on this channel, in thousandths.
-	ChannelFeeMaxProportionalThousandths uint32 `json:"channel_fee_max_proportional_thousandths,omitempty"`
+	ChannelFeeMaxProportionalThousandths *uint32 `json:"channel_fee_max_proportional_thousandths,omitempty"`
 	// CompactLease Compact description of the channel lease parameters.
-	CompactLease clntypes.Hex `json:"compact_lease,omitempty"`
+	CompactLease *clntypes.Hex `json:"compact_lease,omitempty"`
 	// FundProbability Percent of opens to consider funding. 100 means we'll consider funding every requested open channel request.
 	FundProbability uint32 `json:"fund_probability"`
 	// FundingWeight Transaction weight the channel opener will pay us for a leased funding transaction.
-	FundingWeight uint32 `json:"funding_weight,omitempty"`
+	FundingWeight *uint32 `json:"funding_weight,omitempty"`
 	// FuzzPercent Percentage to fuzz our funding amount by.
 	FuzzPercent uint32 `json:"fuzz_percent"`
 	// LeaseFeeBaseMSAT Flat fee to charge for a channel lease.
-	LeaseFeeBaseMSAT clntypes.MSat `json:"lease_fee_base_msat,omitempty"`
+	LeaseFeeBaseMSAT *clntypes.MSat `json:"lease_fee_base_msat,omitempty"`
 	// LeaseFeeBasis Proportional fee to charge for a channel lease, calculated as 1/10,000th of requested funds.
-	LeaseFeeBasis uint32 `json:"lease_fee_basis,omitempty"`
+	LeaseFeeBasis *uint32 `json:"lease_fee_basis,omitempty"`
 	// LeasesOnly Only contribute funds to `option_will_fund` lease requests.
 	LeasesOnly bool `json:"leases_only"`
 	// MaxTheirFundingMSAT The maximum funding sats that we'll allow from peer to activate our funding policy.
@@ -3531,17 +3531,17 @@ type GetRouteRequest struct {
 	// AmountMSAT Amount to send. It can be a whole number, or a whole number ending in *msat* or *sat*, or a number with three decimal places ending in *sat*, or a number with 1 to 11 decimal places ending in *btc*. The 0 value is special: it ignores any *htlc_minimum_msat* setting on channels, and simply returns a possible route (if any) which is useful for simple probing.
 	AmountMSAT clntypes.MSat `json:"amount_msat"`
 	// Cltv Cltv-blocks to spare.
-	Cltv uint32 `json:"cltv,omitempty"`
+	Cltv *uint32 `json:"cltv,omitempty"`
 	// Exclude A JSON array of short-channel-id/direction (e.g. ['564334x877x1/0', '564195x1292x0/1' ]) or node-id which should be excluded from consideration for routing. Note if the source or destination is excluded, the command result is undefined.
-	Exclude []string `json:"exclude,omitempty"`
+	Exclude *[]string `json:"exclude,omitempty"`
 	// Fromid The node to start the route from.
-	Fromid clntypes.PubKey `json:"fromid,omitempty"`
+	Fromid *clntypes.PubKey `json:"fromid,omitempty"`
 	// Fuzzpercent Used to distort fees to provide some randomization to the route generated, but it was not properly implemented and is ignored.
-	Fuzzpercent uint32 `json:"fuzzpercent,omitempty"`
+	Fuzzpercent *uint32 `json:"fuzzpercent,omitempty"`
 	// ID Node pubkey to find the best route for the payment.
 	ID clntypes.PubKey `json:"id"`
 	// Maxhops The maximum number of channels to return.
-	Maxhops uint32 `json:"maxhops,omitempty"`
+	Maxhops *uint32 `json:"maxhops,omitempty"`
 	// Riskfactor A non-negative floating-point field controls this tradeoff; it is the annual cost of your funds being stuck (as a percentage). For example, if you thought the convenience of keeping your funds liquid (not stuck) was worth 20% per annum interest, *riskfactor* would be 20. If you didn't care about risk, *riskfactor* would be zero.
 	Riskfactor uint64 `json:"riskfactor"`
 }
@@ -3574,20 +3574,20 @@ type GetRouteResponse struct {
 
 type ListAddressesRequest struct {
 	// Address A Bitcoin accepted type, including a bech32, address for lookup in the list of addresses issued to date.
-	Address string `json:"address,omitempty"`
+	Address *string `json:"address,omitempty"`
 	// Limit The maximum number of addresses to return or search for.
-	Limit uint32 `json:"limit,omitempty"`
+	Limit *uint32 `json:"limit,omitempty"`
 	// Start Starting key index for listing addresses or searching for a particular address.
-	Start uint64 `json:"start,omitempty"`
+	Start *uint64 `json:"start,omitempty"`
 }
 
 type ListAddressesAddresses struct {
 	// Bech32 The bech32 (native segwit) address.
-	Bech32 string `json:"bech32,omitempty"`
+	Bech32 *string `json:"bech32,omitempty"`
 	// Keyidx The key index of the address issued.
 	Keyidx uint64 `json:"keyidx"`
 	// P2tr The taproot address.
-	P2tr string `json:"p2tr,omitempty"`
+	P2tr *string `json:"p2tr,omitempty"`
 }
 
 type ListAddressesResponse struct {
@@ -3614,17 +3614,17 @@ const (
 
 type ListForwardsRequest struct {
 	// InChannel Only the matching forwards on the given inbound channel are returned.
-	InChannel clntypes.ShortChannelID `json:"in_channel,omitempty"`
+	InChannel *clntypes.ShortChannelID `json:"in_channel,omitempty"`
 	// Index If neither *in_channel* nor *out_channel* is specified, it controls ordering.
-	Index ListForwardsIndex `json:"index,omitempty"`
+	Index *ListForwardsIndex `json:"index,omitempty"`
 	// Limit If `index` is specified, `limit` can be used to specify the maximum number of entries to return.
-	Limit uint32 `json:"limit,omitempty"`
+	Limit *uint32 `json:"limit,omitempty"`
 	// OutChannel Only the matching forwards on the given outbount channel are returned.
-	OutChannel clntypes.ShortChannelID `json:"out_channel,omitempty"`
+	OutChannel *clntypes.ShortChannelID `json:"out_channel,omitempty"`
 	// Start If `index` is specified, `start` may be specified to start from that value, which is generally returned from lightning-wait(7).
-	Start uint64 `json:"start,omitempty"`
+	Start *uint64 `json:"start,omitempty"`
 	// Status If specified, then only the forwards with the given status are returned.
-	Status ListForwardsStatus `json:"status,omitempty"`
+	Status *ListForwardsStatus `json:"status,omitempty"`
 }
 
 // ListForwardsForwardsStatus Still ongoing, completed, failed locally, or failed after forwarding.
@@ -3649,33 +3649,33 @@ type ListForwardsForwards struct {
 	// CreatedIndex 1-based index indicating order this forward was created in.
 	CreatedIndex uint64 `json:"created_index"`
 	// Failcode The numeric onion code returned.
-	Failcode uint32 `json:"failcode,omitempty"`
+	Failcode *uint32 `json:"failcode,omitempty"`
 	// Failreason The name of the onion code returned.
-	Failreason string `json:"failreason,omitempty"`
+	Failreason *string `json:"failreason,omitempty"`
 	// FeeMSAT The amount this paid in fees.
-	FeeMSAT clntypes.MSat `json:"fee_msat,omitempty"`
+	FeeMSAT *clntypes.MSat `json:"fee_msat,omitempty"`
 	// InChannel The channel that received the HTLC.
 	InChannel clntypes.ShortChannelID `json:"in_channel"`
 	// InHTLCID The unique HTLC id the sender gave this (not present if incoming channel was closed before upgrade to v22.11).
-	InHTLCID uint64 `json:"in_htlc_id,omitempty"`
+	InHTLCID *uint64 `json:"in_htlc_id,omitempty"`
 	// InMSAT The value of the incoming HTLC.
 	InMSAT clntypes.MSat `json:"in_msat"`
 	// OutChannel The channel that the HTLC (trying to) forward to.
-	OutChannel clntypes.ShortChannelID `json:"out_channel,omitempty"`
+	OutChannel *clntypes.ShortChannelID `json:"out_channel,omitempty"`
 	// OutHTLCID The unique HTLC id we gave this when sending (may be missing even if out_channel is present, for old forwards before v22.11).
-	OutHTLCID uint64 `json:"out_htlc_id,omitempty"`
+	OutHTLCID *uint64 `json:"out_htlc_id,omitempty"`
 	// OutMSAT The amount we sent out the *out_channel*.
-	OutMSAT clntypes.MSat `json:"out_msat,omitempty"`
+	OutMSAT *clntypes.MSat `json:"out_msat,omitempty"`
 	// ReceivedTime The UNIX timestamp when this was received (may be zero for old forwards).
 	ReceivedTime float64 `json:"received_time"`
 	// ResolvedTime The UNIX timestamp when this was resolved.
-	ResolvedTime float64 `json:"resolved_time,omitempty"`
+	ResolvedTime *float64 `json:"resolved_time,omitempty"`
 	// Status Still ongoing, completed, failed locally, or failed after forwarding.
 	Status ListForwardsForwardsStatus `json:"status"`
 	// Style Either a legacy onion format or a modern tlv format.
-	Style ListForwardsForwardsStyle `json:"style,omitempty"`
+	Style *ListForwardsForwardsStyle `json:"style,omitempty"`
 	// UpdatedIndex 1-based index indicating order this forward was changed (only present if it has changed since creation).
-	UpdatedIndex uint64 `json:"updated_index,omitempty"`
+	UpdatedIndex *uint64 `json:"updated_index,omitempty"`
 }
 
 type ListForwardsResponse struct {
@@ -3684,9 +3684,9 @@ type ListForwardsResponse struct {
 
 type ListOffersRequest struct {
 	// ActiveOnly If set and is true, only offers with `active` true are returned.
-	ActiveOnly bool `json:"active_only,omitempty"`
+	ActiveOnly *bool `json:"active_only,omitempty"`
 	// OfferID Offer_id to get details for (if it exists).
-	OfferID clntypes.Hash `json:"offer_id,omitempty"`
+	OfferID *clntypes.Hash `json:"offer_id,omitempty"`
 }
 
 type ListOffersOffers struct {
@@ -3695,11 +3695,11 @@ type ListOffersOffers struct {
 	// Bolt12 The bolt12 encoding of the offer.
 	Bolt12 string `json:"bolt12"`
 	// Description The user-specified bolt 12 description.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// ForcePaths Whether explicit blinded paths (i.e. fronting nodes) were adde when creating the offer (implying that they should be used when creating invoices).
-	ForcePaths bool `json:"force_paths,omitempty"`
+	ForcePaths *bool `json:"force_paths,omitempty"`
 	// Label The (optional) user-specified label.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// OfferID The id of this offer (merkle hash of non-signature fields).
 	OfferID clntypes.Hash `json:"offer_id"`
 	// SingleUse Whether this expires as soon as it's paid.
@@ -3731,17 +3731,17 @@ const (
 
 type ListPaysRequest struct {
 	// Bolt11 Bolt11 string to get the payment details.
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Index If neither *in_channel* nor *out_channel* is specified, it controls ordering, by `created` or `updated`.
-	Index ListPaysIndex `json:"index,omitempty"`
+	Index *ListPaysIndex `json:"index,omitempty"`
 	// Limit If `index` is specified, `limit` can be used to specify the maximum number of entries to return. NOTE: if this is used, `amount_sent_msat` and `number_of_parts` fields may be lower than expected, as not all payment parts will be considered NOTE: the actual number returned may be less than the limit, as individual payment parts are combined together
-	Limit uint32 `json:"limit,omitempty"`
+	Limit *uint32 `json:"limit,omitempty"`
 	// PaymentHash Payment hash to get the payment details.
-	PaymentHash clntypes.Hash `json:"payment_hash,omitempty"`
+	PaymentHash *clntypes.Hash `json:"payment_hash,omitempty"`
 	// Start If `index` is specified, `start` may be specified to start from that value, which is generally returned from lightning-wait(7). NOTE: if this is used, `amount_sent_msat` and `number_of_parts` fields may be lower than expected, as not all payment parts will be considered
-	Start uint64 `json:"start,omitempty"`
+	Start *uint64 `json:"start,omitempty"`
 	// Status To filter the payment by status.
-	Status ListPaysStatus `json:"status,omitempty"`
+	Status *ListPaysStatus `json:"status,omitempty"`
 }
 
 // ListPaysPaysStatus Status of the payment.
@@ -3755,37 +3755,37 @@ const (
 
 type ListPaysPays struct {
 	// AmountMSAT The amount of millisatoshi we intended to send to the destination. This can only be missing in the case of someone manually calling sendonion without the `amount_msat` parameter (which no plugin currently does).
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// AmountSentMSAT The amount of millisatoshi we sent in order to pay (may include fees and not match amount_msat).
-	AmountSentMSAT clntypes.MSat `json:"amount_sent_msat,omitempty"`
+	AmountSentMSAT *clntypes.MSat `json:"amount_sent_msat,omitempty"`
 	// Bolt11 The bolt11 string (if pay supplied one).
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Bolt12 The bolt12 string (if supplied for pay).
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// CompletedAt The UNIX timestamp showing when this payment was completed.
-	CompletedAt uint64 `json:"completed_at,omitempty"`
+	CompletedAt *uint64 `json:"completed_at,omitempty"`
 	// CreatedAt The UNIX timestamp showing when this payment was initiated.
 	CreatedAt uint64 `json:"created_at"`
 	// CreatedIndex 1-based index indicating order this payment was created in.
-	CreatedIndex uint64 `json:"created_index,omitempty"`
+	CreatedIndex *uint64 `json:"created_index,omitempty"`
 	// Description The description matching the bolt11 description hash (if pay supplied one).
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Destination The final destination of the payment if known.
-	Destination clntypes.PubKey `json:"destination,omitempty"`
+	Destination *clntypes.PubKey `json:"destination,omitempty"`
 	// Erroronion The error onion returned on failure, if any.
-	Erroronion clntypes.Hex `json:"erroronion,omitempty"`
+	Erroronion *clntypes.Hex `json:"erroronion,omitempty"`
 	// Label The label, if given to sendpay.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// NumberOfParts The number of parts for a successful payment (only if more than one).
-	NumberOfParts uint64 `json:"number_of_parts,omitempty"`
+	NumberOfParts *uint64 `json:"number_of_parts,omitempty"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// Preimage Proof of payment.
-	Preimage clntypes.Secret `json:"preimage,omitempty"`
+	Preimage *clntypes.Secret `json:"preimage,omitempty"`
 	// Status Status of the payment.
 	Status ListPaysPaysStatus `json:"status"`
 	// UpdatedIndex 1-based index indicating order this payment was changed (only present if it has changed since creation).
-	UpdatedIndex uint64 `json:"updated_index,omitempty"`
+	UpdatedIndex *uint64 `json:"updated_index,omitempty"`
 }
 
 type ListPaysResponse struct {
@@ -3802,13 +3802,13 @@ const (
 
 type ListHtlcsRequest struct {
 	// ID A short channel id (e.g. 1x2x3) or full 64-byte hex channel id, it will only list htlcs for that channel (which must be known).
-	ID string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 	// Index This controls the ordering of results.
-	Index ListHtlcsIndex `json:"index,omitempty"`
+	Index *ListHtlcsIndex `json:"index,omitempty"`
 	// Limit If `index` is specified, `limit` can be used to specify the maximum number of entries to return.
-	Limit uint32 `json:"limit,omitempty"`
+	Limit *uint32 `json:"limit,omitempty"`
 	// Start If `index` is specified, `start` may be specified to start from that value, which is generally returned from lightning-wait(7).
-	Start uint64 `json:"start,omitempty"`
+	Start *uint64 `json:"start,omitempty"`
 }
 
 // ListHtlcsHtlcsDirection Out if we offered this to the peer, in if they offered it.
@@ -3849,7 +3849,7 @@ type ListHtlcsHtlcs struct {
 	// AmountMSAT The value of the HTLC.
 	AmountMSAT clntypes.MSat `json:"amount_msat"`
 	// CreatedIndex 1-based index indicating order this htlc was created in.
-	CreatedIndex uint64 `json:"created_index,omitempty"`
+	CreatedIndex *uint64 `json:"created_index,omitempty"`
 	// Direction Out if we offered this to the peer, in if they offered it.
 	Direction ListHtlcsHtlcsDirection `json:"direction"`
 	// Expiry The block number where this HTLC expires/expired.
@@ -3863,7 +3863,7 @@ type ListHtlcsHtlcs struct {
 	// State The first 10 states are for `out`, the next 10 are for `in`.
 	State ListHtlcsHtlcsState `json:"state"`
 	// UpdatedIndex 1-based index indicating order this htlc was changed (only present if it has changed since creation).
-	UpdatedIndex uint64 `json:"updated_index,omitempty"`
+	UpdatedIndex *uint64 `json:"updated_index,omitempty"`
 }
 
 type ListHtlcsResponse struct {
@@ -3874,35 +3874,35 @@ type MultiFundChannelDestinations struct {
 	// Amount Amount in satoshis taken from the internal wallet to fund the channel (but if we have any anchor channels, this will always leave at least `min-emergency-msat` as change). The string *all* can be used to specify all available funds (or 16,777,215 satoshi if more is available and large channels were not negotiated with the peer). Otherwise it is in satoshi precision; it can be a whole number, a whole number ending in *sat*, a whole number ending in *000msat*, or a number with 1 to 8 decimal places ending in *btc*. The value cannot be less than the dust limit, currently 546 satoshi as of this writing, nor more than 16,777,215 satoshi (unless large channels were negotiated with the peer).
 	Amount clntypes.AmountOrAll `json:"amount"`
 	// Announce Flag that indicates whether to announce the channel with this. If set to `False`, the channel is unpublished.
-	Announce bool `json:"announce,omitempty"`
+	Announce *bool `json:"announce,omitempty"`
 	// CloseTo Bitcoin address to which the channel funds should be sent to on close. Only valid if both peers have negotiated `option_upfront_shutdown_script` Returns `close_to` set to closing script iff is negotiated.
-	CloseTo string `json:"close_to,omitempty"`
+	CloseTo *string `json:"close_to,omitempty"`
 	// CompactLease Compact representation of the peer's expected channel lease terms. If the peer's terms don't match this set, we will fail to open the channel to this destination.
-	CompactLease string `json:"compact_lease,omitempty"`
+	CompactLease *string `json:"compact_lease,omitempty"`
 	// ID Node ID, with an optional *@host:port* appended to it in a manner understood by **connect**; see lightning-connect(7). Each entry in the *destinations* array must have a unique node *id*. If not already connected, **multifundchannel** will automatically attempt to connect to the node.
 	ID string `json:"id"`
 	// Mindepth Number of confirmations before we consider the channel active.
-	Mindepth uint32 `json:"mindepth,omitempty"`
+	Mindepth *uint32 `json:"mindepth,omitempty"`
 	// PushMSAT Amount of millisatoshis to outright give to the node. This is a gift to the peer, and you do not get a proof-of-payment out of this.
-	PushMSAT clntypes.MSat `json:"push_msat,omitempty"`
+	PushMSAT *clntypes.MSat `json:"push_msat,omitempty"`
 	// RequestAmt Amount of liquidity you'd like to lease from peer. If peer supports `option_will_fund`, indicates to them to include this much liquidity into the channel. Must also pass in *compact_lease*.
-	RequestAmt clntypes.Sat `json:"request_amt,omitempty"`
+	RequestAmt *clntypes.Sat `json:"request_amt,omitempty"`
 	// Reserve Amount we want the peer to maintain on its side of the channel. It can be a whole number, a whole number ending in *sat*, a whole number ending in *000msat*, or a number with 1 to 8 decimal places ending in *btc*.
-	Reserve clntypes.Sat `json:"reserve,omitempty"`
+	Reserve *clntypes.Sat `json:"reserve,omitempty"`
 }
 
 type MultiFundChannelRequest struct {
 	// CommitmentFeerate Initial feerate for commitment and HTLC transactions. See *feerate* for valid values.
-	CommitmentFeerate clntypes.Feerate `json:"commitment_feerate,omitempty"`
+	CommitmentFeerate *clntypes.Feerate `json:"commitment_feerate,omitempty"`
 	// Destinations There must be at least one entry in *destinations*; it cannot be an empty array.
 	Destinations []MultiFundChannelDestinations `json:"destinations"`
 	// Feerate Feerate used for the opening transaction, and if *commitment_feerate* is not set, as initial feerate for commitment and HTLC transactions. See NOTES in lightning-feerates(7) for possible values.
-	Feerate clntypes.Feerate `json:"feerate,omitempty"`
+	Feerate *clntypes.Feerate `json:"feerate,omitempty"`
 	// Minchannels Re-attempt funding as long as at least this many peers remain (must not be zero). The **multifundchannel** command will only fail if too many peers fail the funding process.
-	Minchannels int64 `json:"minchannels,omitempty"`
+	Minchannels *int64 `json:"minchannels,omitempty"`
 	// Minconf Minimum number of confirmations that used outputs should have.
-	Minconf int64               `json:"minconf,omitempty"`
-	Utxos   []clntypes.Outpoint `json:"utxos,omitempty"`
+	Minconf *int64               `json:"minconf,omitempty"`
+	Utxos   *[]clntypes.Outpoint `json:"utxos,omitempty"`
 }
 
 // MultiFundChannelChannelIdsChannelTypeNames Name of feature bit.
@@ -3931,7 +3931,7 @@ type MultiFundChannelChannelIds struct {
 	// ChannelType Channel_type as negotiated with peer.
 	ChannelType MultiFundChannelChannelIdsChannelType `json:"channel_type"`
 	// CloseTo The raw scriptPubkey which mutual close will go to; only present if *close_to* parameter was specified and peer supports `option_upfront_shutdown_script`.
-	CloseTo clntypes.Hex `json:"close_to,omitempty"`
+	CloseTo *clntypes.Hex `json:"close_to,omitempty"`
 	// ID The peer we opened the channel with.
 	ID clntypes.PubKey `json:"id"`
 	// Outnum The 0-based output index showing which output funded the channel.
@@ -3966,7 +3966,7 @@ type MultiFundChannelFailed struct {
 type MultiFundChannelResponse struct {
 	ChannelIds []MultiFundChannelChannelIds `json:"channel_ids"`
 	// Failed Any peers we failed to open with (if *minchannels* was specified less than the number of destinations).
-	Failed []MultiFundChannelFailed `json:"failed,omitempty"`
+	Failed *[]MultiFundChannelFailed `json:"failed,omitempty"`
 	// TX The raw transaction which funded the channel.
 	TX clntypes.Hex `json:"tx"`
 	// TXID The txid of the transaction which funded the channel.
@@ -3975,12 +3975,12 @@ type MultiFundChannelResponse struct {
 
 type MultiWithdrawRequest struct {
 	// Feerate Feerate used for the withdrawals. See NOTES in lightning-feerates(7) for possible values.
-	Feerate clntypes.Feerate `json:"feerate,omitempty"`
+	Feerate *clntypes.Feerate `json:"feerate,omitempty"`
 	// Minconf Minimum number of confirmations that used outputs should have.
-	Minconf uint32 `json:"minconf,omitempty"`
+	Minconf *uint32 `json:"minconf,omitempty"`
 	// Outputs An array containing objects of the form `{address: amount}`. The `amount` may be the string *all*, indicating that all onchain funds be sent to the specified address. Otherwise, it is in satoshi precision; it can be a whole number, a whole number ending in *sat*, a whole number ending in *000msat*, or a number with 1 to 8 decimal places ending in *btc*.
 	Outputs []clntypes.OutputDesc `json:"outputs"`
-	Utxos   []clntypes.Outpoint   `json:"utxos,omitempty"`
+	Utxos   *[]clntypes.Outpoint  `json:"utxos,omitempty"`
 }
 
 type MultiWithdrawResponse struct {
@@ -3992,33 +3992,33 @@ type MultiWithdrawResponse struct {
 
 type OfferRequest struct {
 	// AbsoluteExpiry Time the offer is valid until,in seconds since the first day of 1970 UTC. If not set, the offer remains valid (though it can be deactivated by the issuer of course). This is encoded in the offer.
-	AbsoluteExpiry uint64 `json:"absolute_expiry,omitempty"`
+	AbsoluteExpiry *uint64 `json:"absolute_expiry,omitempty"`
 	// Amount Can be the string `any`, which creates an offer that can be paid with any amount (e.g. a donation). Otherwise it can be a positive value in millisatoshi precision; it can be a whole number, or a whole number ending in *msat* or *sat*, or a number with three decimal places ending in *sat*, or a number with 1 to 11 decimal places ending in *btc*. It can also have an ISO 4217 postfix (e.g. USD), in which case currency conversion will need to be done for the invoice itself. A plugin is needed which provides the `currencyconvert` API for this currency, otherwise the offer creation will fail.
 	Amount string `json:"amount"`
 	// Description A short description of purpose of the offer, e.g. *coffee*. This value is encoded into the resulting offer and is viewable by anyone you expose this offer to. It must be UTF-8, and cannot use *\u* JSON escape codes.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// FrontingNodes An optional array of peer nodes to create blinded paths from. One of these blinded paths will also be used for the invoice, when they request it. This overrides the `payment-fronting-node` configuration setting. If set to the empty array, this means *no fronting nodes*.
-	FrontingNodes []clntypes.PubKey `json:"fronting_nodes,omitempty"`
+	FrontingNodes *[]clntypes.PubKey `json:"fronting_nodes,omitempty"`
 	// Issuer Who is issuing this offer (i.e. you) if appropriate.
-	Issuer string `json:"issuer,omitempty"`
+	Issuer *string `json:"issuer,omitempty"`
 	// Label An internal-use name for the offer, which can be any UTF-8 string. This is *NOT* encoded in the offer not sent to the issuer.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// OptionalRecurrence Make recurrence optional, for backwards compatibility (older payers will only pay once).
-	OptionalRecurrence bool `json:"optional_recurrence,omitempty"`
+	OptionalRecurrence *bool `json:"optional_recurrence,omitempty"`
 	// ProportionalAmount Payment will be charged for the initial period proportional to the amount remaining (only makes sense if recurrence_base is specified)
-	ProportionalAmount bool `json:"proportional_amount,omitempty"`
+	ProportionalAmount *bool `json:"proportional_amount,omitempty"`
 	// QuantityMax Invoice can specify more than one of the items up (and including) this maximum: 0 is a special value meaning `no maximuim`. The *amount* for the invoice will need to be multiplied accordingly. This is encoded in the offer.
-	QuantityMax uint64 `json:"quantity_max,omitempty"`
+	QuantityMax *uint64 `json:"quantity_max,omitempty"`
 	// Recurrence An invoice is expected at regular intervals. The argument is a positive number followed by one of `seconds`, `minutes`, `hours`, `days`, `weeks`, or `months` (variants without the trailing `s` are also permitted). This is encoded in the offer. The semantics of recurrence is fairly predictable, but fully documented in BOLT 12. e.g. `4weeks`.
-	Recurrence string `json:"recurrence,omitempty"`
+	Recurrence *string `json:"recurrence,omitempty"`
 	// RecurrenceBase Time in seconds since the first day of 1970 UTC. This indicates when the first period begins; without this, the recurrence periods start from the first invoice.
-	RecurrenceBase string `json:"recurrence_base,omitempty"`
+	RecurrenceBase *string `json:"recurrence_base,omitempty"`
 	// RecurrenceLimit To indicate the maximum period which exists. eg. `12` means there are 13 periods, from 0 to 12 inclusive. This is encoded in the offer.
-	RecurrenceLimit uint32 `json:"recurrence_limit,omitempty"`
+	RecurrenceLimit *uint32 `json:"recurrence_limit,omitempty"`
 	// RecurrencePaywindow Argument of form `-time+time`. The first time is the number of seconds before the start of a period in which an invoice and payment is valid, the second time is the number of seconds after the start of the period. For example *-604800+86400* means you can fetch an pay the invoice 4 weeks before the given period starts, and up to 1 day afterwards. The optional *%* indicates that the amount of the invoice will be scaled by the time remaining in the period. This is encoded in the offer.
-	RecurrencePaywindow string `json:"recurrence_paywindow,omitempty"`
+	RecurrencePaywindow *string `json:"recurrence_paywindow,omitempty"`
 	// SingleUse Indicates that the offer is only valid once; we may issue multiple invoices, but as soon as one is paid all other invoices will be expired (i.e. only one person can pay this offer).
-	SingleUse bool `json:"single_use,omitempty"`
+	SingleUse *bool `json:"single_use,omitempty"`
 }
 
 type OfferResponse struct {
@@ -4029,9 +4029,9 @@ type OfferResponse struct {
 	// Created False if the offer already existed.
 	Created bool `json:"created"`
 	// ForcePaths True if `fronting_nodes` (or the `payment-fronting-node` configuration entry) is set: implies any invoice issued for this offer must use a subset of the same blinded paths.
-	ForcePaths bool `json:"force_paths,omitempty"`
+	ForcePaths *bool `json:"force_paths,omitempty"`
 	// Label The (optional) user-specified label.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// OfferID The id of this offer (merkle hash of non-signature fields).
 	OfferID clntypes.Hash `json:"offer_id"`
 	// SingleUse Whether this expires as soon as it's paid (reflects the *single_use* parameter).
@@ -4060,7 +4060,7 @@ type OpenChannelBumpRequest struct {
 	// ChannelID Id of the channel to RBF.
 	ChannelID clntypes.Hash `json:"channel_id"`
 	// FundingFeerate Feerate for the funding transaction.
-	FundingFeerate clntypes.Feerate `json:"funding_feerate,omitempty"`
+	FundingFeerate *clntypes.Feerate `json:"funding_feerate,omitempty"`
 	// Initialpsbt The funded, incomplete PSBT that specifies the UTXOs and change output for our channel contribution. It can be updated, see `openchannel_update`; *initialpsbt* must have at least one input. Must have the Non-Witness UTXO (PSBT_IN_NON_WITNESS_UTXO) set for every input. An error (code 309) will be returned if this requirement is not met.
 	Initialpsbt string `json:"initialpsbt"`
 }
@@ -4097,30 +4097,30 @@ type OpenChannelBumpResponse struct {
 	// PSBT The (incomplete) PSBT of the RBF transaction.
 	PSBT string `json:"psbt"`
 	// RequiresConfirmedInputs Does peer require confirmed inputs in psbt?
-	RequiresConfirmedInputs bool `json:"requires_confirmed_inputs,omitempty"`
+	RequiresConfirmedInputs *bool `json:"requires_confirmed_inputs,omitempty"`
 }
 
 type OpenChannelInitRequest struct {
 	// Amount Satoshi value that we will contribute to the channel. This value will be _added_ to the provided PSBT in the output which is encumbered by the 2-of-2 script for this channel.
 	Amount clntypes.Sat `json:"amount"`
 	// Announce Whether or not to announce this channel.
-	Announce bool `json:"announce,omitempty"`
+	Announce *bool `json:"announce,omitempty"`
 	// ChannelType Each bit set in this channel_type.
-	ChannelType []uint32 `json:"channel_type,omitempty"`
+	ChannelType *[]uint32 `json:"channel_type,omitempty"`
 	// CloseTo Bitcoin address to which the channel funds should be sent on close. Only valid if both peers have negotiated `option_upfront_shutdown_script`.
-	CloseTo string `json:"close_to,omitempty"`
+	CloseTo *string `json:"close_to,omitempty"`
 	// CommitmentFeerate Feerate for commitment transactions for non-anchor channels: see **fundchannel**. For anchor channels, it is ignored.
-	CommitmentFeerate clntypes.Feerate `json:"commitment_feerate,omitempty"`
+	CommitmentFeerate *clntypes.Feerate `json:"commitment_feerate,omitempty"`
 	// CompactLease A compact representation of the peer's expected channel lease terms. If the peer's terms don't match this set, we will fail to open the channel.
-	CompactLease clntypes.Hex `json:"compact_lease,omitempty"`
+	CompactLease *clntypes.Hex `json:"compact_lease,omitempty"`
 	// FundingFeerate Feerate for the funding transaction.
-	FundingFeerate clntypes.Feerate `json:"funding_feerate,omitempty"`
+	FundingFeerate *clntypes.Feerate `json:"funding_feerate,omitempty"`
 	// ID Node id of the remote peer.
 	ID clntypes.PubKey `json:"id"`
 	// Initialpsbt Funded, incomplete PSBT that specifies the UTXOs and change output for our channel contribution. It can be updated, see `openchannel_update`; *initialpsbt* must have at least one input. Must have the Non-Witness UTXO (PSBT_IN_NON_WITNESS_UTXO) set for every input. An error (code 309) will be returned if this requirement is not met.
 	Initialpsbt string `json:"initialpsbt"`
 	// RequestAmt An amount of liquidity you'd like to lease from the peer. If peer supports `option_will_fund`, indicates to them to include this much liquidity into the channel. Must also pass in *compact_lease*.
-	RequestAmt clntypes.Sat `json:"request_amt,omitempty"`
+	RequestAmt *clntypes.Sat `json:"request_amt,omitempty"`
 }
 
 // OpenChannelInitChannelTypeNames Name of feature bit.
@@ -4155,7 +4155,7 @@ type OpenChannelInitResponse struct {
 	// PSBT The (incomplete) PSBT of the funding transaction.
 	PSBT string `json:"psbt"`
 	// RequiresConfirmedInputs Does peer require confirmed inputs in psbt?
-	RequiresConfirmedInputs bool `json:"requires_confirmed_inputs,omitempty"`
+	RequiresConfirmedInputs *bool `json:"requires_confirmed_inputs,omitempty"`
 }
 
 type OpenChannelSignedRequest struct {
@@ -4207,7 +4207,7 @@ type OpenChannelUpdateResponse struct {
 	// ChannelType Channel_type as negotiated with peer.
 	ChannelType OpenChannelUpdateChannelType `json:"channel_type"`
 	// CloseTo If a `close_to` address was provided to `openchannel_init` and the peer supports `option_upfront_shutdownscript`. Scriptpubkey which we have to close to if we mutual close.
-	CloseTo clntypes.Hex `json:"close_to,omitempty"`
+	CloseTo *clntypes.Hex `json:"close_to,omitempty"`
 	// CommitmentsSecured Whether the *psbt* is complete (if true, sign *psbt* and call `openchannel_signed` to complete the channel open).
 	CommitmentsSecured bool `json:"commitments_secured"`
 	// FundingOutnum The index of the funding output for this channel in the funding transaction. The index of the funding output in the psbt.
@@ -4215,16 +4215,16 @@ type OpenChannelUpdateResponse struct {
 	// PSBT The PSBT of the funding transaction.
 	PSBT string `json:"psbt"`
 	// RequiresConfirmedInputs Does peer require confirmed inputs in psbt?
-	RequiresConfirmedInputs bool `json:"requires_confirmed_inputs,omitempty"`
+	RequiresConfirmedInputs *bool `json:"requires_confirmed_inputs,omitempty"`
 }
 
 type PingRequest struct {
 	// ID The pubkey of the node to ping.
 	ID clntypes.PubKey `json:"id"`
 	// Len The length of the ping.
-	Len uint16 `json:"len,omitempty"`
+	Len *uint16 `json:"len,omitempty"`
 	// Pongbytes The length of the reply. A value of 65532 to 65535 means `don't reply`.
-	Pongbytes uint16 `json:"pongbytes,omitempty"`
+	Pongbytes *uint16 `json:"pongbytes,omitempty"`
 }
 
 type PingResponse struct {
@@ -4245,10 +4245,10 @@ const (
 
 type PluginRequest struct {
 	// Directory *path* of a directory containing plugins.
-	Directory string   `json:"directory,omitempty"`
-	Options   []string `json:"options,omitempty"`
+	Directory *string   `json:"directory,omitempty"`
+	Options   *[]string `json:"options,omitempty"`
 	// Plugin *path* or *name* of a plugin executable to start or stop.
-	Plugin string `json:"plugin,omitempty"`
+	Plugin *string `json:"plugin,omitempty"`
 	// Subcommand Determines what action is taken: - *subcommand* **start** takes a *path* to an executable as argument and starts it as plugin. *path* may be an absolute path or a path relative to the plugins directory (default *~/.lightning/plugins*). If the plugin is already running and the executable (checksum) has changed, the plugin is killed and restarted except if its an important (or builtin) plugin. If the plugin doesn't complete the 'getmanifest' and 'init' handshakes within 60 seconds, the command will timeout and kill the plugin. Additional *options* may be passed to the plugin, but requires all parameters to be passed as keyword=value pairs using the `-k|--keyword` option which is recommended. For example the following command starts the plugin helloworld.py (present in the plugin directory) with the option greeting set to 'A crazy': ```shell lightning-cli -k plugin subcommand=start plugin=helloworld.py greeting='A crazy' ``` - *subcommand* **stop** takes a plugin executable *path* or *name* as argument and stops the plugin. If the plugin subscribed to 'shutdown', it may take up to 30 seconds before this command returns. If the plugin is important and dynamic, this will shutdown `lightningd`. - *subcommand* **startdir** starts all executables it can find in *directory* (excl. subdirectories) as plugins. Checksum and timeout behavior as in **start** applies. - *subcommand* **rescan** starts all plugins in the default plugins directory (default *~/.lightning/plugins*) that are not already running. Checksum and timeout behavior as in **start** applies. - *subcommand* **list** lists all running plugins (incl. non-dynamic).
 	Subcommand PluginSubcommand `json:"subcommand"`
 }
@@ -4275,15 +4275,15 @@ type PluginPlugins struct {
 
 type PluginResponse struct {
 	// Command The subcommand this is responding to.
-	Command PluginCommand   `json:"command"`
-	Plugins []PluginPlugins `json:"plugins,omitempty"`
+	Command PluginCommand    `json:"command"`
+	Plugins *[]PluginPlugins `json:"plugins,omitempty"`
 	// Result A message saying it successfully stopped.
-	Result string `json:"result,omitempty"`
+	Result *string `json:"result,omitempty"`
 }
 
 type RenePayStatusRequest struct {
 	// Invstring If specified, the command will return a list of payment attempts whose invoice matches *invstring*, otherwise all payments with be listed.
-	Invstring string `json:"invstring,omitempty"`
+	Invstring *string `json:"invstring,omitempty"`
 }
 
 // RenePayStatusPaystatusStatus Status of payment.
@@ -4299,23 +4299,23 @@ type RenePayStatusPaystatus struct {
 	// AmountMSAT Amount the recipient received.
 	AmountMSAT clntypes.MSat `json:"amount_msat"`
 	// AmountSentMSAT Total amount we sent including fees (for completed payments only).
-	AmountSentMSAT clntypes.MSat `json:"amount_sent_msat,omitempty"`
+	AmountSentMSAT *clntypes.MSat `json:"amount_sent_msat,omitempty"`
 	// Bolt11 Invoice string BOLT11.
 	Bolt11 string `json:"bolt11"`
 	// CreatedAt The UNIX timestamp showing when this payment was initiated.
 	CreatedAt float64 `json:"created_at"`
 	// Destination The final destination of the payment.
-	Destination clntypes.PubKey `json:"destination,omitempty"`
+	Destination *clntypes.PubKey `json:"destination,omitempty"`
 	// Groupid The id for this payment attempt.
 	Groupid uint32 `json:"groupid"`
 	// Notes A list of messages for debugging purposes.
-	Notes []string `json:"notes,omitempty"`
+	Notes *[]string `json:"notes,omitempty"`
 	// Parts How many attempts this took.
-	Parts uint32 `json:"parts,omitempty"`
+	Parts *uint32 `json:"parts,omitempty"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// PaymentPreimage The proof of payment: SHA256 of this **payment_hash** (for completed payments only).
-	PaymentPreimage clntypes.Secret `json:"payment_preimage,omitempty"`
+	PaymentPreimage *clntypes.Secret `json:"payment_preimage,omitempty"`
 	// Status Status of payment.
 	Status RenePayStatusPaystatusStatus `json:"status"`
 }
@@ -4327,22 +4327,22 @@ type RenePayStatusResponse struct {
 
 type RenePayRequest struct {
 	// AmountMSAT If the *invstring* does not contain an amount, *amount_msat* is required, otherwise if it is specified it must be *null*. in millisatoshi precision; it can be a whole number, or a whole number with suffix *msat* or *sat*, or a three decimal point number with suffix *sat*, or an 1 to 11 decimal point number suffixed by *btc*.
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// Description Only required for bolt11 invoices which do not contain a description themselves, but contain a description hash: in this case *description* is required. *description* is then checked against the hash inside the invoice before it will be paid.
-	Description  string `json:"description,omitempty"`
-	DevUseShadow bool   `json:"dev_use_shadow,omitempty"`
+	Description  *string `json:"description,omitempty"`
+	DevUseShadow *bool   `json:"dev_use_shadow,omitempty"`
 	// Exclude *exclude* is a JSON array of short-channel-id/direction (e.g. [ '564334x877x1/0', '564195x1292x0/1' ]) or pubkey which should be excluded from consideration for routing.
-	Exclude []string `json:"exclude,omitempty"`
+	Exclude *[]string `json:"exclude,omitempty"`
 	// Invstring Bolt11 invoice which the RPC command attempts to pay. Currently, **renepay** supports bolt11 invoices only.
 	Invstring string `json:"invstring"`
 	// Label Used to attach a label to payments, and is returned in lightning-listpays(7) and lightning-listsendpays(7).
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Maxdelay Overrides the value of `max-locktime-blocks` for this payment. It serves to limit the locktime of funds in the payment HTLC measured in blocks.
-	Maxdelay uint32 `json:"maxdelay,omitempty"`
+	Maxdelay *uint32 `json:"maxdelay,omitempty"`
 	// Maxfee *maxfee* is a hard bound, in the sense that the command will never attempt a payment when the fees exceed that value.
-	Maxfee clntypes.MSat `json:"maxfee,omitempty"`
+	Maxfee *clntypes.MSat `json:"maxfee,omitempty"`
 	// RetryFor Measured in seconds specifies how much time it is allowed for the command to keep retrying the payment.
-	RetryFor uint32 `json:"retry_for,omitempty"`
+	RetryFor *uint32 `json:"retry_for,omitempty"`
 }
 
 // RenePayStatus Status of payment.
@@ -4360,15 +4360,15 @@ type RenePayResponse struct {
 	// AmountSentMSAT Total amount we sent (including fees).
 	AmountSentMSAT clntypes.MSat `json:"amount_sent_msat"`
 	// Bolt11 The bolt11 invoice paid.
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Bolt12 The bolt12 invoice paid.
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// CreatedAt The UNIX timestamp showing when this payment was initiated.
 	CreatedAt float64 `json:"created_at"`
 	// Destination The final destination of the payment.
-	Destination clntypes.PubKey `json:"destination,omitempty"`
+	Destination *clntypes.PubKey `json:"destination,omitempty"`
 	// Groupid The groupid used for these payment parts (as can be seen in listsendpays)
-	Groupid uint64 `json:"groupid,omitempty"`
+	Groupid *uint64 `json:"groupid,omitempty"`
 	// Parts How many attempts this took.
 	Parts uint32 `json:"parts"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
@@ -4381,11 +4381,11 @@ type RenePayResponse struct {
 
 type ReserveInputsRequest struct {
 	// Exclusive If set to *False*, existing reservations are simply extended, rather than causing failure.
-	Exclusive bool `json:"exclusive,omitempty"`
+	Exclusive *bool `json:"exclusive,omitempty"`
 	// PSBT The PSBT to reserve inputs from.
 	PSBT string `json:"psbt"`
 	// Reserve The number of blocks to reserve. By default, reservations are for the next 72 blocks (approximately 6 hours).
-	Reserve uint32 `json:"reserve,omitempty"`
+	Reserve *uint32 `json:"reserve,omitempty"`
 }
 
 type ReserveInputsReservations struct {
@@ -4419,15 +4419,15 @@ type SendCustomMsgResponse struct {
 
 type SendInvoiceRequest struct {
 	// AmountMSAT Required if the *offer* does not specify an amount at all, or specifies it in a different currency. Otherwise you may set it (e.g. to provide a tip).
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// Invreq The bolt12 invoice_request string beginning with `lnr1`.
 	Invreq string `json:"invreq"`
 	// Label The unique label to use for this invoice.
 	Label string `json:"label"`
 	// Quantity Quantity is is required if the offer specifies quantity_max, otherwise it is not allowed.
-	Quantity uint64 `json:"quantity,omitempty"`
+	Quantity *uint64 `json:"quantity,omitempty"`
 	// Timeout Seconds to wait for the offering node to pay the invoice or return an error. This will also be the timeout on the invoice that is sent.
-	Timeout uint32 `json:"timeout,omitempty"`
+	Timeout *uint32 `json:"timeout,omitempty"`
 }
 
 // SendInvoiceStatus Whether it's paid, unpaid or unpayable.
@@ -4441,11 +4441,11 @@ const (
 
 type SendInvoiceResponse struct {
 	// AmountMSAT The amount required to pay this invoice.
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// AmountReceivedMSAT The amount actually received (could be slightly greater than *amount_msat*, since clients may overpay).
-	AmountReceivedMSAT clntypes.MSat `json:"amount_received_msat,omitempty"`
+	AmountReceivedMSAT *clntypes.MSat `json:"amount_received_msat,omitempty"`
 	// Bolt12 The BOLT12 string.
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// CreatedIndex 1-based index indicating order this invoice was created in.
 	CreatedIndex uint64 `json:"created_index"`
 	// Description Description used in the invoice.
@@ -4455,34 +4455,34 @@ type SendInvoiceResponse struct {
 	// Label Unique label supplied at invoice creation.
 	Label string `json:"label"`
 	// PaidAt UNIX timestamp of when it was paid.
-	PaidAt uint64 `json:"paid_at,omitempty"`
+	PaidAt *uint64 `json:"paid_at,omitempty"`
 	// PayIndex Unique incrementing index for this payment.
-	PayIndex uint64 `json:"pay_index,omitempty"`
+	PayIndex *uint64 `json:"pay_index,omitempty"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// PaymentPreimage Proof of payment.
-	PaymentPreimage clntypes.Secret `json:"payment_preimage,omitempty"`
+	PaymentPreimage *clntypes.Secret `json:"payment_preimage,omitempty"`
 	// Status Whether it's paid, unpaid or unpayable.
 	Status SendInvoiceStatus `json:"status"`
 	// UpdatedIndex 1-based index indicating order this invoice was changed (only present if it has changed since creation).
-	UpdatedIndex uint64 `json:"updated_index,omitempty"`
+	UpdatedIndex *uint64 `json:"updated_index,omitempty"`
 }
 
 type SetChannelRequest struct {
 	// Enforcedelay Number of seconds to delay before enforcing the new fees/htlc max. This gives the network a chance to catch up with the new rates and avoids rejecting HTLCs before they do. This only has an effect if rates are increased (we always allow users to overpay fees) or *htlcmax* is decreased, and only applied to a single rate increase per channel (we don't remember an arbitrary number of prior feerates) and if the node is restarted the updated configuration is enforced immediately.
-	Enforcedelay uint32 `json:"enforcedelay,omitempty"`
+	Enforcedelay *uint32 `json:"enforcedelay,omitempty"`
 	// Feebase Value in millisatoshi that is added as base fee to any routed payment: if omitted, it is unchanged. It can be a whole number, or a whole number ending in *msat* or *sat*, or a number with three decimal places ending in *sat*, or a number with 1 to 11 decimal places ending in *btc*.
-	Feebase clntypes.MSat `json:"feebase,omitempty"`
+	Feebase *clntypes.MSat `json:"feebase,omitempty"`
 	// Feeppm Value that is added proportionally per-millionths to any routed payment volume in satoshi. For example, if ppm is 1,000 and 1,000,000 satoshi is being routed through the channel, an proportional fee of 1,000 satoshi is added, resulting in a 0.1% fee.
-	Feeppm uint32 `json:"feeppm,omitempty"`
+	Feeppm *uint32 `json:"feeppm,omitempty"`
 	// Htlcmax Value that limits how large an HTLC we will forward: if omitted, it is unchanged. It can be a whole number, or a whole number ending in *msat* or *sat*, or a number with three decimal places ending in *sat*, or a number with 1 to 11 decimal places ending in *btc*. Note that *htlcmax* only applies to forwarded HTLCs: we can still send larger payments ourselves.
-	Htlcmax clntypes.MSat `json:"htlcmax,omitempty"`
+	Htlcmax *clntypes.MSat `json:"htlcmax,omitempty"`
 	// Htlcmin Value that limits how small an HTLC we will forward: if omitted, it is unchanged. It can be a whole number, or a whole number ending in *msat* or *sat*, or a number with three decimal places ending in *sat*, or a number with 1 to 11 decimal places ending in *btc*. Note that the peer also enforces a minimum for the channel: setting it below that will simply set it to that value with a warning. Also note that *htlcmin* only applies to forwarded HTLCs: we can still send smaller payments ourselves.
-	Htlcmin clntypes.MSat `json:"htlcmin,omitempty"`
+	Htlcmin *clntypes.MSat `json:"htlcmin,omitempty"`
 	// ID Should contain a scid (short channel ID), channel id or peerid (pubkey) of the channel to be modified. If *id* is set to `all`, the updates are applied to all channels in states CHANNELD_NORMAL CHANNELD_AWAITING_LOCKIN or DUALOPEND_AWAITING_LOCKIN. If *id* is a peerid, all channels with the +peer in those states are changed.
 	ID string `json:"id"`
 	// Ignorefeelimits If set to True means to allow the peer to set the commitment transaction fees (or closing transaction fees) to any value they want. This is dangerous: they could set an exorbitant fee (so HTLCs are unenforcable), or a tiny fee (so that commitment transactions cannot be relayed), but avoids channel breakage in case of feerate disagreements. (Note: the global `ignore_fee_limits` setting overrides this).
-	Ignorefeelimits bool `json:"ignorefeelimits,omitempty"`
+	Ignorefeelimits *bool `json:"ignorefeelimits,omitempty"`
 }
 
 type SetChannelChannels struct {
@@ -4501,11 +4501,11 @@ type SetChannelChannels struct {
 	// PeerID The node_id of the peer.
 	PeerID clntypes.PubKey `json:"peer_id"`
 	// ShortChannelID The short_channel_id (if locked in).
-	ShortChannelID clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
+	ShortChannelID *clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
 	// WarningHtlcmaxTooHigh The requested htlcmax was greater than the channel capacity, so we set it to the channel capacity.
-	WarningHtlcmaxTooHigh string `json:"warning_htlcmax_too_high,omitempty"`
+	WarningHtlcmaxTooHigh *string `json:"warning_htlcmax_too_high,omitempty"`
 	// WarningHtlcminTooLow The requested htlcmin was too low for this peer, so we set it to the minimum they will allow.
-	WarningHtlcminTooLow string `json:"warning_htlcmin_too_low,omitempty"`
+	WarningHtlcminTooLow *string `json:"warning_htlcmin_too_low,omitempty"`
 }
 
 type SetChannelResponse struct {
@@ -4517,9 +4517,9 @@ type SetConfigRequest struct {
 	// Config Name of the config variable which should be set to the value of the variable.
 	Config string `json:"config"`
 	// Transient If set, this change does NOT try to alter the configuration files, so the change will be reverted on any restart.
-	Transient bool `json:"transient,omitempty"`
+	Transient *bool `json:"transient,omitempty"`
 	// Val Value of the config variable to be set or updated. For multi options, this must be an array of strings.
-	Val string `json:"val,omitempty"`
+	Val *string `json:"val,omitempty"`
 }
 
 // SetConfigConfig Config settings after completion.
@@ -4529,23 +4529,23 @@ type SetConfigConfig struct {
 	// Dynamic Whether this option is settable via setconfig.
 	Dynamic bool `json:"dynamic"`
 	// Plugin The plugin this configuration setting is for.
-	Plugin string `json:"plugin,omitempty"`
+	Plugin *string `json:"plugin,omitempty"`
 	// Set For simple flag options.
-	Set bool `json:"set,omitempty"`
+	Set *bool `json:"set,omitempty"`
 	// Source Source of configuration setting (`file`:`linenum`) for non-multi options.
-	Source string `json:"source,omitempty"`
+	Source *string `json:"source,omitempty"`
 	// Sources Sources of configuration settings (`file`:`linenum`) for multi options.
-	Sources []string `json:"sources,omitempty"`
+	Sources *[]string `json:"sources,omitempty"`
 	// ValueBool For boolean options.
-	ValueBool bool `json:"value_bool,omitempty"`
+	ValueBool *bool `json:"value_bool,omitempty"`
 	// ValueInt For integer options.
-	ValueInt int64 `json:"value_int,omitempty"`
+	ValueInt *int64 `json:"value_int,omitempty"`
 	// ValueMSAT For msat options.
-	ValueMSAT clntypes.MSat `json:"value_msat,omitempty"`
+	ValueMSAT *clntypes.MSat `json:"value_msat,omitempty"`
 	// ValueStr For string options.
-	ValueStr string `json:"value_str,omitempty"`
+	ValueStr *string `json:"value_str,omitempty"`
 	// ValuesStr For multi-string options.
-	ValuesStr []string `json:"values_str,omitempty"`
+	ValuesStr *[]string `json:"values_str,omitempty"`
 }
 
 type SetConfigResponse struct {
@@ -4593,11 +4593,11 @@ type SpliceInitRequest struct {
 	// ChannelID The channel id of the channel to be spliced.
 	ChannelID clntypes.Hash `json:"channel_id"`
 	// FeeratePerKw The miner fee we promise our peer to pay for our side of the splice transaction. It is calculated by `feerate_per_kw` * our_bytes_in_splice_tx / 1000.
-	FeeratePerKw uint32 `json:"feerate_per_kw,omitempty"`
+	FeeratePerKw *uint32 `json:"feerate_per_kw,omitempty"`
 	// ForceFeerate By default splices will fail if the fee provided looks too high. This is to protect against accidentally setting your fee higher than intended. Set `force_feerate` to true to skip this saftey check.
-	ForceFeerate bool `json:"force_feerate,omitempty"`
+	ForceFeerate *bool `json:"force_feerate,omitempty"`
 	// Initialpsbt The (optional) base 64 encoded PSBT to begin with. If not specified, one will be generated automatically.
-	Initialpsbt string `json:"initialpsbt,omitempty"`
+	Initialpsbt *string `json:"initialpsbt,omitempty"`
 	// RelativeAmount A positive or negative amount of satoshis to add or subtract from the channel. Note you may need to add a double dash (--) after splice_init if using a negative *relative_amount* so it is not interpretted as a command modifier. For example: ```shell lightning-cli splice_init -- $CHANNEL_ID -100000 ```
 	RelativeAmount int64 `json:"relative_amount"`
 }
@@ -4613,12 +4613,12 @@ type SpliceSignedRequest struct {
 	// PSBT The psbt of the resulting transaction after splice negotiation(s)
 	PSBT string `json:"psbt"`
 	// SignFirst A flag that makes our node offer the final splice signature first (defaults to false). When false, the node will calculate who should sign first based off who is adding inputting the least sats to the splice as per spec.
-	SignFirst bool `json:"sign_first,omitempty"`
+	SignFirst *bool `json:"sign_first,omitempty"`
 }
 
 type SpliceSignedResponse struct {
 	// Outnum The index of the new funding output.
-	Outnum uint32 `json:"outnum,omitempty"`
+	Outnum *uint32 `json:"outnum,omitempty"`
 	// PSBT The psbt of the resulting transaction after splice negotiation(s)
 	PSBT string `json:"psbt"`
 	// TX The hex representation of the final transaction that is published.
@@ -4640,7 +4640,7 @@ type SpliceUpdateResponse struct {
 	// PSBT The (incomplete) PSBT of the splice transaction.
 	PSBT string `json:"psbt"`
 	// SignaturesSecured whether or not the peer sent us their signatures for this splice
-	SignaturesSecured bool `json:"signatures_secured,omitempty"`
+	SignaturesSecured *bool `json:"signatures_secured,omitempty"`
 }
 
 type SpliceInRequest struct {
@@ -4652,11 +4652,11 @@ type SpliceInRequest struct {
 
 type SpliceInResponse struct {
 	// PSBT The final psbt
-	PSBT string `json:"psbt,omitempty"`
+	PSBT *string `json:"psbt,omitempty"`
 	// TX The final transaction in hex
-	TX string `json:"tx,omitempty"`
+	TX *string `json:"tx,omitempty"`
 	// TXID The txid of the final transaction
-	TXID string `json:"txid,omitempty"`
+	TXID *string `json:"txid,omitempty"`
 }
 
 type SpliceOutRequest struct {
@@ -4665,58 +4665,58 @@ type SpliceOutRequest struct {
 	// Channel channel identifier or channel query. Format is the same as is used in `dev-splice`.
 	Channel string `json:"channel"`
 	// Destination Where to send the funds to. Defaults to `wallet` which sends the funds to your onchain wallet. Specify a bitcoin address to send funds to that address or specify a channel identifier to send funds to another channel. Format is the same as is used in `dev-splice`.
-	Destination string `json:"destination,omitempty"`
+	Destination *string `json:"destination,omitempty"`
 	// ForceFeerate By default splices will fail if the fee provided looks too high. This is to protect against accidentally setting your fee higher than intended. Set `force_feerate` to true to skip this saftey check
-	ForceFeerate bool `json:"force_feerate,omitempty"`
+	ForceFeerate *bool `json:"force_feerate,omitempty"`
 }
 
 type SpliceOutResponse struct {
 	// PSBT The final psbt
-	PSBT string `json:"psbt,omitempty"`
+	PSBT *string `json:"psbt,omitempty"`
 	// TX The final transaction in hex
-	TX string `json:"tx,omitempty"`
+	TX *string `json:"tx,omitempty"`
 	// TXID The txid of the final transaction
-	TXID string `json:"txid,omitempty"`
+	TXID *string `json:"txid,omitempty"`
 }
 
 type DevSpliceRequest struct {
 	// DebugLog Adds a verbose log of each splice calculation step to the result
-	DebugLog bool `json:"debug_log,omitempty"`
+	DebugLog *bool `json:"debug_log,omitempty"`
 	// DevWetrun Executes the splice up until the point signatures would be sent and then aborts
-	DevWetrun bool `json:"dev-wetrun,omitempty"`
+	DevWetrun *bool `json:"dev-wetrun,omitempty"`
 	// Dryrun Don't execute any actions and output a transcript of what would have been done
-	Dryrun bool `json:"dryrun,omitempty"`
+	Dryrun *bool `json:"dryrun,omitempty"`
 	// ForceFeerate By default splices will fail if the fee provided looks too high. This is to protect against accidentally setting your fee higher than intended. Set `force_feerate` to true to skip this saftey check
-	ForceFeerate bool `json:"force_feerate,omitempty"`
+	ForceFeerate *bool `json:"force_feerate,omitempty"`
 	// ScriptOrJSON The splice script to execute or json equivilent
 	ScriptOrJSON string `json:"script_or_json"`
 }
 
 type DevSpliceResponse struct {
 	// Dryrun The transcript of what the script would have done
-	Dryrun []string `json:"dryrun,omitempty"`
+	Dryrun *[]string `json:"dryrun,omitempty"`
 	// Log A verbose log of each step of splice calcuations
-	Log []string `json:"log,omitempty"`
+	Log *[]string `json:"log,omitempty"`
 	// PSBT The final psbt
-	PSBT string `json:"psbt,omitempty"`
+	PSBT *string `json:"psbt,omitempty"`
 	// TX The final transaction in hex
-	TX string `json:"tx,omitempty"`
+	TX *string `json:"tx,omitempty"`
 	// TXID The txid of the final transaction
-	TXID string `json:"txid,omitempty"`
+	TXID *string `json:"txid,omitempty"`
 }
 
 type UnreserveInputsRequest struct {
 	// PSBT Inputs to unreserve are the inputs specified in the passed-in *psbt*.
 	PSBT string `json:"psbt"`
 	// Reserve The number of blocks to decrease reservation by.
-	Reserve uint32 `json:"reserve,omitempty"`
+	Reserve *uint32 `json:"reserve,omitempty"`
 }
 
 type UnreserveInputsReservations struct {
 	// Reserved Whether the input is now reserved (may still be `true` if it was reserved for a long time).
 	Reserved bool `json:"reserved"`
 	// ReservedToBlock What blockheight the reservation will expire.
-	ReservedToBlock uint32 `json:"reserved_to_block,omitempty"`
+	ReservedToBlock *uint32 `json:"reserved_to_block,omitempty"`
 	// TXID The transaction id.
 	TXID clntypes.TxID `json:"txid"`
 	// Vout The output number which was reserved.
@@ -4731,18 +4731,18 @@ type UnreserveInputsResponse struct {
 
 type UpgradeWalletRequest struct {
 	// Feerate Feerate for the upgrade transaction.
-	Feerate clntypes.Feerate `json:"feerate,omitempty"`
+	Feerate *clntypes.Feerate `json:"feerate,omitempty"`
 	// Reservedok Tells the wallet to include all P2SH-wrapped inputs, including reserved ones.
-	Reservedok bool `json:"reservedok,omitempty"`
+	Reservedok *bool `json:"reservedok,omitempty"`
 }
 
 type UpgradeWalletResponse struct {
 	// PSBT The PSBT that was finalized and sent.
-	PSBT string `json:"psbt,omitempty"`
+	PSBT *string `json:"psbt,omitempty"`
 	// TX The raw transaction which was sent.
-	TX clntypes.Hex `json:"tx,omitempty"`
+	TX *clntypes.Hex `json:"tx,omitempty"`
 	// TXID The txid of the **tx**.
-	TXID clntypes.TxID `json:"txid,omitempty"`
+	TXID *clntypes.TxID `json:"txid,omitempty"`
 	// UpgradedOuts Count of spent/upgraded UTXOs.
 	UpgradedOuts uint64 `json:"upgraded_outs"`
 }
@@ -4751,7 +4751,7 @@ type WaitBlockHeightRequest struct {
 	// Blockheight Current blockheight of the blockchain if the value is greater than this number. If it is a present or past block height, then the command returns immediately.
 	Blockheight uint32 `json:"blockheight"`
 	// Timeout Only wait up to specified seconds.
-	Timeout uint32 `json:"timeout,omitempty"`
+	Timeout *uint32 `json:"timeout,omitempty"`
 }
 
 type WaitBlockHeightResponse struct {
@@ -4825,29 +4825,29 @@ const (
 
 type WaitDetails struct {
 	// Bolt11 The BOLT11 string.
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Bolt12 The BOLT12 string.
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// Description Description used in the invoice.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Groupid Grouping key to disambiguate multiple attempts to pay an invoice or the same payment_hash.
-	Groupid uint64 `json:"groupid,omitempty"`
+	Groupid *uint64 `json:"groupid,omitempty"`
 	// InChannel Unique label supplied at invoice creation.
-	InChannel clntypes.ShortChannelID `json:"in_channel,omitempty"`
+	InChannel *clntypes.ShortChannelID `json:"in_channel,omitempty"`
 	// InHTLCID The unique HTLC id the sender gave this (not present if incoming channel was closed before upgrade to v22.11).
-	InHTLCID uint64 `json:"in_htlc_id,omitempty"`
+	InHTLCID *uint64 `json:"in_htlc_id,omitempty"`
 	// InMSAT The value of the incoming HTLC.
-	InMSAT clntypes.MSat `json:"in_msat,omitempty"`
+	InMSAT *clntypes.MSat `json:"in_msat,omitempty"`
 	// Label Unique label supplied at invoice creation.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// OutChannel The channel that the HTLC (trying to) forward to.
-	OutChannel clntypes.ShortChannelID `json:"out_channel,omitempty"`
+	OutChannel *clntypes.ShortChannelID `json:"out_channel,omitempty"`
 	// Partid Part number (for multiple parts to a single payment).
-	Partid uint64 `json:"partid,omitempty"`
+	Partid *uint64 `json:"partid,omitempty"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
-	PaymentHash clntypes.Hash `json:"payment_hash,omitempty"`
+	PaymentHash *clntypes.Hash `json:"payment_hash,omitempty"`
 	// Status Status of the payment. Still ongoing, completed, failed locally, or failed after forwarding. Whether it's paid, unpaid or unpayable.
-	Status WaitDetailsStatus `json:"status,omitempty"`
+	Status *WaitDetailsStatus `json:"status,omitempty"`
 }
 
 // WaitForwardsStatus Still ongoing, completed, failed locally, or failed after forwarding.
@@ -4862,15 +4862,15 @@ const (
 
 type WaitForwards struct {
 	// InChannel Unique label supplied at invoice creation.
-	InChannel clntypes.ShortChannelID `json:"in_channel,omitempty"`
+	InChannel *clntypes.ShortChannelID `json:"in_channel,omitempty"`
 	// InHTLCID The unique HTLC id the sender gave this (not present if incoming channel was closed before upgrade to v22.11).
-	InHTLCID uint64 `json:"in_htlc_id,omitempty"`
+	InHTLCID *uint64 `json:"in_htlc_id,omitempty"`
 	// InMSAT The value of the incoming HTLC.
-	InMSAT clntypes.MSat `json:"in_msat,omitempty"`
+	InMSAT *clntypes.MSat `json:"in_msat,omitempty"`
 	// OutChannel The channel that the HTLC (trying to) forward to.
-	OutChannel clntypes.ShortChannelID `json:"out_channel,omitempty"`
+	OutChannel *clntypes.ShortChannelID `json:"out_channel,omitempty"`
 	// Status Still ongoing, completed, failed locally, or failed after forwarding.
-	Status WaitForwardsStatus `json:"status,omitempty"`
+	Status *WaitForwardsStatus `json:"status,omitempty"`
 }
 
 // WaitHtlcsDirection Out if we offered this to the peer, in if they offered it.
@@ -4909,19 +4909,19 @@ const (
 
 type WaitHtlcs struct {
 	// AmountMSAT The value of the HTLC.
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// CltvExpiry The block number where this HTLC expires/expired.
-	CltvExpiry uint32 `json:"cltv_expiry,omitempty"`
+	CltvExpiry *uint32 `json:"cltv_expiry,omitempty"`
 	// Direction Out if we offered this to the peer, in if they offered it.
-	Direction WaitHtlcsDirection `json:"direction,omitempty"`
+	Direction *WaitHtlcsDirection `json:"direction,omitempty"`
 	// HTLCID The `id` field which uniquely identifies this HTLC for this channel and direction.
-	HTLCID uint64 `json:"htlc_id,omitempty"`
+	HTLCID *uint64 `json:"htlc_id,omitempty"`
 	// PaymentHash Payment hash sought by HTLC.
-	PaymentHash clntypes.Hash `json:"payment_hash,omitempty"`
+	PaymentHash *clntypes.Hash `json:"payment_hash,omitempty"`
 	// ShortChannelID The channel that contains/contained the HTLC.
-	ShortChannelID clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
+	ShortChannelID *clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
 	// State The first 10 states are for `out`, the next 10 are for `in`.
-	State WaitHtlcsState `json:"state,omitempty"`
+	State *WaitHtlcsState `json:"state,omitempty"`
 }
 
 // WaitInvoicesStatus Whether it's paid, unpaid or unpayable.
@@ -4935,15 +4935,15 @@ const (
 
 type WaitInvoices struct {
 	// Bolt11 The BOLT11 string.
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Bolt12 The BOLT12 string.
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// Description Description used in the invoice.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Label Unique label supplied at invoice creation.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Status Whether it's paid, unpaid or unpayable.
-	Status WaitInvoicesStatus `json:"status,omitempty"`
+	Status *WaitInvoicesStatus `json:"status,omitempty"`
 }
 
 // WaitNetworkeventsType The kind of network event
@@ -4958,11 +4958,11 @@ const (
 
 type WaitNetworkevents struct {
 	// CreatedIndex The created_index of the record added/deleted
-	CreatedIndex uint64 `json:"created_index,omitempty"`
+	CreatedIndex *uint64 `json:"created_index,omitempty"`
 	// PeerID The peer this network event was with
-	PeerID clntypes.PubKey `json:"peer_id,omitempty"`
+	PeerID *clntypes.PubKey `json:"peer_id,omitempty"`
 	// ItemType The kind of network event
-	ItemType WaitNetworkeventsType `json:"type,omitempty"`
+	ItemType *WaitNetworkeventsType `json:"type,omitempty"`
 }
 
 // WaitSendpaysStatus Status of the payment.
@@ -4976,36 +4976,36 @@ const (
 
 type WaitSendpays struct {
 	// Groupid Grouping key to disambiguate multiple attempts to pay an invoice or the same payment_hash.
-	Groupid uint64 `json:"groupid,omitempty"`
+	Groupid *uint64 `json:"groupid,omitempty"`
 	// Partid Part number (for multiple parts to a single payment).
-	Partid uint64 `json:"partid,omitempty"`
+	Partid *uint64 `json:"partid,omitempty"`
 	// PaymentHash The hash of the *payment_preimage* which will prove payment.
-	PaymentHash clntypes.Hash `json:"payment_hash,omitempty"`
+	PaymentHash *clntypes.Hash `json:"payment_hash,omitempty"`
 	// Status Status of the payment.
-	Status WaitSendpaysStatus `json:"status,omitempty"`
+	Status *WaitSendpaysStatus `json:"status,omitempty"`
 }
 
 type WaitResponse struct {
-	Chainmoves   WaitChainmoves   `json:"chainmoves,omitempty"`
-	Channelmoves WaitChannelmoves `json:"channelmoves,omitempty"`
+	Chainmoves   *WaitChainmoves   `json:"chainmoves,omitempty"`
+	Channelmoves *WaitChannelmoves `json:"channelmoves,omitempty"`
 	// Created 1-based index indicating order entry was created.
-	Created uint64 `json:"created,omitempty"`
+	Created *uint64 `json:"created,omitempty"`
 	// Deleted 1-based index indicating order entry was deleted.
-	Deleted       uint64            `json:"deleted,omitempty"`
-	Details       WaitDetails       `json:"details,omitempty"`
-	Forwards      WaitForwards      `json:"forwards,omitempty"`
-	Htlcs         WaitHtlcs         `json:"htlcs,omitempty"`
-	Invoices      WaitInvoices      `json:"invoices,omitempty"`
-	Networkevents WaitNetworkevents `json:"networkevents,omitempty"`
-	Sendpays      WaitSendpays      `json:"sendpays,omitempty"`
-	Subsystem     WaitSubsystem     `json:"subsystem"`
+	Deleted       *uint64            `json:"deleted,omitempty"`
+	Details       *WaitDetails       `json:"details,omitempty"`
+	Forwards      *WaitForwards      `json:"forwards,omitempty"`
+	Htlcs         *WaitHtlcs         `json:"htlcs,omitempty"`
+	Invoices      *WaitInvoices      `json:"invoices,omitempty"`
+	Networkevents *WaitNetworkevents `json:"networkevents,omitempty"`
+	Sendpays      *WaitSendpays      `json:"sendpays,omitempty"`
+	Subsystem     WaitSubsystem      `json:"subsystem"`
 	// Updated 1-based index indicating order entry was updated.
-	Updated uint64 `json:"updated,omitempty"`
+	Updated *uint64 `json:"updated,omitempty"`
 }
 
 type ListConfigsRequest struct {
 	// Config Configuration option name to restrict return.
-	Config string `json:"config,omitempty"`
+	Config *string `json:"config,omitempty"`
 }
 
 type ListConfigsConfigsAcceptHTLCTLVType struct {
@@ -5151,14 +5151,14 @@ type ListConfigsConfigsConf struct {
 
 type ListConfigsConfigsCurrencyrateAddSource struct {
 	// Plugin Plugin which registered this configuration setting.
-	Plugin    string   `json:"plugin,omitempty"`
+	Plugin    *string  `json:"plugin,omitempty"`
 	Sources   []string `json:"sources"`
 	ValuesStr []string `json:"values_str"`
 }
 
 type ListConfigsConfigsCurrencyrateDisableSource struct {
 	// Plugin Plugin which registered this configuration setting.
-	Plugin    string   `json:"plugin,omitempty"`
+	Plugin    *string  `json:"plugin,omitempty"`
 	Sources   []string `json:"sources"`
 	ValuesStr []string `json:"values_str"`
 }
@@ -5193,7 +5193,7 @@ type ListConfigsConfigsDisableDns struct {
 
 type ListConfigsConfigsDisableMpp struct {
 	// Plugin Plugin which registered this configuration setting.
-	Plugin string `json:"plugin,omitempty"`
+	Plugin *string `json:"plugin,omitempty"`
 	// Set `true` if set in config or cmdline.
 	Set bool `json:"set"`
 	// Source Source of configuration setting.
@@ -5270,7 +5270,7 @@ type ListConfigsConfigsFeePerSatoshi struct {
 
 type ListConfigsConfigsFetchinvoiceNoconnect struct {
 	// Plugin Plugin which registered this configuration setting.
-	Plugin string `json:"plugin,omitempty"`
+	Plugin *string `json:"plugin,omitempty"`
 	// Set `true` if set in config or cmdline.
 	Set bool `json:"set"`
 	// Source Source of configuration setting.
@@ -5413,7 +5413,7 @@ type ListConfigsConfigsMessagePadding struct {
 
 type ListConfigsConfigsMinCapacitySat struct {
 	// Dynamic Can this be set by setconfig().
-	Dynamic bool `json:"dynamic,omitempty"`
+	Dynamic *bool `json:"dynamic,omitempty"`
 	// Source Source of configuration setting.
 	Source string `json:"source"`
 	// ValueInt Field from config or cmdline, or default.
@@ -5560,89 +5560,89 @@ type ListConfigsConfigsWatchtimeBlocks struct {
 }
 
 type ListConfigsConfigs struct {
-	AcceptHTLCTLVType                ListConfigsConfigsAcceptHTLCTLVType                `json:"accept-htlc-tlv-type,omitempty"`
-	Addr                             ListConfigsConfigsAddr                             `json:"addr,omitempty"`
-	Alias                            ListConfigsConfigsAlias                            `json:"alias,omitempty"`
-	AllowDeprecatedApis              ListConfigsConfigsAllowDeprecatedApis              `json:"allow-deprecated-apis,omitempty"`
-	AlwaysUseProxy                   ListConfigsConfigsAlwaysUseProxy                   `json:"always-use-proxy,omitempty"`
-	AnnounceAddr                     ListConfigsConfigsAnnounceAddr                     `json:"announce-addr,omitempty"`
-	AnnounceAddrDiscovered           ListConfigsConfigsAnnounceAddrDiscovered           `json:"announce-addr-discovered,omitempty"`
-	AnnounceAddrDiscoveredPort       ListConfigsConfigsAnnounceAddrDiscoveredPort       `json:"announce-addr-discovered-port,omitempty"`
-	AnnounceAddrDns                  ListConfigsConfigsAnnounceAddrDns                  `json:"announce-addr-dns,omitempty"`
-	AutoconnectSeekerPeers           ListConfigsConfigsAutoconnectSeekerPeers           `json:"autoconnect-seeker-peers,omitempty"`
-	Autolisten                       ListConfigsConfigsAutolisten                       `json:"autolisten,omitempty"`
-	BindAddr                         ListConfigsConfigsBindAddr                         `json:"bind-addr,omitempty"`
-	ClearPlugins                     ListConfigsConfigsClearPlugins                     `json:"clear-plugins,omitempty"`
-	CltvDelta                        ListConfigsConfigsCltvDelta                        `json:"cltv-delta,omitempty"`
-	CltvFinal                        ListConfigsConfigsCltvFinal                        `json:"cltv-final,omitempty"`
-	CommitFee                        ListConfigsConfigsCommitFee                        `json:"commit-fee,omitempty"`
-	CommitFeerateOffset              ListConfigsConfigsCommitFeerateOffset              `json:"commit-feerate-offset,omitempty"`
-	CommitTime                       ListConfigsConfigsCommitTime                       `json:"commit-time,omitempty"`
-	Conf                             ListConfigsConfigsConf                             `json:"conf,omitempty"`
-	CurrencyrateAddSource            ListConfigsConfigsCurrencyrateAddSource            `json:"currencyrate-add-source,omitempty"`
-	CurrencyrateDisableSource        ListConfigsConfigsCurrencyrateDisableSource        `json:"currencyrate-disable-source,omitempty"`
-	Daemon                           ListConfigsConfigsDaemon                           `json:"daemon,omitempty"`
-	DatabaseUpgrade                  ListConfigsConfigsDatabaseUpgrade                  `json:"database-upgrade,omitempty"`
-	Developer                        ListConfigsConfigsDeveloper                        `json:"developer,omitempty"`
-	DisableDns                       ListConfigsConfigsDisableDns                       `json:"disable-dns,omitempty"`
-	DisableMpp                       ListConfigsConfigsDisableMpp                       `json:"disable-mpp,omitempty"`
-	DisablePlugin                    ListConfigsConfigsDisablePlugin                    `json:"disable-plugin,omitempty"`
-	EncryptedHsm                     ListConfigsConfigsEncryptedHsm                     `json:"encrypted-hsm,omitempty"`
-	ExperimentalAnchors              ListConfigsConfigsExperimentalAnchors              `json:"experimental-anchors,omitempty"`
-	ExperimentalDualFund             ListConfigsConfigsExperimentalDualFund             `json:"experimental-dual-fund,omitempty"`
-	ExperimentalPeerStorage          ListConfigsConfigsExperimentalPeerStorage          `json:"experimental-peer-storage,omitempty"`
-	ExperimentalShutdownWrongFunding ListConfigsConfigsExperimentalShutdownWrongFunding `json:"experimental-shutdown-wrong-funding,omitempty"`
-	ExperimentalSimpleClose          ListConfigsConfigsExperimentalSimpleClose          `json:"experimental-simple-close,omitempty"`
-	ExperimentalSplicing             ListConfigsConfigsExperimentalSplicing             `json:"experimental-splicing,omitempty"`
-	FeeBase                          ListConfigsConfigsFeeBase                          `json:"fee-base,omitempty"`
-	FeePerSatoshi                    ListConfigsConfigsFeePerSatoshi                    `json:"fee-per-satoshi,omitempty"`
-	FetchinvoiceNoconnect            ListConfigsConfigsFetchinvoiceNoconnect            `json:"fetchinvoice-noconnect,omitempty"`
-	ForceFeerates                    ListConfigsConfigsForceFeerates                    `json:"force-feerates,omitempty"`
-	FundingConfirms                  ListConfigsConfigsFundingConfirms                  `json:"funding-confirms,omitempty"`
-	HsmPassphrase                    ListConfigsConfigsHsmPassphrase                    `json:"hsm-passphrase,omitempty"`
-	HTLCMaximumMSAT                  ListConfigsConfigsHTLCMaximumMSAT                  `json:"htlc-maximum-msat,omitempty"`
-	HTLCMinimumMSAT                  ListConfigsConfigsHTLCMinimumMSAT                  `json:"htlc-minimum-msat,omitempty"`
-	IPromiseToFixBrokenAPIUser       ListConfigsConfigsIPromiseToFixBrokenAPIUser       `json:"i-promise-to-fix-broken-api-user,omitempty"`
-	IgnoreFeeLimits                  ListConfigsConfigsIgnoreFeeLimits                  `json:"ignore-fee-limits,omitempty"`
-	ImportantPlugin                  ListConfigsConfigsImportantPlugin                  `json:"important-plugin,omitempty"`
-	InvoicesOnchainFallback          ListConfigsConfigsInvoicesOnchainFallback          `json:"invoices-onchain-fallback,omitempty"`
-	LargeChannels                    ListConfigsConfigsLargeChannels                    `json:"large-channels,omitempty"`
-	LightningDir                     ListConfigsConfigsLightningDir                     `json:"lightning-dir,omitempty"`
-	LogFile                          ListConfigsConfigsLogFile                          `json:"log-file,omitempty"`
-	LogLevel                         ListConfigsConfigsLogLevel                         `json:"log-level,omitempty"`
-	LogPrefix                        ListConfigsConfigsLogPrefix                        `json:"log-prefix,omitempty"`
-	LogTimestamps                    ListConfigsConfigsLogTimestamps                    `json:"log-timestamps,omitempty"`
-	Mainnet                          ListConfigsConfigsMainnet                          `json:"mainnet,omitempty"`
-	MaxConcurrentHtlcs               ListConfigsConfigsMaxConcurrentHtlcs               `json:"max-concurrent-htlcs,omitempty"`
-	MaxDustHTLCExposureMSAT          ListConfigsConfigsMaxDustHTLCExposureMSAT          `json:"max-dust-htlc-exposure-msat,omitempty"`
-	MaxLocktimeBlocks                ListConfigsConfigsMaxLocktimeBlocks                `json:"max-locktime-blocks,omitempty"`
-	MessagePadding                   ListConfigsConfigsMessagePadding                   `json:"message-padding,omitempty"`
-	MinCapacitySat                   ListConfigsConfigsMinCapacitySat                   `json:"min-capacity-sat,omitempty"`
-	MinEmergencyMSAT                 ListConfigsConfigsMinEmergencyMSAT                 `json:"min-emergency-msat,omitempty"`
-	Network                          ListConfigsConfigsNetwork                          `json:"network,omitempty"`
-	Offline                          ListConfigsConfigsOffline                          `json:"offline,omitempty"`
-	PaymentFrontingNode              ListConfigsConfigsPaymentFrontingNode              `json:"payment-fronting-node,omitempty"`
-	PidFile                          ListConfigsConfigsPidFile                          `json:"pid-file,omitempty"`
-	Plugin                           ListConfigsConfigsPlugin                           `json:"plugin,omitempty"`
-	PluginDir                        ListConfigsConfigsPluginDir                        `json:"plugin-dir,omitempty"`
-	Proxy                            ListConfigsConfigsProxy                            `json:"proxy,omitempty"`
-	Recover                          ListConfigsConfigsRecover                          `json:"recover,omitempty"`
-	Regtest                          ListConfigsConfigsRegtest                          `json:"regtest,omitempty"`
-	RequireConfirmedInputs           ListConfigsConfigsRequireConfirmedInputs           `json:"require-confirmed-inputs,omitempty"`
-	Rescan                           ListConfigsConfigsRescan                           `json:"rescan,omitempty"`
-	Rgb                              ListConfigsConfigsRgb                              `json:"rgb,omitempty"`
-	RPCFile                          ListConfigsConfigsRPCFile                          `json:"rpc-file,omitempty"`
-	RPCFileMode                      ListConfigsConfigsRPCFileMode                      `json:"rpc-file-mode,omitempty"`
-	Signet                           ListConfigsConfigsSignet                           `json:"signet,omitempty"`
-	Subdaemon                        ListConfigsConfigsSubdaemon                        `json:"subdaemon,omitempty"`
-	Testnet                          ListConfigsConfigsTestnet                          `json:"testnet,omitempty"`
-	TorServicePassword               ListConfigsConfigsTorServicePassword               `json:"tor-service-password,omitempty"`
-	Wallet                           ListConfigsConfigsWallet                           `json:"wallet,omitempty"`
-	WatchtimeBlocks                  ListConfigsConfigsWatchtimeBlocks                  `json:"watchtime-blocks,omitempty"`
+	AcceptHTLCTLVType                *ListConfigsConfigsAcceptHTLCTLVType                `json:"accept-htlc-tlv-type,omitempty"`
+	Addr                             *ListConfigsConfigsAddr                             `json:"addr,omitempty"`
+	Alias                            *ListConfigsConfigsAlias                            `json:"alias,omitempty"`
+	AllowDeprecatedApis              *ListConfigsConfigsAllowDeprecatedApis              `json:"allow-deprecated-apis,omitempty"`
+	AlwaysUseProxy                   *ListConfigsConfigsAlwaysUseProxy                   `json:"always-use-proxy,omitempty"`
+	AnnounceAddr                     *ListConfigsConfigsAnnounceAddr                     `json:"announce-addr,omitempty"`
+	AnnounceAddrDiscovered           *ListConfigsConfigsAnnounceAddrDiscovered           `json:"announce-addr-discovered,omitempty"`
+	AnnounceAddrDiscoveredPort       *ListConfigsConfigsAnnounceAddrDiscoveredPort       `json:"announce-addr-discovered-port,omitempty"`
+	AnnounceAddrDns                  *ListConfigsConfigsAnnounceAddrDns                  `json:"announce-addr-dns,omitempty"`
+	AutoconnectSeekerPeers           *ListConfigsConfigsAutoconnectSeekerPeers           `json:"autoconnect-seeker-peers,omitempty"`
+	Autolisten                       *ListConfigsConfigsAutolisten                       `json:"autolisten,omitempty"`
+	BindAddr                         *ListConfigsConfigsBindAddr                         `json:"bind-addr,omitempty"`
+	ClearPlugins                     *ListConfigsConfigsClearPlugins                     `json:"clear-plugins,omitempty"`
+	CltvDelta                        *ListConfigsConfigsCltvDelta                        `json:"cltv-delta,omitempty"`
+	CltvFinal                        *ListConfigsConfigsCltvFinal                        `json:"cltv-final,omitempty"`
+	CommitFee                        *ListConfigsConfigsCommitFee                        `json:"commit-fee,omitempty"`
+	CommitFeerateOffset              *ListConfigsConfigsCommitFeerateOffset              `json:"commit-feerate-offset,omitempty"`
+	CommitTime                       *ListConfigsConfigsCommitTime                       `json:"commit-time,omitempty"`
+	Conf                             *ListConfigsConfigsConf                             `json:"conf,omitempty"`
+	CurrencyrateAddSource            *ListConfigsConfigsCurrencyrateAddSource            `json:"currencyrate-add-source,omitempty"`
+	CurrencyrateDisableSource        *ListConfigsConfigsCurrencyrateDisableSource        `json:"currencyrate-disable-source,omitempty"`
+	Daemon                           *ListConfigsConfigsDaemon                           `json:"daemon,omitempty"`
+	DatabaseUpgrade                  *ListConfigsConfigsDatabaseUpgrade                  `json:"database-upgrade,omitempty"`
+	Developer                        *ListConfigsConfigsDeveloper                        `json:"developer,omitempty"`
+	DisableDns                       *ListConfigsConfigsDisableDns                       `json:"disable-dns,omitempty"`
+	DisableMpp                       *ListConfigsConfigsDisableMpp                       `json:"disable-mpp,omitempty"`
+	DisablePlugin                    *ListConfigsConfigsDisablePlugin                    `json:"disable-plugin,omitempty"`
+	EncryptedHsm                     *ListConfigsConfigsEncryptedHsm                     `json:"encrypted-hsm,omitempty"`
+	ExperimentalAnchors              *ListConfigsConfigsExperimentalAnchors              `json:"experimental-anchors,omitempty"`
+	ExperimentalDualFund             *ListConfigsConfigsExperimentalDualFund             `json:"experimental-dual-fund,omitempty"`
+	ExperimentalPeerStorage          *ListConfigsConfigsExperimentalPeerStorage          `json:"experimental-peer-storage,omitempty"`
+	ExperimentalShutdownWrongFunding *ListConfigsConfigsExperimentalShutdownWrongFunding `json:"experimental-shutdown-wrong-funding,omitempty"`
+	ExperimentalSimpleClose          *ListConfigsConfigsExperimentalSimpleClose          `json:"experimental-simple-close,omitempty"`
+	ExperimentalSplicing             *ListConfigsConfigsExperimentalSplicing             `json:"experimental-splicing,omitempty"`
+	FeeBase                          *ListConfigsConfigsFeeBase                          `json:"fee-base,omitempty"`
+	FeePerSatoshi                    *ListConfigsConfigsFeePerSatoshi                    `json:"fee-per-satoshi,omitempty"`
+	FetchinvoiceNoconnect            *ListConfigsConfigsFetchinvoiceNoconnect            `json:"fetchinvoice-noconnect,omitempty"`
+	ForceFeerates                    *ListConfigsConfigsForceFeerates                    `json:"force-feerates,omitempty"`
+	FundingConfirms                  *ListConfigsConfigsFundingConfirms                  `json:"funding-confirms,omitempty"`
+	HsmPassphrase                    *ListConfigsConfigsHsmPassphrase                    `json:"hsm-passphrase,omitempty"`
+	HTLCMaximumMSAT                  *ListConfigsConfigsHTLCMaximumMSAT                  `json:"htlc-maximum-msat,omitempty"`
+	HTLCMinimumMSAT                  *ListConfigsConfigsHTLCMinimumMSAT                  `json:"htlc-minimum-msat,omitempty"`
+	IPromiseToFixBrokenAPIUser       *ListConfigsConfigsIPromiseToFixBrokenAPIUser       `json:"i-promise-to-fix-broken-api-user,omitempty"`
+	IgnoreFeeLimits                  *ListConfigsConfigsIgnoreFeeLimits                  `json:"ignore-fee-limits,omitempty"`
+	ImportantPlugin                  *ListConfigsConfigsImportantPlugin                  `json:"important-plugin,omitempty"`
+	InvoicesOnchainFallback          *ListConfigsConfigsInvoicesOnchainFallback          `json:"invoices-onchain-fallback,omitempty"`
+	LargeChannels                    *ListConfigsConfigsLargeChannels                    `json:"large-channels,omitempty"`
+	LightningDir                     *ListConfigsConfigsLightningDir                     `json:"lightning-dir,omitempty"`
+	LogFile                          *ListConfigsConfigsLogFile                          `json:"log-file,omitempty"`
+	LogLevel                         *ListConfigsConfigsLogLevel                         `json:"log-level,omitempty"`
+	LogPrefix                        *ListConfigsConfigsLogPrefix                        `json:"log-prefix,omitempty"`
+	LogTimestamps                    *ListConfigsConfigsLogTimestamps                    `json:"log-timestamps,omitempty"`
+	Mainnet                          *ListConfigsConfigsMainnet                          `json:"mainnet,omitempty"`
+	MaxConcurrentHtlcs               *ListConfigsConfigsMaxConcurrentHtlcs               `json:"max-concurrent-htlcs,omitempty"`
+	MaxDustHTLCExposureMSAT          *ListConfigsConfigsMaxDustHTLCExposureMSAT          `json:"max-dust-htlc-exposure-msat,omitempty"`
+	MaxLocktimeBlocks                *ListConfigsConfigsMaxLocktimeBlocks                `json:"max-locktime-blocks,omitempty"`
+	MessagePadding                   *ListConfigsConfigsMessagePadding                   `json:"message-padding,omitempty"`
+	MinCapacitySat                   *ListConfigsConfigsMinCapacitySat                   `json:"min-capacity-sat,omitempty"`
+	MinEmergencyMSAT                 *ListConfigsConfigsMinEmergencyMSAT                 `json:"min-emergency-msat,omitempty"`
+	Network                          *ListConfigsConfigsNetwork                          `json:"network,omitempty"`
+	Offline                          *ListConfigsConfigsOffline                          `json:"offline,omitempty"`
+	PaymentFrontingNode              *ListConfigsConfigsPaymentFrontingNode              `json:"payment-fronting-node,omitempty"`
+	PidFile                          *ListConfigsConfigsPidFile                          `json:"pid-file,omitempty"`
+	Plugin                           *ListConfigsConfigsPlugin                           `json:"plugin,omitempty"`
+	PluginDir                        *ListConfigsConfigsPluginDir                        `json:"plugin-dir,omitempty"`
+	Proxy                            *ListConfigsConfigsProxy                            `json:"proxy,omitempty"`
+	Recover                          *ListConfigsConfigsRecover                          `json:"recover,omitempty"`
+	Regtest                          *ListConfigsConfigsRegtest                          `json:"regtest,omitempty"`
+	RequireConfirmedInputs           *ListConfigsConfigsRequireConfirmedInputs           `json:"require-confirmed-inputs,omitempty"`
+	Rescan                           *ListConfigsConfigsRescan                           `json:"rescan,omitempty"`
+	Rgb                              *ListConfigsConfigsRgb                              `json:"rgb,omitempty"`
+	RPCFile                          *ListConfigsConfigsRPCFile                          `json:"rpc-file,omitempty"`
+	RPCFileMode                      *ListConfigsConfigsRPCFileMode                      `json:"rpc-file-mode,omitempty"`
+	Signet                           *ListConfigsConfigsSignet                           `json:"signet,omitempty"`
+	Subdaemon                        *ListConfigsConfigsSubdaemon                        `json:"subdaemon,omitempty"`
+	Testnet                          *ListConfigsConfigsTestnet                          `json:"testnet,omitempty"`
+	TorServicePassword               *ListConfigsConfigsTorServicePassword               `json:"tor-service-password,omitempty"`
+	Wallet                           *ListConfigsConfigsWallet                           `json:"wallet,omitempty"`
+	WatchtimeBlocks                  *ListConfigsConfigsWatchtimeBlocks                  `json:"watchtime-blocks,omitempty"`
 }
 
 type ListConfigsResponse struct {
-	Configs ListConfigsConfigs `json:"configs,omitempty"`
+	Configs *ListConfigsConfigs `json:"configs,omitempty"`
 }
 
 type StopRequest struct {
@@ -5660,7 +5660,7 @@ type StopResponse struct {
 
 type HelpRequest struct {
 	// Command Command to get information about.
-	Command string `json:"command,omitempty"`
+	Command *string `json:"command,omitempty"`
 }
 
 // HelpFormatHint Prints the help in human-readable flat form.
@@ -5677,8 +5677,8 @@ type HelpHelp struct {
 
 type HelpResponse struct {
 	// FormatHint Prints the help in human-readable flat form.
-	FormatHint HelpFormatHint `json:"format-hint,omitempty"`
-	Help       []HelpHelp     `json:"help"`
+	FormatHint *HelpFormatHint `json:"format-hint,omitempty"`
+	Help       []HelpHelp      `json:"help"`
 }
 
 type PreApproveKeysendRequest struct {
@@ -5710,9 +5710,9 @@ type StaticBackupResponse struct {
 
 type BkprChannelsApyRequest struct {
 	// EndTime UNIX timestamp (in seconds) to filter events up to and at the provided timestamp.
-	EndTime uint64 `json:"end_time,omitempty"`
+	EndTime *uint64 `json:"end_time,omitempty"`
 	// StartTime UNIX timestamp (in seconds) to filter events after the provided timestamp.
-	StartTime uint64 `json:"start_time,omitempty"`
+	StartTime *uint64 `json:"start_time,omitempty"`
 }
 
 type BkprChannelsApyChannelsApy struct {
@@ -5721,21 +5721,21 @@ type BkprChannelsApyChannelsApy struct {
 	// ApyIn Fees earned on inbound routed payments / total start balance for the length of time this channel has been open amortized to a year (APY).
 	ApyIn string `json:"apy_in"`
 	// ApyInInitial Fees earned on inbound routed payments / our start balance for the length of time this channel has been open amortized to a year (APY).
-	ApyInInitial string `json:"apy_in_initial,omitempty"`
+	ApyInInitial *string `json:"apy_in_initial,omitempty"`
 	// ApyLease Lease fees earned over total amount leased for the lease term, amortized to a year (APY). Only appears if channel was leased out by us.
-	ApyLease string `json:"apy_lease,omitempty"`
+	ApyLease *string `json:"apy_lease,omitempty"`
 	// ApyOut Fees earned on outbound routed payments / total start balance for the length of time this channel has been open amortized to a year (APY).
 	ApyOut string `json:"apy_out"`
 	// ApyOutInitial Fees earned on outbound routed payments / our start balance for the length of time this channel has been open amortized to a year (APY).
-	ApyOutInitial string `json:"apy_out_initial,omitempty"`
+	ApyOutInitial *string `json:"apy_out_initial,omitempty"`
 	// ApyTotal Total fees earned on routed payments / total start balance for the length of time this channel has been open amortized to a year (APY).
 	ApyTotal string `json:"apy_total"`
 	// ApyTotalInitial Total fees earned on routed payments / our start balance for the length of time this channel has been open amortized to a year (APY).
-	ApyTotalInitial string `json:"apy_total_initial,omitempty"`
+	ApyTotalInitial *string `json:"apy_total_initial,omitempty"`
 	// ChannelStartBalanceMSAT Total starting balance at funding.
 	ChannelStartBalanceMSAT clntypes.MSat `json:"channel_start_balance_msat"`
 	// FeesInMSAT Fees earned on routed inbound.
-	FeesInMSAT clntypes.MSat `json:"fees_in_msat,omitempty"`
+	FeesInMSAT *clntypes.MSat `json:"fees_in_msat,omitempty"`
 	// FeesOutMSAT Fees earned on routed outbound.
 	FeesOutMSAT clntypes.MSat `json:"fees_out_msat"`
 	// LeaseFeeEarnedMSAT Sats earned for leasing outbound (liquidity ads).
@@ -5755,11 +5755,11 @@ type BkprChannelsApyChannelsApy struct {
 	// UtilizationIn Sats routed inbound / total start balance.
 	UtilizationIn string `json:"utilization_in"`
 	// UtilizationInInitial Sats routed inbound / our start balance.
-	UtilizationInInitial string `json:"utilization_in_initial,omitempty"`
+	UtilizationInInitial *string `json:"utilization_in_initial,omitempty"`
 	// UtilizationOut Sats routed outbound / total start balance.
 	UtilizationOut string `json:"utilization_out"`
 	// UtilizationOutInitial Sats routed outbound / our start balance.
-	UtilizationOutInitial string `json:"utilization_out_initial,omitempty"`
+	UtilizationOutInitial *string `json:"utilization_out_initial,omitempty"`
 }
 
 type BkprChannelsApyResponse struct {
@@ -5768,15 +5768,15 @@ type BkprChannelsApyResponse struct {
 
 type BkprDumpIncomeCSVRequest struct {
 	// ConsolidateFees If true, we emit a single, consolidated event for any onchain-fees for a txid and account. Otherwise, events for every update to the onchain fee calculation for this account and txid will be printed. Note that this means that the events emitted are non-stable, i.e. calling **dumpincomecsv** twice may result in different onchain fee events being emitted, depending on how much information we've logged for that transaction.
-	ConsolidateFees bool `json:"consolidate_fees,omitempty"`
+	ConsolidateFees *bool `json:"consolidate_fees,omitempty"`
 	// CSVFile On-disk destination of the generated CSV file.
-	CSVFile string `json:"csv_file,omitempty"`
+	CSVFile *string `json:"csv_file,omitempty"`
 	// CSVFormat CSV format to use. See RETURN VALUE for options.
 	CSVFormat string `json:"csv_format"`
 	// EndTime UNIX timestamp (in seconds) that filters events up to and at the provided timestamp.
-	EndTime uint64 `json:"end_time,omitempty"`
+	EndTime *uint64 `json:"end_time,omitempty"`
 	// StartTime UNIX timestamp (in seconds) that filters events after the provided timestamp.
-	StartTime uint64 `json:"start_time,omitempty"`
+	StartTime *uint64 `json:"start_time,omitempty"`
 }
 
 // BkprDumpIncomeCSVCSVFormat Format to print csv as.
@@ -5805,30 +5805,30 @@ type BkprInspectTxsOutputs struct {
 	// Account Account this output affected.
 	Account string `json:"account"`
 	// CreditMSAT Amount credited to account.
-	CreditMSAT clntypes.MSat `json:"credit_msat,omitempty"`
+	CreditMSAT *clntypes.MSat `json:"credit_msat,omitempty"`
 	// Currency Human-readable bech32 part for this coin type.
 	Currency string `json:"currency"`
 	// DebitMSAT Amount debited from account.
-	DebitMSAT clntypes.MSat `json:"debit_msat,omitempty"`
+	DebitMSAT *clntypes.MSat `json:"debit_msat,omitempty"`
 	// OriginatingAccount Account this output originated from.
-	OriginatingAccount string `json:"originating_account,omitempty"`
+	OriginatingAccount *string `json:"originating_account,omitempty"`
 	// Outnum Index of output.
 	Outnum uint32 `json:"outnum"`
 	// OutputTag Description of output creation event.
-	OutputTag string `json:"output_tag,omitempty"`
+	OutputTag *string `json:"output_tag,omitempty"`
 	// OutputValueMSAT Value of the output.
 	OutputValueMSAT clntypes.MSat `json:"output_value_msat"`
 	// PaymentID Lightning payment identifier. For an htlc, this will be the preimage.
-	PaymentID clntypes.Hex `json:"payment_id,omitempty"`
+	PaymentID *clntypes.Hex `json:"payment_id,omitempty"`
 	// SpendTag Description of output spend event.
-	SpendTag string `json:"spend_tag,omitempty"`
+	SpendTag *string `json:"spend_tag,omitempty"`
 	// SpendingTXID Transaction this output was spent in.
-	SpendingTXID clntypes.TxID `json:"spending_txid,omitempty"`
+	SpendingTXID *clntypes.TxID `json:"spending_txid,omitempty"`
 }
 
 type BkprInspectTxs struct {
 	// Blockheight Blockheight of transaction.
-	Blockheight uint32 `json:"blockheight,omitempty"`
+	Blockheight *uint32 `json:"blockheight,omitempty"`
 	// FeesPaidMSAT Amount paid in sats for this tx.
 	FeesPaidMSAT clntypes.MSat           `json:"fees_paid_msat"`
 	Outputs      []BkprInspectTxsOutputs `json:"outputs"`
@@ -5842,9 +5842,9 @@ type BkprInspectResponse struct {
 
 type BkprListAccountEventsRequest struct {
 	// Account Receive events for the specified account.
-	Account string `json:"account,omitempty"`
+	Account *string `json:"account,omitempty"`
 	// PaymentID Receive events for the specified payment id.
-	PaymentID string `json:"payment_id,omitempty"`
+	PaymentID *string `json:"payment_id,omitempty"`
 }
 
 // BkprListAccountEventsEventsType Coin movement type.
@@ -5860,35 +5860,35 @@ type BkprListAccountEventsEvents struct {
 	// Account The account name. If the account is a channel, the channel_id.
 	Account string `json:"account"`
 	// Blockheight For chain events, blockheight this occured at.
-	Blockheight uint32 `json:"blockheight,omitempty"`
+	Blockheight *uint32 `json:"blockheight,omitempty"`
 	// CreditMSAT Amount credited.
 	CreditMSAT clntypes.MSat `json:"credit_msat"`
 	// Currency Human-readable bech32 part for this coin type.
 	Currency string `json:"currency"`
 	// Currencyrate The value of `currencyrate` around the time the event occurred. Only present if `bkpr-currency` is set, and a conversion value is available
-	Currencyrate float64 `json:"currencyrate,omitempty"`
+	Currencyrate *float64 `json:"currencyrate,omitempty"`
 	// DebitMSAT Amount debited.
 	DebitMSAT clntypes.MSat `json:"debit_msat"`
 	// Description The description of this event.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// FeesMSAT Amount paid in fees.
-	FeesMSAT clntypes.MSat `json:"fees_msat,omitempty"`
+	FeesMSAT *clntypes.MSat `json:"fees_msat,omitempty"`
 	// IsRebalance Is this payment part of a rebalance.
-	IsRebalance bool `json:"is_rebalance,omitempty"`
+	IsRebalance *bool `json:"is_rebalance,omitempty"`
 	// Origin The account this movement originated from.
-	Origin string `json:"origin,omitempty"`
+	Origin *string `json:"origin,omitempty"`
 	// Outpoint The txid:outnum for this event.
-	Outpoint string `json:"outpoint,omitempty"`
+	Outpoint *string `json:"outpoint,omitempty"`
 	// PartID Counter for multi-part payments.
-	PartID uint32 `json:"part_id,omitempty"`
+	PartID *uint32 `json:"part_id,omitempty"`
 	// PaymentID Lightning payment identifier. For an htlc, this will be the preimage.
-	PaymentID clntypes.Hex `json:"payment_id,omitempty"`
+	PaymentID *clntypes.Hex `json:"payment_id,omitempty"`
 	// Tag Description of movement.
 	Tag string `json:"tag"`
 	// Timestamp Timestamp this event was recorded by the node. For consolidated events such as onchain_fees, the most recent timestamp.
 	Timestamp uint32 `json:"timestamp"`
 	// TXID The txid of the transaction that created this event.
-	TXID clntypes.TxID `json:"txid,omitempty"`
+	TXID *clntypes.TxID `json:"txid,omitempty"`
 	// ItemType Coin movement type.
 	ItemType BkprListAccountEventsEventsType `json:"type"`
 }
@@ -5910,16 +5910,16 @@ type BkprListBalancesAccountsBalances struct {
 type BkprListBalancesAccounts struct {
 	// Account The account name. If the account is a channel, the channel_id.
 	Account       string `json:"account"`
-	AccountClosed bool   `json:"account_closed,omitempty"`
+	AccountClosed *bool  `json:"account_closed,omitempty"`
 	// AccountResolved Has this channel been closed and all outputs resolved?
-	AccountResolved bool                               `json:"account_resolved,omitempty"`
+	AccountResolved *bool                              `json:"account_resolved,omitempty"`
 	Balances        []BkprListBalancesAccountsBalances `json:"balances"`
 	// PeerID Node id for the peer this account is with.
-	PeerID clntypes.PubKey `json:"peer_id,omitempty"`
+	PeerID *clntypes.PubKey `json:"peer_id,omitempty"`
 	// ResolvedAtBlock Blockheight account resolved on chain.
-	ResolvedAtBlock uint32 `json:"resolved_at_block,omitempty"`
+	ResolvedAtBlock *uint32 `json:"resolved_at_block,omitempty"`
 	// WeOpened Did we initiate this account open (open the channel).
-	WeOpened bool `json:"we_opened,omitempty"`
+	WeOpened *bool `json:"we_opened,omitempty"`
 }
 
 type BkprListBalancesResponse struct {
@@ -5928,11 +5928,11 @@ type BkprListBalancesResponse struct {
 
 type BkprListIncomeRequest struct {
 	// ConsolidateFees If true, we emit a single, consolidated event for any onchain-fees for a txid and account. Otherwise, events for every update to the onchain fee calculation for this account and txid will be printed. Note that this means that the events emitted are non-stable, i.e. calling **listincome** twice may result in different onchain fee events being emitted, depending on how much information we've logged for that transaction.
-	ConsolidateFees bool `json:"consolidate_fees,omitempty"`
+	ConsolidateFees *bool `json:"consolidate_fees,omitempty"`
 	// EndTime UNIX timestamp (in seconds) that filters events up to and at the provided timestamp.
-	EndTime uint32 `json:"end_time,omitempty"`
+	EndTime *uint32 `json:"end_time,omitempty"`
 	// StartTime UNIX timestamp (in seconds) that filters events after the provided timestamp.
-	StartTime uint32 `json:"start_time,omitempty"`
+	StartTime *uint32 `json:"start_time,omitempty"`
 }
 
 type BkprListIncomeIncomeEvents struct {
@@ -5945,17 +5945,17 @@ type BkprListIncomeIncomeEvents struct {
 	// DebitMSAT Amount spent (expenses).
 	DebitMSAT clntypes.MSat `json:"debit_msat"`
 	// Description More information about this event. If a `invoice` type, typically the bolt11/bolt12 description.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Outpoint The txid:outnum for this event, if applicable.
-	Outpoint string `json:"outpoint,omitempty"`
+	Outpoint *string `json:"outpoint,omitempty"`
 	// PaymentID Lightning payment identifier. For an htlc, this will be the preimage.
-	PaymentID clntypes.Hex `json:"payment_id,omitempty"`
+	PaymentID *clntypes.Hex `json:"payment_id,omitempty"`
 	// Tag Type of income event.
 	Tag string `json:"tag"`
 	// Timestamp Timestamp this event was recorded by the node. For consolidated events such as onchain_fees, the most recent timestamp.
 	Timestamp uint32 `json:"timestamp"`
 	// TXID The txid of the transaction that created this event, if applicable.
-	TXID clntypes.TxID `json:"txid,omitempty"`
+	TXID *clntypes.TxID `json:"txid,omitempty"`
 }
 
 type BkprListIncomeResponse struct {
@@ -5981,7 +5981,7 @@ type BkprEditDescriptionByPaymentIDUpdated struct {
 	// Account The account name. If the account is a channel, the channel_id.
 	Account string `json:"account"`
 	// Blockheight For chain events, blockheight this occured at.
-	Blockheight uint32 `json:"blockheight,omitempty"`
+	Blockheight *uint32 `json:"blockheight,omitempty"`
 	// CreditMSAT Amount credited.
 	CreditMSAT clntypes.MSat `json:"credit_msat"`
 	// Currency Human-readable bech32 part for this coin type.
@@ -5991,23 +5991,23 @@ type BkprEditDescriptionByPaymentIDUpdated struct {
 	// Description The description of this event
 	Description string `json:"description"`
 	// FeesMSAT Amount paid in fees.
-	FeesMSAT clntypes.MSat `json:"fees_msat,omitempty"`
+	FeesMSAT *clntypes.MSat `json:"fees_msat,omitempty"`
 	// IsRebalance Is this payment part of a rebalance.
-	IsRebalance bool `json:"is_rebalance,omitempty"`
+	IsRebalance *bool `json:"is_rebalance,omitempty"`
 	// Origin The account this movement originated from.
-	Origin string `json:"origin,omitempty"`
+	Origin *string `json:"origin,omitempty"`
 	// Outpoint The txid:outnum for this event.
-	Outpoint string `json:"outpoint,omitempty"`
+	Outpoint *string `json:"outpoint,omitempty"`
 	// PartID Counter for multi-part payments.
-	PartID uint32 `json:"part_id,omitempty"`
+	PartID *uint32 `json:"part_id,omitempty"`
 	// PaymentID Lightning payment identifier. For an htlc, this will be the preimage.
-	PaymentID clntypes.Hex `json:"payment_id,omitempty"`
+	PaymentID *clntypes.Hex `json:"payment_id,omitempty"`
 	// Tag Description of movement.
 	Tag string `json:"tag"`
 	// Timestamp Timestamp this event was recorded by the node. For consolidated events such as onchain_fees, the most recent timestamp.
 	Timestamp uint32 `json:"timestamp"`
 	// TXID The txid of the transaction that created this event.
-	TXID clntypes.TxID `json:"txid,omitempty"`
+	TXID *clntypes.TxID `json:"txid,omitempty"`
 	// ItemType Coin movement type.
 	ItemType BkprEditDescriptionByPaymentIDUpdatedType `json:"type"`
 }
@@ -6035,7 +6035,7 @@ type BkprEditDescriptionByOutpointUpdated struct {
 	// Account The account name. If the account is a channel, the channel_id.
 	Account string `json:"account"`
 	// Blockheight For chain events, blockheight this occured at.
-	Blockheight uint32 `json:"blockheight,omitempty"`
+	Blockheight *uint32 `json:"blockheight,omitempty"`
 	// CreditMSAT Amount credited.
 	CreditMSAT clntypes.MSat `json:"credit_msat"`
 	// Currency Human-readable bech32 part for this coin type.
@@ -6045,23 +6045,23 @@ type BkprEditDescriptionByOutpointUpdated struct {
 	// Description A description of this outpoint. The description of this event
 	Description string `json:"description"`
 	// FeesMSAT Amount paid in fees.
-	FeesMSAT clntypes.MSat `json:"fees_msat,omitempty"`
+	FeesMSAT *clntypes.MSat `json:"fees_msat,omitempty"`
 	// IsRebalance Is this payment part of a rebalance.
-	IsRebalance bool `json:"is_rebalance,omitempty"`
+	IsRebalance *bool `json:"is_rebalance,omitempty"`
 	// Origin The account this movement originated from.
-	Origin string `json:"origin,omitempty"`
+	Origin *string `json:"origin,omitempty"`
 	// Outpoint The txid:outnum for this event.
-	Outpoint string `json:"outpoint,omitempty"`
+	Outpoint *string `json:"outpoint,omitempty"`
 	// PartID Counter for multi-part payments.
-	PartID uint32 `json:"part_id,omitempty"`
+	PartID *uint32 `json:"part_id,omitempty"`
 	// PaymentID Lightning payment identifier. For an htlc, this will be the preimage.
-	PaymentID clntypes.Hex `json:"payment_id,omitempty"`
+	PaymentID *clntypes.Hex `json:"payment_id,omitempty"`
 	// Tag Description of movement.
 	Tag string `json:"tag"`
 	// Timestamp Timestamp this event was recorded by the node. For consolidated events such as onchain_fees, the most recent timestamp.
 	Timestamp uint32 `json:"timestamp"`
 	// TXID The txid of the transaction that created this event.
-	TXID clntypes.TxID `json:"txid,omitempty"`
+	TXID *clntypes.TxID `json:"txid,omitempty"`
 	// ItemType Coin movement type.
 	ItemType BkprEditDescriptionByOutpointUpdatedType `json:"type"`
 }
@@ -6072,15 +6072,15 @@ type BkprEditDescriptionByOutpointResponse struct {
 
 type BkprReportRequest struct {
 	// EndTime UNIX timestamp (in seconds) that filters events up to and at the provided timestamp.
-	EndTime uint32 `json:"end_time,omitempty"`
+	EndTime *uint32 `json:"end_time,omitempty"`
 	// Escape How to handle the formatted output fields: if set to `csv` it will handle fields with commas or double-quotes correctly for that format. Note that text is never escaped (you need to do that), only {} tags.
-	Escape string `json:"escape,omitempty"`
+	Escape *string `json:"escape,omitempty"`
 	// Format This format string is used for each income event (note that `lightning-cli` can get confused if the format begins and ends with `{` and `}`, so you may need to add a space). The following tags in braces are replaced: * `{account}`: account name (channel id, or 'wallet') * `{tag}`: event tag. This will be one of: * `deposit`: an onchain send to the wallet by `outpoint`. * `htlc_fulfill`: an onchain HTLC fulfill (due to unilaterally closed channel) at `outpoint`. * `invoice`: either incoming (positive credit) or outgoing (positive debit) payment. * `invoice_fee`: the routing fee paid to pay an outgoing invoice * `journal_entry`: an accounting fixup, caused by loss of data (or, a node which predates bookkeeper) * `lease_fee`: a fee paid or received to lease a channel via the experimental liquidity advertisement option * `onchain_fee,`: a miner fee paid to open/close a channel, or make a bitcoin payment. The `txid` will correspond to a `withdrawal` `outpoint` for withdrawl * `pushed`: an amount pushed to or from us on channel open. * `rebalance_fee`: routing fee paid for sending a payment to ourselves. * `routed`: credit gained from routing a payment * `withdrawal`: debit from an onchain spend. * `{description}`: description as provided in the invoice, if present * `{credit}`: credit amount in BTC * `{debit}`: debit amount in BTC * `{fees}`: fee amount in BTC * `{localtime}`: event timestamp in local time as YYYY-MM-DD HH:MM:SS * `{utctime}`: event timestamp in UTC as YYYY-MM-DD HH:MM:SS * `{outpoint}`: outpoint, if present * `{txid}`: txid, if present * `{payment_id}`: payment hash, if present * `{bkpr-currency}`: value of bkpr-currency, if any * `{currencyrate}`: exchange rate for 1 BTC at that event time, if available * `{creditdebit}`: +credit or -debit (or 0) in BTC * `{currencycredit}`: credit amount converted into bkpr-currency * `{currencydebit}`: debit amount converted into bkpr-currency * `{currencycreditdebit}`: +credit or -debit (or 0) in bkpr-currency If a field is unavailable, it expands to an empty string (or 0 for credit, debit, fees and creditdebit). Tags support C-style conditional syntax: `{tag[?if-set][:if-not-set]}` * if-set: text to use when the tag is present (and non-zero for credit, debit, fees and creditdebit). Default is the tag value itself. * if-not-set: text to use when the tag is absent (or zero for amount fields). Default is empty string (or 0 for amount fields). Either or both parts may be omitted, and each part can itself contain tags. For example: * `{outpoint:NONE}`: the outpoint value, or 'NONE' if not available * `{credit:0.00}`: the credit value, or '0.00' if zero * `{outpoint?[{outpoint}]:NONE}`: `[<value>]` if outpoint is available, or 'NONE' if not * `{payment_id:{txid:UNKNOWN}}`: the payment_id, or the txid if no payment_id, or 'UNKNOWN' if neither To include a literal `{`, write `{{`.
-	Format string `json:"format,omitempty"`
+	Format *string `json:"format,omitempty"`
 	// Headers strings to place at the top of the output (useful when creating CSV files directly).
-	Headers []string `json:"headers,omitempty"`
+	Headers *[]string `json:"headers,omitempty"`
 	// StartTime UNIX timestamp (in seconds) that filters events after the provided timestamp.
-	StartTime uint32 `json:"start_time,omitempty"`
+	StartTime *uint32 `json:"start_time,omitempty"`
 }
 
 type BkprReportResponse struct {
@@ -6089,11 +6089,11 @@ type BkprReportResponse struct {
 
 type BlacklistRuneRequest struct {
 	// End Final rune unique id to blacklist (defaults to start).
-	End uint64 `json:"end,omitempty"`
+	End *uint64 `json:"end,omitempty"`
 	// Relist Undo the blacklisting (if any) of every rune in range start to end (inclusive)
-	Relist bool `json:"relist,omitempty"`
+	Relist *bool `json:"relist,omitempty"`
 	// Start First rune unique id to blacklist.
-	Start uint64 `json:"start,omitempty"`
+	Start *uint64 `json:"start,omitempty"`
 }
 
 type BlacklistRuneBlacklist struct {
@@ -6110,10 +6110,10 @@ type BlacklistRuneResponse struct {
 
 type CheckRuneRequest struct {
 	// Method Method for which rune needs to be validated *(required until v23.11)*.
-	Method string `json:"method,omitempty"`
+	Method *string `json:"method,omitempty"`
 	// Nodeid Node id of requesting node *(required until v23.11)*.
-	Nodeid string   `json:"nodeid,omitempty"`
-	Params []string `json:"params,omitempty"`
+	Nodeid *string   `json:"nodeid,omitempty"`
+	Params *[]string `json:"params,omitempty"`
 	// Rune Rune to check for authorization.
 	Rune string `json:"rune"`
 }
@@ -6125,9 +6125,9 @@ type CheckRuneResponse struct {
 
 type CreateRuneRequest struct {
 	// Restrictions It can be the string `readonly`, or an array of restrictions. Each restriction is an array of one or more alternatives, such as "method is listpeers", or "method is listpeers OR time is before 2023".
-	Restrictions []string `json:"restrictions,omitempty"`
+	Restrictions *[]string `json:"restrictions,omitempty"`
 	// Rune If supplied, the restrictions are simple appended to that *rune* (it doesn't need to be a rune belonging to this node). If not supplied, a new *rune* is constructed, with a new unique id.
-	Rune string `json:"rune,omitempty"`
+	Rune *string `json:"rune,omitempty"`
 }
 
 type CreateRuneResponse struct {
@@ -6136,12 +6136,12 @@ type CreateRuneResponse struct {
 	// UniqueID The id of this rune: this is set at creation and cannot be changed (even as restrictions are added).
 	UniqueID string `json:"unique_id"`
 	// WarningUnrestrictedRune A warning shown when runes are created with powers that could drain your node.
-	WarningUnrestrictedRune string `json:"warning_unrestricted_rune,omitempty"`
+	WarningUnrestrictedRune *string `json:"warning_unrestricted_rune,omitempty"`
 }
 
 type ShowRunesRequest struct {
 	// Rune If specified, only details of that rune will be returned.
-	Rune string `json:"rune,omitempty"`
+	Rune *string `json:"rune,omitempty"`
 }
 
 type ShowRunesRunesRestrictionsAlternatives struct {
@@ -6163,11 +6163,11 @@ type ShowRunesRunesRestrictions struct {
 
 type ShowRunesRunes struct {
 	// Blacklisted The rune has been blacklisted; see commando-blacklist(7).
-	Blacklisted bool `json:"blacklisted,omitempty"`
+	Blacklisted *bool `json:"blacklisted,omitempty"`
 	// LastUsed The last time this rune was successfully used.
-	LastUsed float64 `json:"last_used,omitempty"`
+	LastUsed *float64 `json:"last_used,omitempty"`
 	// OurRune This is not a rune for this node (only possible when `rune` is specified).
-	OurRune bool `json:"our_rune,omitempty"`
+	OurRune *bool `json:"our_rune,omitempty"`
 	// Restrictions The restrictions on what commands this rune can authorize.
 	Restrictions []ShowRunesRunesRestrictions `json:"restrictions"`
 	// RestrictionsAsEnglish English readable description of the restrictions array above.
@@ -6175,7 +6175,7 @@ type ShowRunesRunes struct {
 	// Rune Base64 encoded rune.
 	Rune string `json:"rune"`
 	// Stored This is false if the rune does not appear in our datastore (only possible when `rune` is specified).
-	Stored bool `json:"stored,omitempty"`
+	Stored *bool `json:"stored,omitempty"`
 	// UniqueID Unique id assigned when the rune was generated; this is always a u64 for commando runes.
 	UniqueID string `json:"unique_id"`
 }
@@ -6188,13 +6188,13 @@ type AskReneUnreservePath struct {
 	// AmountMSAT The amount to send into this hop.
 	AmountMSAT clntypes.MSat `json:"amount_msat"`
 	// Layer The layer to restrict this reservation to (useful for fake channels).
-	Layer string `json:"layer,omitempty"`
+	Layer *string `json:"layer,omitempty"`
 	// ShortChannelIDDir The channel and direction joining these nodes.
 	ShortChannelIDDir clntypes.ShortChannelIDDir `json:"short_channel_id_dir"`
 }
 
 type AskReneUnreserveRequest struct {
-	DevRemoveAll bool                   `json:"dev_remove_all,omitempty"`
+	DevRemoveAll *bool                  `json:"dev_remove_all,omitempty"`
 	Path         []AskReneUnreservePath `json:"path"`
 }
 
@@ -6203,46 +6203,46 @@ type AskReneUnreserveResponse struct {
 
 type AskReneListLayersRequest struct {
 	// Layer The name of the layer to report on.
-	Layer string `json:"layer,omitempty"`
+	Layer *string `json:"layer,omitempty"`
 }
 
 type AskReneListLayersLayersBiases struct {
 	// Bias The bias (-100 to +100)
 	Bias int64 `json:"bias"`
 	// Description Description/annotation for the bias
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// ShortChannelIDDir The short channel id and direction
 	ShortChannelIDDir clntypes.ShortChannelIDDir `json:"short_channel_id_dir"`
 	// Timestamp The UNIX timestamp when this bias was created.
-	Timestamp uint64 `json:"timestamp,omitempty"`
+	Timestamp *uint64 `json:"timestamp,omitempty"`
 }
 
 type AskReneListLayersLayersChannelUpdates struct {
 	// CltvExpiryDelta The CLTV delay required for this direction.
-	CltvExpiryDelta uint16 `json:"cltv_expiry_delta,omitempty"`
+	CltvExpiryDelta *uint16 `json:"cltv_expiry_delta,omitempty"`
 	// Enabled True if this can be used, false otherwise.
-	Enabled bool `json:"enabled,omitempty"`
+	Enabled *bool `json:"enabled,omitempty"`
 	// FeeBaseMSAT The base fee to apply to use the channel in this direction.
-	FeeBaseMSAT clntypes.MSat `json:"fee_base_msat,omitempty"`
+	FeeBaseMSAT *clntypes.MSat `json:"fee_base_msat,omitempty"`
 	// FeeProportionalMillionths The proportional fee (in parts per million) to apply to use the channel in this direction.
-	FeeProportionalMillionths uint32 `json:"fee_proportional_millionths,omitempty"`
+	FeeProportionalMillionths *uint32 `json:"fee_proportional_millionths,omitempty"`
 	// HTLCMaximumMSAT The maximum value allowed in this direction.
-	HTLCMaximumMSAT clntypes.MSat `json:"htlc_maximum_msat,omitempty"`
+	HTLCMaximumMSAT *clntypes.MSat `json:"htlc_maximum_msat,omitempty"`
 	// HTLCMinimumMSAT The minimum value allowed in this direction.
-	HTLCMinimumMSAT clntypes.MSat `json:"htlc_minimum_msat,omitempty"`
+	HTLCMinimumMSAT *clntypes.MSat `json:"htlc_minimum_msat,omitempty"`
 	// ShortChannelIDDir The short channel id and direction this update applies to.
 	ShortChannelIDDir clntypes.ShortChannelIDDir `json:"short_channel_id_dir"`
 }
 
 type AskReneListLayersLayersConstraints struct {
 	// MaximumMSAT The maximum value which this channel could pass.
-	MaximumMSAT clntypes.MSat `json:"maximum_msat,omitempty"`
+	MaximumMSAT *clntypes.MSat `json:"maximum_msat,omitempty"`
 	// MinimumMSAT The minimum value which this channel could pass.
-	MinimumMSAT clntypes.MSat `json:"minimum_msat,omitempty"`
+	MinimumMSAT *clntypes.MSat `json:"minimum_msat,omitempty"`
 	// ShortChannelIDDir The short channel id and direction
 	ShortChannelIDDir clntypes.ShortChannelIDDir `json:"short_channel_id_dir"`
 	// Timestamp The UNIX timestamp when this constraint was created.
-	Timestamp uint64 `json:"timestamp,omitempty"`
+	Timestamp *uint64 `json:"timestamp,omitempty"`
 }
 
 type AskReneListLayersLayersCreatedChannels struct {
@@ -6258,7 +6258,7 @@ type AskReneListLayersLayersCreatedChannels struct {
 
 type AskReneListLayersLayersNodeBiases struct {
 	// Description A human readable annotation.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// InBias The bias (-100 to +100) on incoming channels.
 	InBias int64 `json:"in_bias"`
 	// Node The id of the biased node.
@@ -6270,15 +6270,15 @@ type AskReneListLayersLayersNodeBiases struct {
 }
 
 type AskReneListLayersLayers struct {
-	Biases           []AskReneListLayersLayersBiases          `json:"biases,omitempty"`
+	Biases           *[]AskReneListLayersLayersBiases         `json:"biases,omitempty"`
 	ChannelUpdates   []AskReneListLayersLayersChannelUpdates  `json:"channel_updates"`
 	Constraints      []AskReneListLayersLayersConstraints     `json:"constraints"`
 	CreatedChannels  []AskReneListLayersLayersCreatedChannels `json:"created_channels"`
-	DisabledChannels []clntypes.ShortChannelIDDir             `json:"disabled_channels,omitempty"`
+	DisabledChannels *[]clntypes.ShortChannelIDDir            `json:"disabled_channels,omitempty"`
 	DisabledNodes    []clntypes.PubKey                        `json:"disabled_nodes"`
 	// Layer The name of the layer.
-	Layer      string                              `json:"layer"`
-	NodeBiases []AskReneListLayersLayersNodeBiases `json:"node_biases,omitempty"`
+	Layer      string                               `json:"layer"`
+	NodeBiases *[]AskReneListLayersLayersNodeBiases `json:"node_biases,omitempty"`
 	// Persistent Whether the layer is saved across restarts.
 	Persistent bool `json:"persistent"`
 }
@@ -6291,40 +6291,40 @@ type AskReneCreateLayerRequest struct {
 	// Layer The name of the layer to create.
 	Layer string `json:"layer"`
 	// Persistent True if askrene should save and restore this layer. As a side-effect, create-layer also succeeds if the layer already exists and persistent is true.
-	Persistent bool `json:"persistent,omitempty"`
+	Persistent *bool `json:"persistent,omitempty"`
 }
 
 type AskReneCreateLayerLayersBiases struct {
 	// Bias The bias (-100 to +100)
 	Bias int64 `json:"bias"`
 	// Description Description/annotation to display in askrene-listlayers(7)
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// ShortChannelIDDir The short channel id and direction
 	ShortChannelIDDir clntypes.ShortChannelIDDir `json:"short_channel_id_dir"`
 	// Timestamp The UNIX timestamp when this bias was created.
-	Timestamp uint64 `json:"timestamp,omitempty"`
+	Timestamp *uint64 `json:"timestamp,omitempty"`
 }
 
 type AskReneCreateLayerLayersChannelUpdates struct {
 	// Delay The CLTV delay required for this direction.
-	Delay uint16 `json:"delay,omitempty"`
+	Delay *uint16 `json:"delay,omitempty"`
 	// FeeBaseMSAT The base fee to apply to use the channel in this direction.
-	FeeBaseMSAT clntypes.MSat `json:"fee_base_msat,omitempty"`
+	FeeBaseMSAT *clntypes.MSat `json:"fee_base_msat,omitempty"`
 	// FeeProportionalMillionths The proportional fee (in parts per million) to apply to use the channel in this direction.
-	FeeProportionalMillionths uint32 `json:"fee_proportional_millionths,omitempty"`
+	FeeProportionalMillionths *uint32 `json:"fee_proportional_millionths,omitempty"`
 	// HTLCMaximumMSAT The maximum value allowed in this direction.
-	HTLCMaximumMSAT clntypes.MSat `json:"htlc_maximum_msat,omitempty"`
+	HTLCMaximumMSAT *clntypes.MSat `json:"htlc_maximum_msat,omitempty"`
 	// HTLCMinimumMSAT The minimum value allowed in this direction.
-	HTLCMinimumMSAT clntypes.MSat `json:"htlc_minimum_msat,omitempty"`
+	HTLCMinimumMSAT *clntypes.MSat `json:"htlc_minimum_msat,omitempty"`
 }
 
 type AskReneCreateLayerLayersConstraints struct {
 	// Direction The direction.
 	Direction uint32 `json:"direction"`
 	// MaximumMSAT The maximum value which this channel could pass. This or *minimum_msat* will be present, but not both.
-	MaximumMSAT clntypes.MSat `json:"maximum_msat,omitempty"`
+	MaximumMSAT *clntypes.MSat `json:"maximum_msat,omitempty"`
 	// MinimumMSAT The minimum value which this channel could pass. This or *minimum_msat* will be present, but not both.
-	MinimumMSAT clntypes.MSat `json:"minimum_msat,omitempty"`
+	MinimumMSAT *clntypes.MSat `json:"minimum_msat,omitempty"`
 	// ShortChannelID The short channel id.
 	ShortChannelID clntypes.ShortChannelID `json:"short_channel_id"`
 }
@@ -6342,7 +6342,7 @@ type AskReneCreateLayerLayersCreatedChannels struct {
 
 type AskReneCreateLayerLayersNodeBiases struct {
 	// Description A human readable annotation.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// InBias The bias (-100 to +100) on incoming channels.
 	InBias int64 `json:"in_bias"`
 	// Node The id of the biased node.
@@ -6354,15 +6354,15 @@ type AskReneCreateLayerLayersNodeBiases struct {
 }
 
 type AskReneCreateLayerLayers struct {
-	Biases           []AskReneCreateLayerLayersBiases          `json:"biases,omitempty"`
+	Biases           *[]AskReneCreateLayerLayersBiases         `json:"biases,omitempty"`
 	ChannelUpdates   []AskReneCreateLayerLayersChannelUpdates  `json:"channel_updates"`
 	Constraints      []AskReneCreateLayerLayersConstraints     `json:"constraints"`
 	CreatedChannels  []AskReneCreateLayerLayersCreatedChannels `json:"created_channels"`
-	DisabledChannels []clntypes.ShortChannelIDDir              `json:"disabled_channels,omitempty"`
+	DisabledChannels *[]clntypes.ShortChannelIDDir             `json:"disabled_channels,omitempty"`
 	DisabledNodes    []clntypes.PubKey                         `json:"disabled_nodes"`
 	// Layer The name of the layer.
-	Layer      string                               `json:"layer"`
-	NodeBiases []AskReneCreateLayerLayersNodeBiases `json:"node_biases,omitempty"`
+	Layer      string                                `json:"layer"`
+	NodeBiases *[]AskReneCreateLayerLayersNodeBiases `json:"node_biases,omitempty"`
 	// Persistent Whether the layer is saved/restored across restarts.
 	Persistent bool `json:"persistent"`
 }
@@ -6393,7 +6393,7 @@ type AskReneReservePath struct {
 	// AmountMSAT The amount to send into this hop.
 	AmountMSAT clntypes.MSat `json:"amount_msat"`
 	// Layer The layer to restrict this reservation to. This is only useful for fake channels which are not uniquely identified by `short_channel_id_dir`, which would otherwise confuse multiple unrelated callers.
-	Layer string `json:"layer,omitempty"`
+	Layer *string `json:"layer,omitempty"`
 	// ShortChannelIDDir The channel and direction joining these nodes.
 	ShortChannelIDDir clntypes.ShortChannelIDDir `json:"short_channel_id_dir"`
 }
@@ -6428,34 +6428,34 @@ type GetRoutesRequest struct {
 	FinalCltv uint32   `json:"final_cltv"`
 	Layers    []string `json:"layers"`
 	// Maxdelay Maximum number of blocks of delay for the route. Cannot be bigger than 2016.
-	Maxdelay uint32 `json:"maxdelay,omitempty"`
+	Maxdelay *uint32 `json:"maxdelay,omitempty"`
 	// MaxfeeMSAT Maximum fee to spend: we will never return a set of routes more expensive than this. It can be a whole number, or a whole number ending in *msat* or *sat*, or a number with three decimal places ending in *sat*, or a number with 1 to 11 decimal places ending in *btc*.
 	MaxfeeMSAT clntypes.MSat `json:"maxfee_msat"`
 	// Maxparts Maximum number of routes in the solution.
-	Maxparts uint32 `json:"maxparts,omitempty"`
+	Maxparts *uint32 `json:"maxparts,omitempty"`
 	// Source Node pubkey to start the paths
 	Source clntypes.PubKey `json:"source"`
 }
 
 type GetRoutesRoutesPath struct {
 	// AmountInMSAT The amount to send into this hop.
-	AmountInMSAT clntypes.MSat `json:"amount_in_msat,omitempty"`
+	AmountInMSAT *clntypes.MSat `json:"amount_in_msat,omitempty"`
 	// AmountMSAT The amount to send into this hop.
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// AmountOutMSAT The amount which arrives at the far end of this hop.
-	AmountOutMSAT clntypes.MSat `json:"amount_out_msat,omitempty"`
+	AmountOutMSAT *clntypes.MSat `json:"amount_out_msat,omitempty"`
 	// CltvIn The total CLTV expected by the node at the start of this hop.
-	CltvIn uint32 `json:"cltv_in,omitempty"`
+	CltvIn *uint32 `json:"cltv_in,omitempty"`
 	// CltvOut The total CLTV expected by the node at the end of this hop.
-	CltvOut uint32 `json:"cltv_out,omitempty"`
+	CltvOut *uint32 `json:"cltv_out,omitempty"`
 	// Delay The total CLTV expected by the node at the start of this hop.
-	Delay uint32 `json:"delay,omitempty"`
+	Delay *uint32 `json:"delay,omitempty"`
 	// NextNodeID The peer id at the end of this hop.
-	NextNodeID clntypes.PubKey `json:"next_node_id,omitempty"`
+	NextNodeID *clntypes.PubKey `json:"next_node_id,omitempty"`
 	// NodeIDIn The peer id at the start of this hop.
-	NodeIDIn clntypes.PubKey `json:"node_id_in,omitempty"`
+	NodeIDIn *clntypes.PubKey `json:"node_id_in,omitempty"`
 	// NodeIDOut The peer id at the end of this hop.
-	NodeIDOut clntypes.PubKey `json:"node_id_out,omitempty"`
+	NodeIDOut *clntypes.PubKey `json:"node_id_out,omitempty"`
 	// ShortChannelIDDir The channel and direction joining these nodes.
 	ShortChannelIDDir clntypes.ShortChannelIDDir `json:"short_channel_id_dir"`
 }
@@ -6511,9 +6511,9 @@ type AskReneInformChannelConstraints struct {
 	// Layer The name of the layer to apply this change to.
 	Layer string `json:"layer"`
 	// MaximumMSAT The maximum value which this channel could pass.
-	MaximumMSAT clntypes.MSat `json:"maximum_msat,omitempty"`
+	MaximumMSAT *clntypes.MSat `json:"maximum_msat,omitempty"`
 	// MinimumMSAT The minimum value which this channel could pass.
-	MinimumMSAT clntypes.MSat `json:"minimum_msat,omitempty"`
+	MinimumMSAT *clntypes.MSat `json:"minimum_msat,omitempty"`
 	// ShortChannelIDDir The short channel id and direction
 	ShortChannelIDDir clntypes.ShortChannelIDDir `json:"short_channel_id_dir"`
 	// Timestamp The UNIX timestamp when this constraint was created.
@@ -6542,17 +6542,17 @@ type AskReneCreateChannelResponse struct {
 
 type AskReneUpdateChannelRequest struct {
 	// CltvExpiryDelta The CLTV delay required for this direction.
-	CltvExpiryDelta uint16 `json:"cltv_expiry_delta,omitempty"`
+	CltvExpiryDelta *uint16 `json:"cltv_expiry_delta,omitempty"`
 	// Enabled Whether the channel is usable at all.
-	Enabled bool `json:"enabled,omitempty"`
+	Enabled *bool `json:"enabled,omitempty"`
 	// FeeBaseMSAT The base fee to apply to use the channel in this direction.
-	FeeBaseMSAT clntypes.MSat `json:"fee_base_msat,omitempty"`
+	FeeBaseMSAT *clntypes.MSat `json:"fee_base_msat,omitempty"`
 	// FeeProportionalMillionths The proportional fee (in parts per million) to apply to use the channel in this direction.
-	FeeProportionalMillionths uint32 `json:"fee_proportional_millionths,omitempty"`
+	FeeProportionalMillionths *uint32 `json:"fee_proportional_millionths,omitempty"`
 	// HTLCMaximumMSAT The maximum value allowed in this direction.
-	HTLCMaximumMSAT clntypes.MSat `json:"htlc_maximum_msat,omitempty"`
+	HTLCMaximumMSAT *clntypes.MSat `json:"htlc_maximum_msat,omitempty"`
 	// HTLCMinimumMSAT The minimum value allowed in this direction.
-	HTLCMinimumMSAT clntypes.MSat `json:"htlc_minimum_msat,omitempty"`
+	HTLCMinimumMSAT *clntypes.MSat `json:"htlc_minimum_msat,omitempty"`
 	// Layer The name of the layer to apply this change to.
 	Layer string `json:"layer"`
 	// ShortChannelIDDir The channel and direction to apply the change to.
@@ -6566,11 +6566,11 @@ type AskReneBiasChannelRequest struct {
 	// Bias The bias, positive being good and negative being bad (0 being no bias). Useful values are +/-1 through +/-10, though -100 through +100 are possible values.
 	Bias int64 `json:"bias"`
 	// Description Description/annotation to display in askrene-listlayers(7)
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Layer The name of the layer to apply this bias to.
 	Layer string `json:"layer"`
 	// Relative The bias will be added to the previous value.
-	Relative bool `json:"relative,omitempty"`
+	Relative *bool `json:"relative,omitempty"`
 	// ShortChannelIDDir The short channel id and direction to apply this bias to.
 	ShortChannelIDDir clntypes.ShortChannelIDDir `json:"short_channel_id_dir"`
 }
@@ -6579,13 +6579,13 @@ type AskReneBiasChannelBiases struct {
 	// Bias The bias (-100 to +100)
 	Bias int64 `json:"bias"`
 	// Description The bias (-100 to +100)
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Layer The name of the layer this bias applies to.
 	Layer string `json:"layer"`
 	// ShortChannelIDDir The short channel id and direction
 	ShortChannelIDDir clntypes.ShortChannelIDDir `json:"short_channel_id_dir"`
 	// Timestamp The UNIX timestamp when this bias was created.
-	Timestamp uint64 `json:"timestamp,omitempty"`
+	Timestamp *uint64 `json:"timestamp,omitempty"`
 }
 
 type AskReneBiasChannelResponse struct {
@@ -6596,7 +6596,7 @@ type AskreneBiasNodeRequest struct {
 	// Bias The bias, positive being good and negative being bad (0 being no bias). Useful values are +/-1 through +/-10, though -100 through +100 are possible values.
 	Bias int64 `json:"bias"`
 	// Description Description/annotation to display in askrene-listlayers(7)
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Direction Either *in* or *out* to specify if the bias applies to incoming or outgoing channels with respect to this node.
 	Direction string `json:"direction"`
 	// Layer The name of the layer to apply this bias to.
@@ -6604,12 +6604,12 @@ type AskreneBiasNodeRequest struct {
 	// Node The node to which this bias applies. It does not need to exist.
 	Node clntypes.PubKey `json:"node"`
 	// Relative The bias will be added to the previous value.
-	Relative bool `json:"relative,omitempty"`
+	Relative *bool `json:"relative,omitempty"`
 }
 
 type AskreneBiasNodeNodeBiases struct {
 	// Description A human readable annotation.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// InBias The bias (-100 to +100) on incoming channels.
 	InBias int64 `json:"in_bias"`
 	// Layer The name of the layer this bias applies to.
@@ -6650,17 +6650,17 @@ type InjectPaymentOnionRequest struct {
 	// CltvExpiry The cltv_expiry for the first HTLC in blocks. This must be greater than the current blockheight.
 	CltvExpiry uint16 `json:"cltv_expiry"`
 	// Destination Destination id (for *waitsendpay* and *listsendpays*). If not set, will be extracted if possible from *invstring*.
-	Destination clntypes.PubKey `json:"destination,omitempty"`
+	Destination *clntypes.PubKey `json:"destination,omitempty"`
 	// DestinationMSAT Amount that is actually delivered to the destination (i.e. `amount_msat` minus fees), for showing in listsendpays (confusingly, as `amount_msat`).
-	DestinationMSAT clntypes.MSat `json:"destination_msat,omitempty"`
+	DestinationMSAT *clntypes.MSat `json:"destination_msat,omitempty"`
 	// Groupid Grouping key to disambiguate multiple attempts to pay the same *payment_hash*. All payments in other groups must be completed before starting a new group.
 	Groupid uint64 `json:"groupid"`
 	// Invstring Usually a bolt11 or bolt12 string, which, it will be returned in *waitsendpay* and *listsendpays* results.
-	Invstring string `json:"invstring,omitempty"`
+	Invstring *string `json:"invstring,omitempty"`
 	// Label Can be used to provide a human readable reference to retrieve the payment at a later time.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Localinvreqid `localinvreqid` is used by offers to link a payment attempt to a local `invoice_request` offer created by lightningd-invoicerequest(7).
-	Localinvreqid clntypes.Hash `json:"localinvreqid,omitempty"`
+	Localinvreqid *clntypes.Hash `json:"localinvreqid,omitempty"`
 	// Onion Hex-encoded 1366 bytes long blob that was returned by either of the tools that can generate onions. It contains the payloads destined for each hop and some metadata. Please refer to [BOLT 04][bolt04] for further details. If is specific to the route that is being used and the *payment_hash* used to construct, and therefore cannot be reused for other payments or to attempt a separate route. The custom onion can generally be created using the `devtools/onion` CLI tool, or the **createonion** RPC command.
 	Onion clntypes.Hex `json:"onion"`
 	// Partid The non-zero identifier for multiple parallel partial payments with the same *payment_hash*.
@@ -6692,26 +6692,26 @@ type InjectOnionMessageResponse struct {
 
 type XpayRequest struct {
 	// AmountMSAT Only possible for a bolt11 invoice which does not have an amount (in which case, it's compulsory). *amount_msat* is in millisatoshi precision; it can be a whole number, or a whole number with suffix *msat* or *sat*, or a three decimal point number with suffix *sat*, or an 1 to 11 decimal point number suffixed by *btc*.
-	AmountMSAT   clntypes.MSat `json:"amount_msat,omitempty"`
-	DevUseShadow bool          `json:"dev_use_shadow,omitempty"`
+	AmountMSAT   *clntypes.MSat `json:"amount_msat,omitempty"`
+	DevUseShadow *bool          `json:"dev_use_shadow,omitempty"`
 	// Invstring bolt11 or bolt12 invoice, a bolt12 (non-recursive) offer or a BIP353 name. If it's a bip353 name, an offer is fetched with `fetchbip353` if available. If it's an offer, the invoice is fetched using `fetchinvoice` automatically.
 	Invstring string `json:"invstring"`
 	// Label Attach a label to payments for which is returned in `listpays` and `listsendpays`. This is for your own use: it is not visible to the recipient.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Layers These are askrene layers to apply in addition to xpay's own: these can alter the topology or provide additional information on the lightning network. This lets you exclude particular nodes or channels, or bias against them: see askrene-create-layer.
-	Layers []string `json:"layers,omitempty"`
+	Layers *[]string `json:"layers,omitempty"`
 	// Localinvreqid `localinvreqid` is used by offers to link a payment attempt to a local `invoice_request` offer created by lightningd-invoicerequest(7). This ensures that we only make a single payment for an offer, and that the offer is marked `used` once paid.
-	Localinvreqid clntypes.Hex `json:"localinvreqid,omitempty"`
+	Localinvreqid *clntypes.Hex `json:"localinvreqid,omitempty"`
 	// Maxdelay A payment may be delayed for up to `maxdelay` blocks by another node; clients should be prepared for this worst case.
-	Maxdelay uint32 `json:"maxdelay,omitempty"`
+	Maxdelay *uint32 `json:"maxdelay,omitempty"`
 	// Maxfee *maxfee* creates an absolute limit on what fee we will pay.
-	Maxfee clntypes.MSat `json:"maxfee,omitempty"`
+	Maxfee *clntypes.MSat `json:"maxfee,omitempty"`
 	// PartialMSAT Explicitly state that you are only paying some part of the invoice. Presumably someone else is paying the rest (otherwise the payment will time out at the recipient).
-	PartialMSAT clntypes.MSat `json:"partial_msat,omitempty"`
+	PartialMSAT *clntypes.MSat `json:"partial_msat,omitempty"`
 	// PayerNote A message that a payer is willing to send to a payee within an invoice request.
-	PayerNote string `json:"payer_note,omitempty"`
+	PayerNote *string `json:"payer_note,omitempty"`
 	// RetryFor Until *retry_for* seconds passes, the command will keep finding routes and retrying the payment.
-	RetryFor uint32 `json:"retry_for,omitempty"`
+	RetryFor *uint32 `json:"retry_for,omitempty"`
 }
 
 type XpayResponse struct {
@@ -6754,11 +6754,11 @@ const (
 
 type ListChannelMovesRequest struct {
 	// Index How to interpret `start` and `limit`
-	Index ListChannelMovesIndex `json:"index,omitempty"`
+	Index *ListChannelMovesIndex `json:"index,omitempty"`
 	// Limit If `index` is specified, `limit` can be used to specify the maximum number of entries to return.
-	Limit uint32 `json:"limit,omitempty"`
+	Limit *uint32 `json:"limit,omitempty"`
 	// Start If `index` is specified, `start` may be specified to start from that value, which is generally returned from lightning-wait(7).
-	Start uint64 `json:"start,omitempty"`
+	Start *uint64 `json:"start,omitempty"`
 }
 
 // ListChannelMovesChannelmovesPrimaryTag A set of one or more tags defining the nature of the change
@@ -6786,11 +6786,11 @@ type ListChannelMovesChannelmoves struct {
 	// FeesMSAT The fees paid for this payment
 	FeesMSAT clntypes.MSat `json:"fees_msat"`
 	// GroupID The group_id for the payment (the `payment_hash`, `group_id`, `part_id` tuple will be unique)
-	GroupID uint64 `json:"group_id,omitempty"`
+	GroupID *uint64 `json:"group_id,omitempty"`
 	// PartID The part_id for the payment (the `payment_hash`, `group_id`, `part_id` tuple will be unique)
-	PartID uint64 `json:"part_id,omitempty"`
+	PartID *uint64 `json:"part_id,omitempty"`
 	// PaymentHash The hash associated with this payment (not present for leases or push funding)
-	PaymentHash clntypes.Hash `json:"payment_hash,omitempty"`
+	PaymentHash *clntypes.Hash `json:"payment_hash,omitempty"`
 	// PrimaryTag A set of one or more tags defining the nature of the change
 	PrimaryTag ListChannelMovesChannelmovesPrimaryTag `json:"primary_tag"`
 	// Timestamp Time of this event in seconds since January 1 1970 UTC
@@ -6810,11 +6810,11 @@ const (
 
 type ListChainMovesRequest struct {
 	// Index How to interpret `start` and `limit`
-	Index ListChainMovesIndex `json:"index,omitempty"`
+	Index *ListChainMovesIndex `json:"index,omitempty"`
 	// Limit If `index` is specified, `limit` can be used to specify the maximum number of entries to return.
-	Limit uint32 `json:"limit,omitempty"`
+	Limit *uint32 `json:"limit,omitempty"`
 	// Start If `index` is specified, `start` may be specified to start from that value, which is generally returned from lightning-wait(7).
-	Start uint64 `json:"start,omitempty"`
+	Start *uint64 `json:"start,omitempty"`
 }
 
 // ListChainMovesChainmovesPrimaryTag A set of one or more tags defining the nature of the change
@@ -6853,19 +6853,19 @@ type ListChainMovesChainmoves struct {
 	// ExtraTags A set of additional tags expanding on the details
 	ExtraTags []string `json:"extra_tags"`
 	// OriginatingAccount This is either a channel_id corresponding to the source channel involved, or a string such as `wallet` for the internal wallet.
-	OriginatingAccount string `json:"originating_account,omitempty"`
+	OriginatingAccount *string `json:"originating_account,omitempty"`
 	// OutputCount The number of outputs in the `txid` (so you can tell once you've seen events for all of them).
-	OutputCount uint32 `json:"output_count,omitempty"`
+	OutputCount *uint32 `json:"output_count,omitempty"`
 	// OutputMSAT The output amount (always a whole number of sats). Note that in some cases (e.g. channel opens), not all these belong to us.
 	OutputMSAT clntypes.MSat `json:"output_msat"`
 	// PaymentHash The payment hash associated with this balance change.
-	PaymentHash clntypes.Hash `json:"payment_hash,omitempty"`
+	PaymentHash *clntypes.Hash `json:"payment_hash,omitempty"`
 	// PeerID The lightning peer associated with this onchain event
-	PeerID clntypes.PubKey `json:"peer_id,omitempty"`
+	PeerID *clntypes.PubKey `json:"peer_id,omitempty"`
 	// PrimaryTag A set of one or more tags defining the nature of the change
 	PrimaryTag ListChainMovesChainmovesPrimaryTag `json:"primary_tag"`
 	// SpendingTXID The transaction ID which did the spending.
-	SpendingTXID clntypes.TxID `json:"spending_txid,omitempty"`
+	SpendingTXID *clntypes.TxID `json:"spending_txid,omitempty"`
 	// Timestamp Time of this event in seconds since January 1 1970 UTC
 	Timestamp uint64 `json:"timestamp"`
 	// UTXO The txid and outpoint number spent for this balance change.
@@ -6885,26 +6885,26 @@ const (
 
 type ListNetworkEventsRequest struct {
 	// ID A node id: if set, only network events for this peer are returned
-	ID string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 	// Index This controls the ordering of results.
-	Index ListNetworkEventsIndex `json:"index,omitempty"`
+	Index *ListNetworkEventsIndex `json:"index,omitempty"`
 	// Limit If `index` is specified, `limit` can be used to specify the maximum number of entries to return.
-	Limit uint32 `json:"limit,omitempty"`
+	Limit *uint32 `json:"limit,omitempty"`
 	// Start If `index` is specified, `start` may be specified to start from that value, which is generally returned from lightning-wait(7).
-	Start uint64 `json:"start,omitempty"`
+	Start *uint64 `json:"start,omitempty"`
 }
 
 type ListNetworkEventsNetworkevents struct {
 	// ConnectAttempted True if we found an address we could attempt to connect to, e.g. ignoring Tor addresses if we don't have a proxy, and ignoring IPv6 addresses if we don't have IPv6 support.
-	ConnectAttempted bool `json:"connect_attempted,omitempty"`
+	ConnectAttempted *bool `json:"connect_attempted,omitempty"`
 	// CreatedIndex 1-based index indicating order this network event was created in.
 	CreatedIndex uint64 `json:"created_index"`
 	// DurationNsec The time taken (for ping, the latency, for connect / connect_fail, the time taken to get a result, for disconnect, the time we were connected)
-	DurationNsec uint64 `json:"duration_nsec,omitempty"`
+	DurationNsec *uint64 `json:"duration_nsec,omitempty"`
 	// PeerID The node the network connection was talking to.
 	PeerID clntypes.PubKey `json:"peer_id"`
 	// Reason The cause of the event (if known)
-	Reason string `json:"reason,omitempty"`
+	Reason *string `json:"reason,omitempty"`
 	// Timestamp Time this event was recorded, in seconds since January 1 1970 UTC
 	Timestamp uint64 `json:"timestamp"`
 	// ItemType The type of event (currently `ping`, `connect`, `connect_fail` or `disconnect`)
@@ -6926,24 +6926,24 @@ type DelNetworkEventResponse struct {
 // ClnrestRegisterPathRuneRestrictions Optional rune validation parameters to check before allowing access. These are passed to the checkrune RPC command. Omitting the rune_restrictions parameter means using your matched rpc method and the rpc params used. You can use this for example to not require the user to create a new rune for your rpc_method but rather require something like method=pay.
 type ClnrestRegisterPathRuneRestrictions struct {
 	// Method Method for which rune needs to be validated *(required until v23.11)*. Omitting this means your rpc_method will be used.
-	Method string `json:"method,omitempty"`
+	Method *string `json:"method,omitempty"`
 	// Nodeid Node id of requesting node *(required until v23.11)*.
-	Nodeid string `json:"nodeid,omitempty"`
+	Nodeid *string `json:"nodeid,omitempty"`
 	// Params Parameters for method. Omitting this means the rpc params from the request will be used.
-	Params map[string]string `json:"params,omitempty"`
+	Params *map[string]string `json:"params,omitempty"`
 }
 
 type ClnrestRegisterPathRequest struct {
 	// HttpMethod HTTP method for this ``path``. Valid values are: ``GET``, ``POST``, ``PUT``, ``PATCH`` or ``DELETE``. Defaults to ``POST``.
-	HttpMethod string `json:"http_method,omitempty"`
+	HttpMethod *string `json:"http_method,omitempty"`
 	// Path The REST API path to register (e.g., '/v1/custom/endpoint'). Captures which translate to an rpc parameter of 'key:value' are written like this: '/user/{key}'
 	Path string `json:"path"`
 	// RPCMethod The RPC method name to invoke when this ``path`` and ``http_method`` combination is accessed.
 	RPCMethod string `json:"rpc_method"`
 	// RuneRequired Whether a rune is required to access this ``path``. Is only allowed to be ``false`` for ``GET`` requests. Defaults to true
-	RuneRequired bool `json:"rune_required,omitempty"`
+	RuneRequired *bool `json:"rune_required,omitempty"`
 	// RuneRestrictions Optional rune validation parameters to check before allowing access. These are passed to the checkrune RPC command. Omitting the rune_restrictions parameter means using your matched rpc method and the rpc params used. You can use this for example to not require the user to create a new rune for your rpc_method but rather require something like method=pay.
-	RuneRestrictions ClnrestRegisterPathRuneRestrictions `json:"rune_restrictions,omitempty"`
+	RuneRestrictions *ClnrestRegisterPathRuneRestrictions `json:"rune_restrictions,omitempty"`
 }
 
 type ClnrestRegisterPathResponse struct {
@@ -6981,7 +6981,7 @@ type CurrencyRateRequest struct {
 	// Currency The ISO 4217 currency code (e.g. USD) to convert to. The plugin normalises this value to uppercase before querying sources.
 	Currency string `json:"currency"`
 	// Source The name of a specific exchange-rate source to query. If omitted, the median across all available sources is returned. An error is returned if the source name is not recognised or has no cached data for the requested currency.
-	Source string `json:"source,omitempty"`
+	Source *string `json:"source,omitempty"`
 }
 
 type CurrencyRateResponse struct {
@@ -6995,17 +6995,17 @@ type SendAmountRequest struct {
 	// Invstring A bolt12 (non-recursive) offer with no specific amount or a BIP353 name. It can also pay to a Bolt11 invoice as long as the amount is un-specified.
 	Invstring string `json:"invstring"`
 	// Label Attach a label to payments for which is returned in `listpays` and `listsendpays`. This is for your own use: it is not visible to the recipient.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Layers These are askrene layers to apply in addition to 'xpay' layer: these can alter the topology or provide additional information on the lightning network. See askrene-create-layer.
-	Layers []string `json:"layers,omitempty"`
+	Layers *[]string `json:"layers,omitempty"`
 	// Maxdelay A payment may be delayed for up to `maxdelay` blocks by another node; clients should be prepared for this worst case.
-	Maxdelay uint32 `json:"maxdelay,omitempty"`
+	Maxdelay *uint32 `json:"maxdelay,omitempty"`
 	// Maxfee *maxfee* creates an absolute limit on what fee will be paid.
-	Maxfee clntypes.MSat `json:"maxfee,omitempty"`
+	Maxfee *clntypes.MSat `json:"maxfee,omitempty"`
 	// PayerNote A message that a payer is willing to send to a payee within an invoice request.
-	PayerNote string `json:"payer_note,omitempty"`
+	PayerNote *string `json:"payer_note,omitempty"`
 	// RetryFor Until *retry_for* seconds passes, the command will keep finding routes and retrying the payment.
-	RetryFor uint32 `json:"retry_for,omitempty"`
+	RetryFor *uint32 `json:"retry_for,omitempty"`
 }
 
 type SendAmountResponse struct {
@@ -7023,11 +7023,11 @@ type SendAmountResponse struct {
 
 type CreateProofRequest struct {
 	// Include An explicit list of TLV field names or numbers to include in the proof if they are present. The default values are: * 10 (offer_description): identifies what was purchased * 22 (offer_issuer_id): identifies who issued the offer being proved * 164 (invoice_created_at): timestamp of invoice * 170 (invoice_amount): the amount actually paid Note that the following fields are always included: 88 (invreq_payer_id), 168 (invoice_payment_hash), 174 (invoice_features), 176 (invoice_node_id) and 240 (signature).
-	Include []any `json:"include,omitempty"`
+	Include *[]any `json:"include,omitempty"`
 	// Invstring bolt12 invoice, a bolt12 (non-recursive) offer or a BIP353 name.
 	Invstring string `json:"invstring"`
 	// Note A note to include in the proof: someone can challenge you to create a proof with a given note, and so you can demonstrate that you can indeed make a new proof. Default is an empty string.
-	Note string `json:"note,omitempty"`
+	Note *string `json:"note,omitempty"`
 }
 
 type CreateProofProofs struct {
@@ -7048,17 +7048,17 @@ type XkeysendRequest struct {
 	// Destination The 33 byte, hex-encoded, node ID of the node that the payment should go to.
 	Destination clntypes.PubKey `json:"destination"`
 	// Extratlvs Dictionary of additional fields to insert into the final tlv. The format is 'fieldnumber': 'hexstring'.
-	Extratlvs map[string]string `json:"extratlvs,omitempty"`
+	Extratlvs *map[string]string `json:"extratlvs,omitempty"`
 	// Label Attach a label to the payment for which is returned in `listpays` and `listsendpays`. This is for your own use: it is not visible to the recipient.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Layers These are askrene layers to apply: these can alter the topology or provide additional information on the lightning network. See askrene-create-layer.
-	Layers []string `json:"layers,omitempty"`
+	Layers *[]string `json:"layers,omitempty"`
 	// Maxdelay Number of blocks the payment may be delayed.
-	Maxdelay uint32 `json:"maxdelay,omitempty"`
+	Maxdelay *uint32 `json:"maxdelay,omitempty"`
 	// Maxfee *maxfee* creates an absolute limit on what fee we will pay.
-	Maxfee clntypes.MSat `json:"maxfee,omitempty"`
+	Maxfee *clntypes.MSat `json:"maxfee,omitempty"`
 	// RetryFor Until *retry_for* seconds passes, the command will keep finding routes and retrying the payment. However, a payment may be delayed for up to `maxdelay` blocks by another node; clients should be prepared for this worst case.
-	RetryFor uint32 `json:"retry_for,omitempty"`
+	RetryFor *uint32 `json:"retry_for,omitempty"`
 }
 
 type XkeysendResponse struct {
@@ -7076,14 +7076,14 @@ type XkeysendResponse struct {
 
 type GracefulRequest struct {
 	// Timeout If set, the graceful command will return after this time even if not all HTLCs have terminated. Useful for scripting, where you may want to follow with `stop`.
-	Timeout uint32 `json:"timeout,omitempty"`
+	Timeout *uint32 `json:"timeout,omitempty"`
 }
 
 type GracefulResponse struct {
 	// PendingHTLCExpiries The (sorted) expiry blockheights of all HTLCs which are not resolved
-	PendingHTLCExpiries []uint32 `json:"pending_htlc_expiries,omitempty"`
+	PendingHTLCExpiries *[]uint32 `json:"pending_htlc_expiries,omitempty"`
 	// PendingPeers Any peers still connected (presumably because they have outstanding HTLCs)
-	PendingPeers []clntypes.PubKey `json:"pending_peers,omitempty"`
+	PendingPeers *[]clntypes.PubKey `json:"pending_peers,omitempty"`
 }
 
 type BalanceSnapshotRequest struct {
@@ -7203,15 +7203,15 @@ type ChannelStateChanged struct {
 	// ChannelID The channel id of the channel.
 	ChannelID clntypes.Hash `json:"channel_id"`
 	// Message The state change message.
-	Message string `json:"message,omitempty"`
+	Message *string `json:"message,omitempty"`
 	// NewState The channel state, in particular "CHANNELD_NORMAL" and "CHANNELD_AWAITING_SPLICE" mean the channel can be used normally. Note: *CLOSED* state was only added in v25.12.
 	NewState ChannelStateChangedNewState `json:"new_state"`
 	// OldState The channel state, in particular "CHANNELD_NORMAL" and "CHANNELD_AWAITING_SPLICE" mean the channel can be used normally. The deprecated value 'unknown' was also present for new channels up until v26.04, it was removed in v26.06.
-	OldState ChannelStateChangedOldState `json:"old_state,omitempty"`
+	OldState *ChannelStateChangedOldState `json:"old_state,omitempty"`
 	// PeerID The peer id of the channel.
 	PeerID clntypes.PubKey `json:"peer_id"`
 	// ShortChannelID The short channel id of the channel. If the channel is not yet confirmed, this field will be null.
-	ShortChannelID clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
+	ShortChannelID *clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
 	// Timestamp The timestamp of the state change.
 	Timestamp string `json:"timestamp"`
 }
@@ -7269,55 +7269,55 @@ type CoinMovement struct {
 	// AccountID The account identifier for the movement.
 	AccountID string `json:"account_id"`
 	// Blockheight The blockheight for a chain movement.
-	Blockheight uint32 `json:"blockheight,omitempty"`
+	Blockheight *uint32 `json:"blockheight,omitempty"`
 	// CoinType The BIP173 coin type name.
 	CoinType string `json:"coin_type"`
 	// CreatedIndex 1-based index indicating order this move was created in.
-	CreatedIndex uint64 `json:"created_index,omitempty"`
+	CreatedIndex *uint64 `json:"created_index,omitempty"`
 	// CreditMSAT Amount credited to the account.
 	CreditMSAT clntypes.MSat `json:"credit_msat"`
 	// DebitMSAT Amount debited from the account.
 	DebitMSAT clntypes.MSat `json:"debit_msat"`
 	// ExtraTags Additional movement tags.
-	ExtraTags []string `json:"extra_tags,omitempty"`
+	ExtraTags *[]string `json:"extra_tags,omitempty"`
 	// FeesMSAT The fees associated with a channel movement.
-	FeesMSAT clntypes.MSat `json:"fees_msat,omitempty"`
+	FeesMSAT *clntypes.MSat `json:"fees_msat,omitempty"`
 	// GroupID The group id for a multi-part channel payment.
-	GroupID uint64 `json:"group_id,omitempty"`
+	GroupID *uint64 `json:"group_id,omitempty"`
 	// NodeID The node id that emitted the notification.
 	NodeID clntypes.PubKey `json:"node_id"`
 	// OriginatingAccount The originating account for an external chain movement, if any.
-	OriginatingAccount string `json:"originating_account,omitempty"`
+	OriginatingAccount *string `json:"originating_account,omitempty"`
 	// OutputCount The number of outputs in the spending transaction, if known.
-	OutputCount uint32 `json:"output_count,omitempty"`
+	OutputCount *uint32 `json:"output_count,omitempty"`
 	// OutputMSAT The output amount for a chain movement.
-	OutputMSAT clntypes.MSat `json:"output_msat,omitempty"`
+	OutputMSAT *clntypes.MSat `json:"output_msat,omitempty"`
 	// PartID The part id for a multi-part channel payment.
-	PartID uint64 `json:"part_id,omitempty"`
+	PartID *uint64 `json:"part_id,omitempty"`
 	// PaymentHash The payment hash associated with the movement, if any.
-	PaymentHash clntypes.Hash `json:"payment_hash,omitempty"`
+	PaymentHash *clntypes.Hash `json:"payment_hash,omitempty"`
 	// PeerID The peer associated with a chain movement, if any.
-	PeerID clntypes.PubKey `json:"peer_id,omitempty"`
+	PeerID *clntypes.PubKey `json:"peer_id,omitempty"`
 	// PrimaryTag The primary movement tag.
-	PrimaryTag CoinMovementPrimaryTag `json:"primary_tag,omitempty"`
+	PrimaryTag *CoinMovementPrimaryTag `json:"primary_tag,omitempty"`
 	// SpendingTXID The spending transaction id for a chain movement, if any.
-	SpendingTXID clntypes.TxID `json:"spending_txid,omitempty"`
+	SpendingTXID *clntypes.TxID `json:"spending_txid,omitempty"`
 	// Tags Deprecated legacy combined tag array, emitted only for deprecated output compatibility.
-	Tags []string `json:"tags,omitempty"`
+	Tags *[]string `json:"tags,omitempty"`
 	// Timestamp The UNIX timestamp when the movement was recorded.
 	Timestamp uint64 `json:"timestamp"`
 	// TXID Deprecated legacy field for the spending transaction id.
-	TXID clntypes.TxID `json:"txid,omitempty"`
+	TXID *clntypes.TxID `json:"txid,omitempty"`
 	// ItemType Whether this is a channel or chain movement.
 	ItemType CoinMovementType `json:"type"`
 	// UTXO The outpoint for a chain movement.
-	UTXO clntypes.Outpoint `json:"utxo,omitempty"`
+	UTXO *clntypes.Outpoint `json:"utxo,omitempty"`
 	// UTXOTXID Deprecated legacy field for the outpoint transaction id.
-	UTXOTXID clntypes.TxID `json:"utxo_txid,omitempty"`
+	UTXOTXID *clntypes.TxID `json:"utxo_txid,omitempty"`
 	// Version The coin movement schema version.
 	Version uint32 `json:"version"`
 	// Vout Deprecated legacy field for the outpoint output index.
-	Vout uint32 `json:"vout,omitempty"`
+	Vout *uint32 `json:"vout,omitempty"`
 }
 
 type CustommsgRequest struct {
@@ -7366,29 +7366,29 @@ const (
 
 type ForwardEvent struct {
 	// Failcode The BOLT 4 failcode when the forward failed locally.
-	Failcode uint32 `json:"failcode,omitempty"`
+	Failcode *uint32 `json:"failcode,omitempty"`
 	// Failreason The symbolic failcode name when the forward failed locally.
-	Failreason string `json:"failreason,omitempty"`
+	Failreason *string `json:"failreason,omitempty"`
 	// FeeMSAT The fee earned on the forward, if an outbound amount is known.
-	FeeMSAT clntypes.MSat `json:"fee_msat,omitempty"`
+	FeeMSAT *clntypes.MSat `json:"fee_msat,omitempty"`
 	// InChannel The inbound channel that received the HTLC.
 	InChannel clntypes.ShortChannelID `json:"in_channel"`
 	// InMSAT The amount of the incoming HTLC.
 	InMSAT clntypes.MSat `json:"in_msat"`
 	// OutChannel The outbound channel used for the forward, if one was selected.
-	OutChannel clntypes.ShortChannelID `json:"out_channel,omitempty"`
+	OutChannel *clntypes.ShortChannelID `json:"out_channel,omitempty"`
 	// OutMSAT The amount forwarded to the outbound channel, if known.
-	OutMSAT clntypes.MSat `json:"out_msat,omitempty"`
+	OutMSAT *clntypes.MSat `json:"out_msat,omitempty"`
 	// PaymentHash The payment hash for the forwarded HTLC.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// ReceivedTime The UNIX timestamp when the HTLC was received.
 	ReceivedTime float64 `json:"received_time"`
 	// ResolvedTime The UNIX timestamp when the HTLC was resolved, if it has been resolved.
-	ResolvedTime float64 `json:"resolved_time,omitempty"`
+	ResolvedTime *float64 `json:"resolved_time,omitempty"`
 	// Status The current forwarding status.
 	Status ForwardEventStatus `json:"status"`
 	// Style The onion format used for the forward, if known.
-	Style ForwardEventStyle `json:"style,omitempty"`
+	Style *ForwardEventStyle `json:"style,omitempty"`
 }
 
 type InvoiceCreationRequest struct {
@@ -7398,9 +7398,9 @@ type InvoiceCreation struct {
 	// Label The label of the created invoice.
 	Label string `json:"label"`
 	// MSAT The invoice amount, if the invoice amount was specified at creation time.
-	MSAT clntypes.MSat `json:"msat,omitempty"`
+	MSAT *clntypes.MSat `json:"msat,omitempty"`
 	// OfferID If the invoice is associated with a BOLT 12 offer, this `offer_id` will be present (merkle hash of non-signature fields).
-	OfferID clntypes.Hash `json:"offer_id,omitempty"`
+	OfferID *clntypes.Hash `json:"offer_id,omitempty"`
 	// Preimage The payment preimage for the created invoice.
 	Preimage clntypes.Secret `json:"preimage"`
 }
@@ -7414,7 +7414,7 @@ type InvoicePayment struct {
 	// MSAT The amount paid for the invoice.
 	MSAT clntypes.MSat `json:"msat"`
 	// Outpoint The onchain outpoint for a dual-funded or onchain invoice payment, if present.
-	Outpoint clntypes.Outpoint `json:"outpoint,omitempty"`
+	Outpoint *clntypes.Outpoint `json:"outpoint,omitempty"`
 	// Preimage The payment preimage for the invoice.
 	Preimage clntypes.Secret `json:"preimage"`
 }
@@ -7454,11 +7454,11 @@ type OnionmessageForwardFail struct {
 	// Incoming The incoming onion message payload.
 	Incoming clntypes.Hex `json:"incoming"`
 	// NextNodeID The next node id for the attempted forward when the next hop is a node.
-	NextNodeID clntypes.PubKey `json:"next_node_id,omitempty"`
+	NextNodeID *clntypes.PubKey `json:"next_node_id,omitempty"`
 	// NextShortChannelIDDir The next short_channel_id_dir for the attempted forward when the next hop is a channel.
-	NextShortChannelIDDir clntypes.ShortChannelIDDir `json:"next_short_channel_id_dir,omitempty"`
+	NextShortChannelIDDir *clntypes.ShortChannelIDDir `json:"next_short_channel_id_dir,omitempty"`
 	// Outgoing The outgoing onion message payload if a next hop had already been selected.
-	Outgoing clntypes.Hex `json:"outgoing,omitempty"`
+	Outgoing *clntypes.Hex `json:"outgoing,omitempty"`
 	// PathKey The path key used for the attempted forward.
 	PathKey clntypes.PubKey `json:"path_key"`
 	// Source The node that sent the incoming onion message.
@@ -7514,57 +7514,57 @@ const (
 // SendpayFailureData The structured payment failure details.
 type SendpayFailureData struct {
 	// AmountMSAT The amount intended for the destination, if known.
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// AmountSentMSAT The total amount sent including fees.
-	AmountSentMSAT clntypes.MSat `json:"amount_sent_msat,omitempty"`
+	AmountSentMSAT *clntypes.MSat `json:"amount_sent_msat,omitempty"`
 	// Bolt11 The bolt11 invoice string, if present.
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Bolt12 The bolt12 invoice or offer string, if present.
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// CompletedAt The UNIX timestamp when this payment completed.
-	CompletedAt uint64 `json:"completed_at,omitempty"`
+	CompletedAt *uint64 `json:"completed_at,omitempty"`
 	// CreatedAt The UNIX timestamp when this payment was initiated.
-	CreatedAt uint64 `json:"created_at,omitempty"`
+	CreatedAt *uint64 `json:"created_at,omitempty"`
 	// CreatedIndex 1-based index indicating order this payment was created in.
-	CreatedIndex uint64 `json:"created_index,omitempty"`
+	CreatedIndex *uint64 `json:"created_index,omitempty"`
 	// Description The description associated with the payment, if present.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Destination The final destination of the payment, if known.
-	Destination clntypes.PubKey `json:"destination,omitempty"`
+	Destination *clntypes.PubKey `json:"destination,omitempty"`
 	// ErringChannel The channel that produced the failure, if known.
-	ErringChannel clntypes.ShortChannelID `json:"erring_channel,omitempty"`
+	ErringChannel *clntypes.ShortChannelID `json:"erring_channel,omitempty"`
 	// ErringDirection The direction within the erring channel.
-	ErringDirection uint32 `json:"erring_direction,omitempty"`
+	ErringDirection *uint32 `json:"erring_direction,omitempty"`
 	// ErringIndex The position in the route where the failure occurred.
-	ErringIndex uint32 `json:"erring_index,omitempty"`
+	ErringIndex *uint32 `json:"erring_index,omitempty"`
 	// ErringNode The node that produced the failure, if known.
-	ErringNode clntypes.PubKey `json:"erring_node,omitempty"`
+	ErringNode *clntypes.PubKey `json:"erring_node,omitempty"`
 	// Erroronion The raw error onion if one was retained for the payment.
-	Erroronion clntypes.Hex `json:"erroronion,omitempty"`
+	Erroronion *clntypes.Hex `json:"erroronion,omitempty"`
 	// Failcode The BOLT 4 failcode.
-	Failcode uint32 `json:"failcode,omitempty"`
+	Failcode *uint32 `json:"failcode,omitempty"`
 	// Failcodename The symbolic name for the failcode, if known.
-	Failcodename string `json:"failcodename,omitempty"`
+	Failcodename *string `json:"failcodename,omitempty"`
 	// Groupid Grouping key for multiple attempts on the same payment.
-	Groupid uint64 `json:"groupid,omitempty"`
+	Groupid *uint64 `json:"groupid,omitempty"`
 	// ID Old synonym for created_index.
-	ID uint64 `json:"id,omitempty"`
+	ID *uint64 `json:"id,omitempty"`
 	// Label The optional label associated with the payment.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Onionreply The onion reply for an unparseable onion failure.
-	Onionreply clntypes.Hex `json:"onionreply,omitempty"`
+	Onionreply *clntypes.Hex `json:"onionreply,omitempty"`
 	// Partid Part number for a multi-part payment.
-	Partid uint64 `json:"partid,omitempty"`
+	Partid *uint64 `json:"partid,omitempty"`
 	// PaymentHash The hash of the payment preimage.
-	PaymentHash clntypes.Hash `json:"payment_hash,omitempty"`
+	PaymentHash *clntypes.Hash `json:"payment_hash,omitempty"`
 	// PaymentPreimage The payment preimage, if the payment later completed through another path.
-	PaymentPreimage clntypes.Secret `json:"payment_preimage,omitempty"`
+	PaymentPreimage *clntypes.Secret `json:"payment_preimage,omitempty"`
 	// RawMessage The raw failure message payload, if present.
-	RawMessage clntypes.Hex `json:"raw_message,omitempty"`
+	RawMessage *clntypes.Hex `json:"raw_message,omitempty"`
 	// Status The terminal status for a failed sendpay notification.
-	Status SendpayFailureDataStatus `json:"status,omitempty"`
+	Status *SendpayFailureDataStatus `json:"status,omitempty"`
 	// UpdatedIndex 1-based index indicating order this payment was updated in.
-	UpdatedIndex uint64 `json:"updated_index,omitempty"`
+	UpdatedIndex *uint64 `json:"updated_index,omitempty"`
 }
 
 type SendpayFailure struct {
@@ -7588,41 +7588,41 @@ const (
 
 type SendpaySuccess struct {
 	// AmountMSAT The amount delivered to the destination, if known.
-	AmountMSAT clntypes.MSat `json:"amount_msat,omitempty"`
+	AmountMSAT *clntypes.MSat `json:"amount_msat,omitempty"`
 	// AmountSentMSAT The total amount sent including fees.
 	AmountSentMSAT clntypes.MSat `json:"amount_sent_msat"`
 	// Bolt11 The bolt11 invoice string, if present.
-	Bolt11 string `json:"bolt11,omitempty"`
+	Bolt11 *string `json:"bolt11,omitempty"`
 	// Bolt12 The bolt12 invoice or offer string, if present.
-	Bolt12 string `json:"bolt12,omitempty"`
+	Bolt12 *string `json:"bolt12,omitempty"`
 	// CompletedAt The UNIX timestamp when this payment completed.
-	CompletedAt uint64 `json:"completed_at,omitempty"`
+	CompletedAt *uint64 `json:"completed_at,omitempty"`
 	// CreatedAt The UNIX timestamp when this payment was initiated.
 	CreatedAt uint64 `json:"created_at"`
 	// CreatedIndex 1-based index indicating order this payment was created in.
 	CreatedIndex uint64 `json:"created_index"`
 	// Description The description associated with the payment, if present.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Destination The final destination of the payment, if known.
-	Destination clntypes.PubKey `json:"destination,omitempty"`
+	Destination *clntypes.PubKey `json:"destination,omitempty"`
 	// Erroronion The raw error onion if one was retained for the payment.
-	Erroronion clntypes.Hex `json:"erroronion,omitempty"`
+	Erroronion *clntypes.Hex `json:"erroronion,omitempty"`
 	// Groupid Grouping key for multiple attempts on the same payment.
 	Groupid uint64 `json:"groupid"`
 	// ID Old synonym for created_index.
 	ID uint64 `json:"id"`
 	// Label The optional label associated with the payment.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// Partid Part number for a multi-part payment.
-	Partid uint64 `json:"partid,omitempty"`
+	Partid *uint64 `json:"partid,omitempty"`
 	// PaymentHash The hash of the payment preimage.
 	PaymentHash clntypes.Hash `json:"payment_hash"`
 	// PaymentPreimage The payment preimage proving success.
-	PaymentPreimage clntypes.Secret `json:"payment_preimage,omitempty"`
+	PaymentPreimage *clntypes.Secret `json:"payment_preimage,omitempty"`
 	// Status The terminal status for a successful sendpay notification.
 	Status SendpaySuccessStatus `json:"status"`
 	// UpdatedIndex 1-based index indicating order this payment was updated in.
-	UpdatedIndex uint64 `json:"updated_index,omitempty"`
+	UpdatedIndex *uint64 `json:"updated_index,omitempty"`
 }
 
 type ShutdownRequest struct {
@@ -7670,17 +7670,17 @@ type PayPartEnd struct {
 	// Duration The time in seconds from send to result.
 	Duration float64 `json:"duration"`
 	// ErrorCode The xpay error code, if known.
-	ErrorCode uint32 `json:"error_code,omitempty"`
+	ErrorCode *uint32 `json:"error_code,omitempty"`
 	// ErrorMessage The human-readable xpay error message.
-	ErrorMessage string `json:"error_message,omitempty"`
+	ErrorMessage *string `json:"error_message,omitempty"`
 	// FailedDirection The direction within the failed short channel id, if known.
-	FailedDirection uint32 `json:"failed_direction,omitempty"`
+	FailedDirection *uint32 `json:"failed_direction,omitempty"`
 	// FailedMsg The decrypted onion error message, if available.
-	FailedMsg clntypes.Hex `json:"failed_msg,omitempty"`
+	FailedMsg *clntypes.Hex `json:"failed_msg,omitempty"`
 	// FailedNodeID The node that generated the failure, if known.
-	FailedNodeID clntypes.PubKey `json:"failed_node_id,omitempty"`
+	FailedNodeID *clntypes.PubKey `json:"failed_node_id,omitempty"`
 	// FailedShortChannelID The short channel id complained about, if known.
-	FailedShortChannelID clntypes.ShortChannelID `json:"failed_short_channel_id,omitempty"`
+	FailedShortChannelID *clntypes.ShortChannelID `json:"failed_short_channel_id,omitempty"`
 	// Groupid The xpay group identifier for the payment attempt.
 	Groupid uint64 `json:"groupid"`
 	// Partid The identifier for this payment part.
@@ -7740,7 +7740,7 @@ type PeerConnectedPeer struct {
 	// ID The node_id of the connected peer.
 	ID clntypes.PubKey `json:"id"`
 	// RemoteAddr Our own address as reported by the remote peer. Helps with detecting our own IPv4 changes behind NAT.
-	RemoteAddr string `json:"remote_addr,omitempty"`
+	RemoteAddr *string `json:"remote_addr,omitempty"`
 }
 
 type PeerConnected struct {
@@ -7833,8 +7833,8 @@ type OpenchannelOpenchannel struct {
 	// ChannelFlags Channel flags as defined in BOLT #7.
 	ChannelFlags uint8 `json:"channel_flags"`
 	// ChannelReserveMSAT Channel reserve required by the peer.
-	ChannelReserveMSAT clntypes.MSat                     `json:"channel_reserve_msat"`
-	ChannelType        OpenchannelOpenchannelChannelType `json:"channel_type,omitempty"`
+	ChannelReserveMSAT clntypes.MSat                      `json:"channel_reserve_msat"`
+	ChannelType        *OpenchannelOpenchannelChannelType `json:"channel_type,omitempty"`
 	// DustLimitMSAT Dust limit for outputs.
 	DustLimitMSAT clntypes.MSat `json:"dust_limit_msat"`
 	// FeeratePerKw Feerate in satoshi per kw.
@@ -7852,7 +7852,7 @@ type OpenchannelOpenchannel struct {
 	// PushMSAT Amount pushed to us at channel open.
 	PushMSAT clntypes.MSat `json:"push_msat"`
 	// ShutdownScriptpubkey Optional shutdown scriptPubKey proposed by the peer.
-	ShutdownScriptpubkey clntypes.Hex `json:"shutdown_scriptpubkey,omitempty"`
+	ShutdownScriptpubkey *clntypes.Hex `json:"shutdown_scriptpubkey,omitempty"`
 	// ToSelfDelay The number of blocks before they can take their funds if they unilateral close.
 	ToSelfDelay uint32 `json:"to_self_delay"`
 }
@@ -7882,8 +7882,8 @@ type Openchannel2Openchannel2 struct {
 	// ChannelID Temporary `channel_id` assigned for this channel negotiation.
 	ChannelID clntypes.Hash `json:"channel_id"`
 	// ChannelMaxMSAT Maximum capacity this channel is allowed to reach.
-	ChannelMaxMSAT clntypes.MSat                       `json:"channel_max_msat"`
-	ChannelType    Openchannel2Openchannel2ChannelType `json:"channel_type,omitempty"`
+	ChannelMaxMSAT clntypes.MSat                        `json:"channel_max_msat"`
+	ChannelType    *Openchannel2Openchannel2ChannelType `json:"channel_type,omitempty"`
 	// CommitmentFeeratePerKw Feerate (per kw) used for commitment transactions.
 	CommitmentFeeratePerKw uint32 `json:"commitment_feerate_per_kw"`
 	// DustLimitMSAT Minimum output value below which outputs are considered dust.
@@ -7899,7 +7899,7 @@ type Openchannel2Openchannel2 struct {
 	// ID The `node_id` of the peer proposing the channel.
 	ID clntypes.PubKey `json:"id"`
 	// LeaseBlockheightStart Blockheight at which the lease period begins. Only present if `requested_lease_msat` is present.
-	LeaseBlockheightStart uint32 `json:"lease_blockheight_start,omitempty"`
+	LeaseBlockheightStart *uint32 `json:"lease_blockheight_start,omitempty"`
 	// Locktime Locktime to be used in the funding transaction.
 	Locktime uint32 `json:"locktime"`
 	// MaxAcceptedHtlcs Maximum number of HTLC's the remote is allowed to offer at once.
@@ -7907,13 +7907,13 @@ type Openchannel2Openchannel2 struct {
 	// MaxHTLCValueInFlightMSAT Maximum total value of outstanding HTLCs allowed in the channel at any time.
 	MaxHTLCValueInFlightMSAT clntypes.MSat `json:"max_htlc_value_in_flight_msat"`
 	// NodeBlockheight Current blockheight of the node. Used in conjunction with lease parameters. Only present if `requested_lease_msat` is present.
-	NodeBlockheight uint32 `json:"node_blockheight,omitempty"`
+	NodeBlockheight *uint32 `json:"node_blockheight,omitempty"`
 	// RequestedLeaseMSAT Amount of liquidity the peer is requesting us to lease to them. Only present if `option_will_fund` is negotiated.
-	RequestedLeaseMSAT clntypes.MSat `json:"requested_lease_msat,omitempty"`
+	RequestedLeaseMSAT *clntypes.MSat `json:"requested_lease_msat,omitempty"`
 	// RequireConfirmedInputs Indicates whether the peer requires all funding inputs to be confirmed.
 	RequireConfirmedInputs bool `json:"require_confirmed_inputs"`
 	// ShutdownScriptpubkey Optional shutdown scriptPubKey provided by the peer for cooperative close.
-	ShutdownScriptpubkey clntypes.Hex `json:"shutdown_scriptpubkey,omitempty"`
+	ShutdownScriptpubkey *clntypes.Hex `json:"shutdown_scriptpubkey,omitempty"`
 	// TheirFundingMSAT Amount contributed by the remote peer to the channel funding transaction.
 	TheirFundingMSAT clntypes.MSat `json:"their_funding_msat"`
 	// ToSelfDelay The number of blocks before they can take their funds if they unilateral close.
@@ -7988,7 +7988,7 @@ type RbfChannelRbfChannel struct {
 	// OurLastFundingMSAT Our previous contribution to the funding transaction.
 	OurLastFundingMSAT clntypes.MSat `json:"our_last_funding_msat"`
 	// RequestedLeaseMSAT If present, the amount of liquidity the peer is requesting us to lease. This field is optional and only included if the peer requested a lease.
-	RequestedLeaseMSAT clntypes.MSat `json:"requested_lease_msat,omitempty"`
+	RequestedLeaseMSAT *clntypes.MSat `json:"requested_lease_msat,omitempty"`
 	// RequireConfirmedInputs Indicates whether the remote peer requires all inputs in the PSBT to be confirmed. If true, the plugin must avoid adding unconfirmed inputs.
 	RequireConfirmedInputs bool `json:"require_confirmed_inputs"`
 	// TheirFundingMSAT The peer's proposed new funding contribution.
@@ -8017,7 +8017,7 @@ type HTLCAcceptedHTLC struct {
 	// CltvExpiryRelative Hints how much time we still have to claim the HTLC. It is the `cltv_expiry` minus the current blockheight and is passed along mainly to avoid the plugin having to look up the current blockheight.
 	CltvExpiryRelative uint32 `json:"cltv_expiry_relative"`
 	// ExtraTlvs Optional TLV stream attached to the HTLC.
-	ExtraTlvs clntypes.Hex `json:"extra_tlvs,omitempty"`
+	ExtraTlvs *clntypes.Hex `json:"extra_tlvs,omitempty"`
 	// ID The unique HTLC identifier assigned by the channel peer.
 	ID uint64 `json:"id"`
 	// PaymentHash The payment hash used to identify the payment.
@@ -8035,36 +8035,36 @@ const (
 
 type HTLCAcceptedOnion struct {
 	// ForwardMSAT The amount to forward to the next hop.
-	ForwardMSAT clntypes.MSat `json:"forward_msat,omitempty"`
+	ForwardMSAT *clntypes.MSat `json:"forward_msat,omitempty"`
 	// NextNodeID The node_id of the next hop. Only present if specified in the onion payload.
-	NextNodeID clntypes.PubKey `json:"next_node_id,omitempty"`
+	NextNodeID *clntypes.PubKey `json:"next_node_id,omitempty"`
 	// NextOnion The fully processed onion that we should be sending to the next hop as part of the outgoing HTLC. Processed in this case means that we took the incoming onion, decrypted it, extracted the payload destined for us, and serialised the resulting onion again.
 	NextOnion clntypes.Hex `json:"next_onion"`
 	// OutgoingCltvValue Determines what the CLTV value for the HTLC that we forward to the next hop should be.
-	OutgoingCltvValue uint32 `json:"outgoing_cltv_value,omitempty"`
+	OutgoingCltvValue *uint32 `json:"outgoing_cltv_value,omitempty"`
 	// Payload The raw unparsed onion payload received from the sender.
 	Payload clntypes.Hex `json:"payload"`
 	// PaymentMetadata Additional metadata provided in the onion payload. Only present if included by the sender.
-	PaymentMetadata clntypes.Hex `json:"payment_metadata,omitempty"`
+	PaymentMetadata *clntypes.Hex `json:"payment_metadata,omitempty"`
 	// PaymentSecret The payment secret (which the payer should have obtained from the invoice) provided by the sender. Only present for final recipients.
-	PaymentSecret clntypes.Secret `json:"payment_secret,omitempty"`
+	PaymentSecret *clntypes.Secret `json:"payment_secret,omitempty"`
 	// SharedSecret The shared secret used to decrypt the incoming onion. It is shared with the sender that constructed the onion.
 	SharedSecret clntypes.Secret `json:"shared_secret"`
 	// ShortChannelID Determines the channel that the sender is hinting should be used next. Not present if this node is the final destination.
-	ShortChannelID clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
+	ShortChannelID *clntypes.ShortChannelID `json:"short_channel_id,omitempty"`
 	// TotalMSAT The total payment amount. Only present for final recipients using modern TLV payloads.
-	TotalMSAT clntypes.MSat `json:"total_msat,omitempty"`
+	TotalMSAT *clntypes.MSat `json:"total_msat,omitempty"`
 	// ItemType Indicates that the payload is TLV formatted. Only present if the payload was successfully parsed.
-	ItemType HTLCAcceptedOnionType `json:"type,omitempty"`
+	ItemType *HTLCAcceptedOnionType `json:"type,omitempty"`
 }
 
 type HTLCAccepted struct {
 	// ForwardTo The `channel_id` we intend to forward the HTLC to. Will not be present if the `short_channel_id` was invalid or we were the final destination.
-	ForwardTo clntypes.Hash     `json:"forward_to,omitempty"`
+	ForwardTo *clntypes.Hash    `json:"forward_to,omitempty"`
 	HTLC      HTLCAcceptedHTLC  `json:"htlc"`
 	Onion     HTLCAcceptedOnion `json:"onion"`
 	// PeerID The `node_id` of the peer that offered this HTLC. This field may be absent if the peer is unknown.
-	PeerID clntypes.PubKey `json:"peer_id,omitempty"`
+	PeerID *clntypes.PubKey `json:"peer_id,omitempty"`
 }
 
 // HTLCAcceptedResult Determines how the HTLC should be handled. `continue` means that the plugin does not want to do anything special and lightningd should continue processing it normally, i.e., resolve the payment if we're the recipient, or attempt to forward it otherwise. Notice that the usual checks such as sufficient fees and CLTV deltas are still enforced. It can also replace the onion.payload by specifying a payload in the response. Note that this is always a TLV-style payload, so unlike onion.payload there is no length prefix (and it must be at least 4 hex digits long). This will be re-parsed; it's useful for removing onion fields which a plugin doesn't want lightningd to consider. It can also specify forward_to in the response, replacing the destination. This usually only makes sense if it wants to choose an alternate channel to the same next peer, but is useful if the payload is also replaced. Also, it can specify extra_tlvs in the response. This will replace the TLV-stream update_add_htlc_tlvs in the update_add_htlc message for forwarded htlcs. If the node is the final destination, the plugin can also replace the amount of the invoice that belongs to the payment_hash by specifying invoice_msat. `fail` will tell lightningd to fail the HTLC with a given hex-encoded `failure_message` (please refer to BOLT #4 for details: `incorrect_or_unknown_payment_details` is the most common). Instead of `failure_message` the response can contain a hex-encoded `failure_onion` that will be used instead (please refer to the BOLT #4 for details). This can be used, for example, if you're writing a bridge between two Lightning Networks. Note that lightningd will apply the obfuscation step to the value returned here with its own shared secret (and key type `ammag`) before returning it to the previous hop. `resolve` instructs lightningd to claim the HTLC by providing the preimage matching the `payment_hash` presented in the call. Notice that the plugin must ensure that the `payment_key` really matches the `payment_hash` since lightningd will not check and the wrong value could result in the channel being closed.
@@ -8132,9 +8132,9 @@ type RPCCommandReturnResult struct {
 // RPCCommandReturn Returns a custom JSON-RPC response to the caller.
 type RPCCommandReturn struct {
 	// Error Custom error object to return to the caller.
-	Error RPCCommandReturnError `json:"error,omitempty"`
+	Error *RPCCommandReturnError `json:"error,omitempty"`
 	// Result Custom result object to return to the caller.
-	Result RPCCommandReturnResult `json:"result,omitempty"`
+	Result *RPCCommandReturnResult `json:"result,omitempty"`
 }
 
 type CustommsgHook struct {
@@ -8161,15 +8161,15 @@ type OnionMessageRecvOnionMessageReplyBlindedpathHops struct {
 // OnionMessageRecvOnionMessageReplyBlindedpath A blinded return path provided by the sender. This allows replying without revealing the recipient's identity or network position. If present, plugins must use this path if they construct a reply onion message.
 type OnionMessageRecvOnionMessageReplyBlindedpath struct {
 	// FirstNodeID The introduction node of the blinded path. This is the first hop to which the reply should be sent. Only one of `first_node_id` or the pair `first_scid` and `first_scid_dir` is present.
-	FirstNodeID clntypes.PubKey `json:"first_node_id,omitempty"`
+	FirstNodeID *clntypes.PubKey `json:"first_node_id,omitempty"`
 	// FirstPathKey Initial public key used to derive shared secrets with the first hop. This key allows each hop to derive per-hop encryption keys and blinding factors.
-	FirstPathKey clntypes.PubKey `json:"first_path_key,omitempty"`
+	FirstPathKey *clntypes.PubKey `json:"first_path_key,omitempty"`
 	// FirstSCID Alternative to `first_node_id`: identifies the introduction point via a channel. Only one of `first_node_id` or the pair `first_scid` and `first_scid_dir` is present.
-	FirstSCID clntypes.ShortChannelID `json:"first_scid,omitempty"`
+	FirstSCID *clntypes.ShortChannelID `json:"first_scid,omitempty"`
 	// FirstSCIDDir Direction of the `short_channel_id` (0 or 1). Only one of `first_node_id` or the pair `first_scid` and `first_scid_dir` is present.
-	FirstSCIDDir uint32 `json:"first_scid_dir,omitempty"`
+	FirstSCIDDir *uint32 `json:"first_scid_dir,omitempty"`
 	// Hops Sequence of blinded hops forming the path. Each hop contains a blinded node identifier and encrypted routing instructions.
-	Hops []OnionMessageRecvOnionMessageReplyBlindedpathHops `json:"hops,omitempty"`
+	Hops *[]OnionMessageRecvOnionMessageReplyBlindedpathHops `json:"hops,omitempty"`
 }
 
 type OnionMessageRecvOnionMessageUnknownFields struct {
@@ -8181,15 +8181,15 @@ type OnionMessageRecvOnionMessageUnknownFields struct {
 
 type OnionMessageRecvOnionMessage struct {
 	// Invoice BOLT #12 `invoice` payload.
-	Invoice clntypes.Hex `json:"invoice,omitempty"`
+	Invoice *clntypes.Hex `json:"invoice,omitempty"`
 	// InvoiceError BOLT #12 `invoice_error` payload.
-	InvoiceError clntypes.Hex `json:"invoice_error,omitempty"`
+	InvoiceError *clntypes.Hex `json:"invoice_error,omitempty"`
 	// InvoiceRequest BOLT #12 `invoice_request` payload.
-	InvoiceRequest clntypes.Hex `json:"invoice_request,omitempty"`
+	InvoiceRequest *clntypes.Hex `json:"invoice_request,omitempty"`
 	// ReplyBlindedpath A blinded return path provided by the sender. This allows replying without revealing the recipient's identity or network position. If present, plugins must use this path if they construct a reply onion message.
-	ReplyBlindedpath OnionMessageRecvOnionMessageReplyBlindedpath `json:"reply_blindedpath,omitempty"`
+	ReplyBlindedpath *OnionMessageRecvOnionMessageReplyBlindedpath `json:"reply_blindedpath,omitempty"`
 	// UnknownFields Unknown or unparsed TLV fields from the onion message. Plugins may inspect these for experimental or custom extensions.
-	UnknownFields []OnionMessageRecvOnionMessageUnknownFields `json:"unknown_fields,omitempty"`
+	UnknownFields *[]OnionMessageRecvOnionMessageUnknownFields `json:"unknown_fields,omitempty"`
 }
 
 type OnionMessageRecv struct {
@@ -8206,15 +8206,15 @@ type OnionMessageRecvSecretOnionMessageReplyBlindedpathHops struct {
 // OnionMessageRecvSecretOnionMessageReplyBlindedpath A blinded return path provided by the sender. This allows replying without revealing the recipient's identity or network position. If present, plugins must use this path if they construct a reply onion message.
 type OnionMessageRecvSecretOnionMessageReplyBlindedpath struct {
 	// FirstNodeID The introduction node of the blinded path. This is the first hop to which the reply should be sent. Only one of `first_node_id` or the pair `first_scid` and `first_scid_dir` is present.
-	FirstNodeID clntypes.PubKey `json:"first_node_id,omitempty"`
+	FirstNodeID *clntypes.PubKey `json:"first_node_id,omitempty"`
 	// FirstPathKey Initial public key used to derive shared secrets with the first hop. This key allows each hop to derive per-hop encryption keys and blinding factors.
-	FirstPathKey clntypes.PubKey `json:"first_path_key,omitempty"`
+	FirstPathKey *clntypes.PubKey `json:"first_path_key,omitempty"`
 	// FirstSCID Alternative to `first_node_id`: identifies the introduction point via a channel. Only one of `first_node_id` or the pair `first_scid` and `first_scid_dir` is present.
-	FirstSCID clntypes.ShortChannelID `json:"first_scid,omitempty"`
+	FirstSCID *clntypes.ShortChannelID `json:"first_scid,omitempty"`
 	// FirstSCIDDir Direction of the `short_channel_id` (0 or 1). Only one of `first_node_id` or the pair `first_scid` and `first_scid_dir` is present.
-	FirstSCIDDir uint32 `json:"first_scid_dir,omitempty"`
+	FirstSCIDDir *uint32 `json:"first_scid_dir,omitempty"`
 	// Hops Sequence of blinded hops forming the path. Each hop contains a blinded node identifier and encrypted routing instructions.
-	Hops []OnionMessageRecvSecretOnionMessageReplyBlindedpathHops `json:"hops,omitempty"`
+	Hops *[]OnionMessageRecvSecretOnionMessageReplyBlindedpathHops `json:"hops,omitempty"`
 }
 
 type OnionMessageRecvSecretOnionMessageUnknownFields struct {
@@ -8226,17 +8226,17 @@ type OnionMessageRecvSecretOnionMessageUnknownFields struct {
 
 type OnionMessageRecvSecretOnionMessage struct {
 	// Invoice BOLT #12 `invoice` payload.
-	Invoice clntypes.Hex `json:"invoice,omitempty"`
+	Invoice *clntypes.Hex `json:"invoice,omitempty"`
 	// InvoiceError BOLT #12 `invoice_error` payload.
-	InvoiceError clntypes.Hex `json:"invoice_error,omitempty"`
+	InvoiceError *clntypes.Hex `json:"invoice_error,omitempty"`
 	// InvoiceRequest BOLT #12 `invoice_request` payload.
-	InvoiceRequest clntypes.Hex `json:"invoice_request,omitempty"`
+	InvoiceRequest *clntypes.Hex `json:"invoice_request,omitempty"`
 	// Pathsecret Shared secret identifying the blinded path. Used to verify that the sender used a path previously provided by this node. This prevents probing attacks and unauthorized replies.
 	Pathsecret clntypes.Secret `json:"pathsecret"`
 	// ReplyBlindedpath A blinded return path provided by the sender. This allows replying without revealing the recipient's identity or network position. If present, plugins must use this path if they construct a reply onion message.
-	ReplyBlindedpath OnionMessageRecvSecretOnionMessageReplyBlindedpath `json:"reply_blindedpath,omitempty"`
+	ReplyBlindedpath *OnionMessageRecvSecretOnionMessageReplyBlindedpath `json:"reply_blindedpath,omitempty"`
 	// UnknownFields Unknown or unparsed TLV fields from the onion message. Plugins may inspect these for experimental or custom extensions.
-	UnknownFields []OnionMessageRecvSecretOnionMessageUnknownFields `json:"unknown_fields,omitempty"`
+	UnknownFields *[]OnionMessageRecvSecretOnionMessageUnknownFields `json:"unknown_fields,omitempty"`
 }
 
 type OnionMessageRecvSecret struct {

@@ -46,14 +46,15 @@ func (d *DatastoreClient[T]) SaveRaw(ctx context.Context, key []string, value T,
 	if err != nil {
 		return nil, err
 	}
+	dataString := string(data)
 
 	request := clnrpc.DatastoreRequest{
 		Key:    key,
-		Mode:   mode,
-		String: string(data),
+		Mode:   &mode,
+		String: &dataString,
 	}
 	if len(generation) == 1 {
-		request.Generation = generation[0]
+		request.Generation = &generation[0]
 	}
 	return d.client.Datastore(ctx, request)
 }
@@ -97,14 +98,21 @@ func (d *DatastoreClient[T]) List(ctx context.Context, key []string) ([]T, error
 // ListRaw loads and decodes all datastore entries below the optional key prefix.
 // Also returns the raw response from listdatastore call
 func (d *DatastoreClient[T]) ListRaw(ctx context.Context, key []string) ([]T, *clnrpc.ListDatastoreResponse, error) {
-	response, err := d.client.ListDatastore(ctx, clnrpc.ListDatastoreRequest{Key: key})
+	request := clnrpc.ListDatastoreRequest{}
+	if len(key) > 0 {
+		request.Key = &key
+	}
+	response, err := d.client.ListDatastore(ctx, request)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	values := make([]T, len(response.Datastore))
 	for i := range response.Datastore {
-		if err := json.Unmarshal([]byte(response.Datastore[i].String), &values[i]); err != nil {
+		if response.Datastore[i].String == nil {
+			return nil, nil, errors.New("datastore entry does not contain string data")
+		}
+		if err := json.Unmarshal([]byte(*response.Datastore[i].String), &values[i]); err != nil {
 			return nil, nil, err
 		}
 	}
@@ -129,7 +137,7 @@ func (d *DatastoreClient[T]) DeleteRaw(ctx context.Context, key []string, genera
 
 	request := clnrpc.DelDatastoreRequest{Key: key}
 	if len(generation) == 1 {
-		request.Generation = generation[0]
+		request.Generation = &generation[0]
 	}
 	return d.client.DelDatastore(ctx, request)
 }
