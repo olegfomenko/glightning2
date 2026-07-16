@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"slices"
+
 	"github.com/olegfomenko/glightning2/clnrpc"
 )
 
@@ -22,16 +24,18 @@ func GetDatastore[T any](client *clnrpc.Client) *DatastoreClient[T] {
 }
 
 // Save serializes value as JSON and stores it under key using mode.
+// A nil value stores a zero-byte value.
 // Generation is optional and enables atomic updates when supplied.
-func (d *DatastoreClient[T]) Save(ctx context.Context, key []string, value T, mode clnrpc.DatastoreMode, generation ...uint64) error {
+func (d *DatastoreClient[T]) Save(ctx context.Context, key []string, value *T, mode clnrpc.DatastoreMode, generation ...uint64) error {
 	_, err := d.SaveRaw(ctx, key, value, mode, generation...)
 	return err
 }
 
 // SaveRaw serializes value as JSON and stores it under key using mode.
+// A nil value stores a zero-byte value.
 // Generation is optional and enables atomic updates when supplied.
 // Also returns the raw response from datastore call
-func (d *DatastoreClient[T]) SaveRaw(ctx context.Context, key []string, value T, mode clnrpc.DatastoreMode, generation ...uint64) (*clnrpc.DatastoreResponse, error) {
+func (d *DatastoreClient[T]) SaveRaw(ctx context.Context, key []string, value *T, mode clnrpc.DatastoreMode, generation ...uint64) (*clnrpc.DatastoreResponse, error) {
 	if len(key) == 0 {
 		return nil, errors.New("datastore key is required")
 	}
@@ -42,11 +46,14 @@ func (d *DatastoreClient[T]) SaveRaw(ctx context.Context, key []string, value T,
 		return nil, errors.New("datastore accepts at most one generation")
 	}
 
-	data, err := json.Marshal(value)
-	if err != nil {
-		return nil, err
+	dataString := ""
+	if value != nil {
+		data, err := json.Marshal(*value)
+		if err != nil {
+			return nil, err
+		}
+		dataString = string(data)
 	}
-	dataString := string(data)
 
 	request := clnrpc.DatastoreRequest{
 		Key:    key,
@@ -86,7 +93,7 @@ func (d *DatastoreClient[T]) GetRaw(ctx context.Context, key []string) (T, *clnr
 		return value, nil, ErrDatastoreNotFound
 	}
 
-	return values[0], response, ErrDatastoreNotFound
+	return values[0], response, nil
 }
 
 // List loads and decodes all datastore entries below the optional key prefix.
@@ -109,10 +116,11 @@ func (d *DatastoreClient[T]) ListRaw(ctx context.Context, key []string) ([]T, *c
 
 	values := make([]T, len(response.Datastore))
 	for i := range response.Datastore {
-		if response.Datastore[i].String == nil {
+		entry := response.Datastore[i]
+		if entry.String == nil {
 			return nil, nil, errors.New("datastore entry does not contain string data")
 		}
-		if err := json.Unmarshal([]byte(*response.Datastore[i].String), &values[i]); err != nil {
+		if err := json.Unmarshal([]byte(*entry.String), &values[i]); err != nil {
 			return nil, nil, err
 		}
 	}
@@ -144,9 +152,20 @@ func (d *DatastoreClient[T]) DeleteRaw(ctx context.Context, key []string, genera
 
 // Exists reports whether an exact datastore key exists.
 func (d *DatastoreClient[T]) Exists(ctx context.Context, key []string) (bool, error) {
-	_, _, err := d.GetRaw(ctx, key)
-	if errors.Is(err, ErrDatastoreNotFound) {
-		return false, nil
+	if len(key) == 0 {
+		return false, errors.New("datastore key is required")
 	}
-	return err == nil, err
+
+	response, err := d.client.ListDatastore(ctx, clnrpc.ListDatastoreRequest{Key: &key})
+	if err != nil {
+		return false, err
+	}
+
+	// listdatastore treats key as a prefix and may also return its descendants.
+	for i := range response.Datastore {
+		if slices.Equal(response.Datastore[i].Key, key) {
+			return true, nil
+		}
+	}
+	return false, nil
 }
