@@ -9,19 +9,32 @@ import (
 	"os"
 )
 
-func (p *Plugin) Start(ctx context.Context, in, out *os.File) error {
+const logsPerHandlerMultiplier = 100
+const serviceGoroutines = 3
+
+func (p *Plugin) Start(ctx context.Context, in, out *os.File, extra ...func(context.Context) error) error {
 	p.registerLifecycleMethods()
 
-	wg, ctx := errgroup.WithContext(ctx)
-
-	// Set max goroutines of processRequest to outChanCapacity
-	wg.SetLimit(p.MaxConcurrentRequests + 3)
-
-	scanner := prepareScanner(in, p.MaxIntakeBuffer)
 	inChan := make(chan []byte)
 	defer close(inChan)
-	outChan := make(chan []byte, p.MaxConcurrentRequests)
+
+	outChan := make(chan []byte, p.maxConcurrentRequests)
 	defer close(outChan)
+
+	notifyChan := make(chan []byte, p.maxConcurrentRequests*logsPerHandlerMultiplier)
+	p.logger = NewLogger(notifyChan)
+
+	wg, ctx := errgroup.WithContext(ctx)
+	// Set max goroutines of processRequest to outChanCapacity
+	wg.SetLimit(p.maxConcurrentRequests + serviceGoroutines + len(extra))
+
+	scanner := prepareScanner(in, p.maxIntakeBuffer)
+
+	for _, f := range extra {
+		wg.Go(func() error {
+			return f(ctx)
+		})
+	}
 
 	wg.Go(func() error {
 		return p.read(ctx, scanner, inChan)
@@ -32,7 +45,7 @@ func (p *Plugin) Start(ctx context.Context, in, out *os.File) error {
 	})
 
 	wg.Go(func() error {
-		return p.write(ctx, out, outChan)
+		return p.write(ctx, out, outChan, notifyChan)
 	})
 
 	return wg.Wait()
@@ -47,7 +60,6 @@ func (p *Plugin) listen(ctx context.Context, wg *errgroup.Group, inChan <-chan [
 			wg.Go(func() error {
 				return p.processRequest(ctx, buf, outChan)
 			})
-
 		}
 	}
 }
@@ -71,22 +83,24 @@ func (p *Plugin) read(ctx context.Context, scanner *bufio.Scanner, inChan chan<-
 	return scanner.Err()
 }
 
-func (p *Plugin) write(ctx context.Context, out *os.File, outChan <-chan []byte) error {
+func (p *Plugin) write(ctx context.Context, out *os.File, outChan <-chan []byte, notifyChan <-chan []byte) error {
 	outWriter := bufio.NewWriter(out)
 
 	for {
+		var msg []byte
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
-		case msg := <-outChan:
+		case msg = <-outChan:
+		case msg = <-notifyChan:
+		}
 
-			twoNewlines := []byte("\n\n")
-			if _, err := outWriter.Write(append(msg, twoNewlines...)); err != nil {
-				return err
-			}
-			if err := outWriter.Flush(); err != nil {
-				return err
-			}
+		twoNewlines := []byte("\n\n")
+		if _, err := outWriter.Write(append(msg, twoNewlines...)); err != nil {
+			return err
+		}
+		if err := outWriter.Flush(); err != nil {
+			return err
 		}
 	}
 }

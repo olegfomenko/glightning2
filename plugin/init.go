@@ -62,12 +62,6 @@ func (p *Plugin) GetConfiguration() Configuration {
 	return cfg
 }
 
-// GetClient returns the Core Lightning RPC client initialized during init.
-// It returns nil before init is processed.
-func (p *Plugin) GetClient() *clnrpc.Client {
-	return p.client
-}
-
 func (p *Plugin) registerLifecycleMethods() {
 	p.requestHandlers["getmanifest"] = p.handleGetManifest
 	p.requestHandlers["init"] = p.handleInit

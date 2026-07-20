@@ -3,9 +3,8 @@ package plugin
 import (
 	"context"
 	"encoding/json"
-	"runtime"
-
 	"github.com/olegfomenko/glightning2/clnrpc"
+	"runtime"
 )
 
 // DefaultMaxIntakeBuffer defines the default line size limit for input stream scanner.
@@ -45,13 +44,16 @@ type Plugin struct {
 	configuration Configuration
 	client        *clnrpc.Client
 
-	// MaxIntakeBuffer configures the line size limit for input stream scanner.
-	// The default value is 500MB.
-	MaxIntakeBuffer int
+	// logger emits notifications and log messages to Core Lightning while the plugin is running.
+	logger *Logger
 
-	// MaxConcurrentRequests limits the number of request processed at the same time.
+	// maxIntakeBuffer configures the line size limit for input stream scanner.
+	// The default value is 500MB.
+	maxIntakeBuffer int
+
+	// maxConcurrentRequests limits the number of request processed at the same time.
 	// Default is runtime.NumCPU()
-	MaxConcurrentRequests int
+	maxConcurrentRequests int
 }
 
 // NewPlugin creates an empty Core Lightning plugin definition.
@@ -61,12 +63,21 @@ func NewPlugin() *Plugin {
 			rpcMethods: make(map[string]ManifestRPCMethod),
 			hooks:      make(map[string]ManifestHook),
 		},
-		requestHandlers:      make(map[string]RequestHandler),
-		notificationHandlers: make(map[string]NotificationHandler),
-
-		MaxIntakeBuffer:       DefaultMaxIntakeBuffer,
-		MaxConcurrentRequests: runtime.NumCPU(),
+		requestHandlers:       make(map[string]RequestHandler),
+		notificationHandlers:  make(map[string]NotificationHandler),
+		maxIntakeBuffer:       DefaultMaxIntakeBuffer,
+		maxConcurrentRequests: runtime.NumCPU(),
 	}
+}
+
+func (p *Plugin) SetMaxIntakeBuffer(maxIntakeBuffer int) *Plugin {
+	p.maxIntakeBuffer = maxIntakeBuffer
+	return p
+}
+
+func (p *Plugin) SetMaxConcurrentRequests(maxConcurrentRequests int) *Plugin {
+	p.maxConcurrentRequests = maxConcurrentRequests
+	return p
 }
 
 // AddStringOption adds a string option to the plugin manifest.
@@ -300,6 +311,22 @@ func (p *Plugin) SubscribeHook(manifest ManifestHook, handler RequestHandler) *P
 	p.requestHandlers[manifest.Name] = handler
 	p.declarations.hooks[manifest.Name] = manifest
 	return p
+}
+
+// GetClient returns the Core Lightning RPC client initialized during init.
+// It returns nil before init is processed.
+func (p *Plugin) GetClient() *clnrpc.Client {
+	return p.client
+}
+
+// GetLogger returns the Logger instance which can be used to send notifications to the Core Lightning,
+// including log messages
+func (p *Plugin) GetLogger() *Logger {
+	if p.logger == nil {
+		panic("plugin was not started")
+	}
+
+	return p.logger
 }
 
 // Manifest builds the plugin getmanifest response from registered handlers and metadata.

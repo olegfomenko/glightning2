@@ -59,18 +59,25 @@ func TestPluginConfiguration(t *testing.T) {
 }
 
 func TestPluginIntegration(t *testing.T) {
+	plugin := NewPlugin()
+
 	getUser := func(context.Context, json.RawMessage) (json.RawMessage, error) {
 		return nil, nil
 	}
-	onConnect := func(context.Context, json.RawMessage) error {
+	onConnect := func(ctx context.Context, _ json.RawMessage) error {
+		if err := plugin.GetLogger().Notify(ctx, "user_saved", struct {
+			UserID string `json:"user_id"`
+		}{UserID: "123"}); err != nil {
+			return err
+		}
+		plugin.GetLogger().Info(ctx, "first line\nsecond line")
 		return nil
 	}
 	onDBWrite := func(context.Context, clnrpc.DBWrite) (json.RawMessage, error) {
 		return nil, nil
 	}
 
-	plugin := NewPlugin().
-		AddStringOption("flag1", "Flag 1 option (string)", "string").
+	plugin.AddStringOption("flag1", "Flag 1 option (string)", "string").
 		AddBoolOption("flag2", "Flag 2 option (bool)", true).
 		AddRPCMethod("get_user", "Get user entry", getUser).
 		AddRPCMethod("save_user", "Save user entry", func(context.Context, json.RawMessage) (json.RawMessage, error) {
@@ -220,4 +227,48 @@ func TestPluginIntegration(t *testing.T) {
 		t.Fatalf("flag2: value=%v err=%v", boolValue, err)
 	}
 
+	// Emit notification
+
+	connectNotification := []byte(`{"jsonrpc":"2.0","method":"connect","params":{}}` + "\n\n")
+	if _, err := toPluginPipeW.Write(connectNotification); err != nil {
+		t.Fatal(err)
+	}
+
+	// Check response (the user_saved notification)
+	if !scanner.Scan() {
+		t.Fatalf("reading custom notification: %v", scanner.Err())
+	}
+	message, err = jsonrpc2.DecodeMessage(scanner.Bytes())
+	if err != nil {
+		t.Fatal(err)
+	}
+	notification, ok := message.(*jsonrpc2.Request)
+	if !ok || notification.IsCall() || notification.Method != "user_saved" {
+		t.Fatalf("invalid custom notification: %#v", message)
+	}
+	if string(notification.Params) != `{"user_id":"123"}` {
+		t.Fatalf("custom notification params = %s", notification.Params)
+	}
+
+	// Check logs emitted correctly
+	for _, want := range []string{"first line", "second line"} {
+		if !scanner.Scan() {
+			t.Fatalf("reading log notification: %v", scanner.Err())
+		}
+		message, err := jsonrpc2.DecodeMessage(scanner.Bytes())
+		if err != nil {
+			t.Fatal(err)
+		}
+		notification, ok := message.(*jsonrpc2.Request)
+		if !ok || notification.IsCall() || notification.Method != "log" {
+			t.Fatalf("invalid log notification: %#v", message)
+		}
+		var log LogNotification
+		if err := json.Unmarshal(notification.Params, &log); err != nil {
+			t.Fatal(err)
+		}
+		if log.Level != LogLevelInfo || log.Message != want {
+			t.Fatalf("log notification = %#v, want level=%q message=%q", log, LogLevelInfo, want)
+		}
+	}
 }
