@@ -116,7 +116,7 @@ class GoGenerator(IGenerator):
             field_name = go_field_name(child.normalized())
             if not field_name:
                 continue
-            field_type = self.go_type(child)
+            field_type = self.go_field_type(child)
             tag = json_tag(child)
             lines.extend(comment_lines(field_name, child.description, indent="\t"))
             lines.append(f"\t{field_name} {field_type} `{tag}`")
@@ -162,6 +162,12 @@ class GoGenerator(IGenerator):
         if isinstance(field, UnionField):
             return "any"
         return "any"
+
+    def go_field_type(self, field: Any) -> str:
+        field_type = self.go_type(field)
+        if getattr(field, "optional", False):
+            return f"*{field_type}"
+        return field_type
 
     def primitive_type(self, name: str) -> str:
         builtin = {

@@ -1,0 +1,171 @@
+package plugin
+
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"slices"
+
+	"github.com/olegfomenko/glightning2/clnrpc"
+)
+
+// ErrDatastoreNotFound indicates that an exact datastore key does not exist.
+var ErrDatastoreNotFound = errors.New("datastore entry not found")
+
+// DatastoreClient stores and retrieves JSON values through Core Lightning's
+// datastore RPC methods.
+type DatastoreClient[T any] struct {
+	client *clnrpc.Client
+}
+
+// GetDatastore returns a new datastore helper backed by the plugin's CLN client.
+func GetDatastore[T any](client *clnrpc.Client) *DatastoreClient[T] {
+	return &DatastoreClient[T]{client: client}
+}
+
+// Save serializes value as JSON and stores it under key using mode.
+// A nil value stores a zero-byte value.
+// Generation is optional and enables atomic updates when supplied.
+func (d *DatastoreClient[T]) Save(ctx context.Context, key []string, value *T, mode clnrpc.DatastoreMode, generation ...uint64) error {
+	_, err := d.SaveRaw(ctx, key, value, mode, generation...)
+	return err
+}
+
+// SaveRaw serializes value as JSON and stores it under key using mode.
+// A nil value stores a zero-byte value.
+// Generation is optional and enables atomic updates when supplied.
+// Also returns the raw response from datastore call
+func (d *DatastoreClient[T]) SaveRaw(ctx context.Context, key []string, value *T, mode clnrpc.DatastoreMode, generation ...uint64) (*clnrpc.DatastoreResponse, error) {
+	if len(key) == 0 {
+		return nil, errors.New("datastore key is required")
+	}
+	if mode == "" {
+		return nil, errors.New("datastore mode is required")
+	}
+	if len(generation) > 1 {
+		return nil, errors.New("datastore accepts at most one generation")
+	}
+
+	dataString := ""
+	if value != nil {
+		data, err := json.Marshal(*value)
+		if err != nil {
+			return nil, err
+		}
+		dataString = string(data)
+	}
+
+	request := clnrpc.DatastoreRequest{
+		Key:    key,
+		Mode:   &mode,
+		String: &dataString,
+	}
+	if len(generation) == 1 {
+		request.Generation = &generation[0]
+	}
+	return d.client.Datastore(ctx, request)
+}
+
+// Get loads and decodes the value at the exact key.
+func (d *DatastoreClient[T]) Get(ctx context.Context, key []string) (T, error) {
+	value, _, err := d.GetRaw(ctx, key)
+	return value, err
+}
+
+// GetRaw loads and decodes the value at the exact key.
+// Also returns the raw response from listdatastore call
+func (d *DatastoreClient[T]) GetRaw(ctx context.Context, key []string) (T, *clnrpc.ListDatastoreResponse, error) {
+	var value T
+	if len(key) == 0 {
+		return value, nil, errors.New("datastore key is required")
+	}
+
+	values, response, err := d.ListRaw(ctx, key)
+	if err != nil {
+		return value, nil, err
+	}
+
+	if len(values) > 1 {
+		return value, nil, errors.New("found more then one entry")
+	}
+
+	if len(values) == 0 {
+		return value, nil, ErrDatastoreNotFound
+	}
+
+	return values[0], response, nil
+}
+
+// List loads and decodes all datastore entries below the optional key prefix.
+func (d *DatastoreClient[T]) List(ctx context.Context, key []string) ([]T, error) {
+	values, _, err := d.ListRaw(ctx, key)
+	return values, err
+}
+
+// ListRaw loads and decodes all datastore entries below the optional key prefix.
+// Also returns the raw response from listdatastore call
+func (d *DatastoreClient[T]) ListRaw(ctx context.Context, key []string) ([]T, *clnrpc.ListDatastoreResponse, error) {
+	request := clnrpc.ListDatastoreRequest{}
+	if len(key) > 0 {
+		request.Key = &key
+	}
+	response, err := d.client.ListDatastore(ctx, request)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	values := make([]T, len(response.Datastore))
+	for i := range response.Datastore {
+		entry := response.Datastore[i]
+		if entry.String == nil {
+			return nil, nil, errors.New("datastore entry does not contain string data")
+		}
+		if err := json.Unmarshal([]byte(*entry.String), &values[i]); err != nil {
+			return nil, nil, err
+		}
+	}
+	return values, response, nil
+}
+
+// Delete removes the value at key. Generation is optional and enables an atomic delete when supplied.
+func (d *DatastoreClient[T]) Delete(ctx context.Context, key []string, generation ...uint64) error {
+	_, err := d.DeleteRaw(ctx, key, generation...)
+	return err
+}
+
+// DeleteRaw removes the value at key. Generation is optional and enables an atomic delete when supplied.
+// Also returns the raw response from deldatastore call
+func (d *DatastoreClient[T]) DeleteRaw(ctx context.Context, key []string, generation ...uint64) (*clnrpc.DelDatastoreResponse, error) {
+	if len(key) == 0 {
+		return nil, errors.New("datastore key is required")
+	}
+	if len(generation) > 1 {
+		return nil, errors.New("datastore accepts at most one generation")
+	}
+
+	request := clnrpc.DelDatastoreRequest{Key: key}
+	if len(generation) == 1 {
+		request.Generation = &generation[0]
+	}
+	return d.client.DelDatastore(ctx, request)
+}
+
+// Exists reports whether an exact datastore key exists.
+func (d *DatastoreClient[T]) Exists(ctx context.Context, key []string) (bool, error) {
+	if len(key) == 0 {
+		return false, errors.New("datastore key is required")
+	}
+
+	response, err := d.client.ListDatastore(ctx, clnrpc.ListDatastoreRequest{Key: &key})
+	if err != nil {
+		return false, err
+	}
+
+	// listdatastore treats key as a prefix and may also return its descendants.
+	for i := range response.Datastore {
+		if slices.Equal(response.Datastore[i].Key, key) {
+			return true, nil
+		}
+	}
+	return false, nil
+}
